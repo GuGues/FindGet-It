@@ -52,6 +52,8 @@ public class SecurityConfig {
                         .requestMatchers("/sighup","/sighup/**","/auth").permitAll()
                         .requestMatchers("/user/**").hasAnyRole("USER")
                         .requestMatchers("/chat/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/Mypage/**").hasAnyRole("USER","ADMIN")
+                        .requestMatchers("/**").permitAll()
                 )
                 .formLogin(formLogin -> formLogin
                         .loginPage("/login")

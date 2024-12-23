@@ -111,34 +111,34 @@
   </ul>
   
   <ul id="menu_detail">
-    <c:if test="${url.contains('/lost')}">
+    <c:if test="${url.contains('/lost') && !url.contains('/Mypage')}">
      <li><h3 class="side-title">분실물</h3></li>
      <li><a href="/lost">분실물 검색</a></li>
      <li><a href="/lost/write">분실물 의뢰</a></li>
      <li><a href="police/lost">경찰청 분실물 검색</a></li>
      <li><a href="https://www.lost112.go.kr/html.do?html=/member/login&sub=U&title=%ED%9A%8C%EC%9B%90%EB%A7%88%EB%8B%B9&ptitle=%EB%A1%9C%EA%B7%B8%EC%9D%B8&MENU_NO=MENU5400" target="blank">경찰청 분실물 신고</a></li>
     </c:if>
-    <c:if test="${url.contains('/found')}">
+    <c:if test="${url.contains('/found') && !url.contains('/Mypage')}">
      <li><h3>습득물</h3></li>
      <li><a href="/found">찾GET어 습득물</a></li>
      <li><a href="/police/found">경찰청 등록 습득물</a></li>
      <li><a href="https://www.handphone.or.kr/">핸드폰찾기 콜센터</a></li>
     </c:if>
-    <c:if test="${url.contains('/faq') || url.contains('/cs')}">
+    <c:if test="${url.contains('/faq') || url.contains('/cs') && !url.contains('/Mypage')}">
      <li><h3>FAQ</h3></li>
      <li><a href="/faq">자주 묻는 질문</a></li>
      <li><a href="/cs/write">1:1 문의</a></li>
     </c:if>
-    <c:if test="${url.contains('/notice')}">
+    <c:if test="${url.contains('/notice') && !url.contains('/Mypage')}">
      <li><h3>공지사항</h3></li>
      <li><a href="/notice">공지사항</a></li>
     </c:if>
-    <c:if test="${url.contains('/myPage')}">
+    <c:if test="${url.contains('/Mypage')}">
      <li><h3>마이페이지</h3></li>
-     <li><a href="/myPage/lost/view">내 분실물</a></li>
-     <li><a href="/myPage/found/view">내 습득물</a></li>
-     <li><a href="/myPage/ask">내 문의글</a></li>
-     <li><a href="/myPage/update">내정보수정</a></li>
+     <li><a href="/Mypage/lost/view">내 분실물</a></li>
+     <li><a href="/Mypage/found/view">내 습득물</a></li>
+     <li><a href="/Mypage/ask">내 문의글</a></li>
+     <li><a href="/Mypage/update">내정보수정</a></li>
     </c:if>
   </ul>
   

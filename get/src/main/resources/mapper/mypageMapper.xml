@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.get.mypage.MypageMapper">
+
+<select id="getEmail">
+SELECT *
+FROM   MEMBERS
+WHERE  EMAIL = #{email}
+</select>
+
+<select id="getLostList">
+SELECT LOST_TITLE, TO_CHAR(L_REG_DATE, 'YYYY-MM-DD')AS L_REG_DATE, L_VIEWS
+FROM   LOST_ITEMS
+WHERE  EMAIL = #{email}
+</select>
+
+<select id="getCsList">
+SELECT CS_TITLE, TO_CHAR(CS_REG_DATE, 'YYYY-MM-DD') AS CS_REG_DATE, CS_STATE
+FROM   CS_CENTER
+WHERE  EMAIL = #{email}
+</select>
+
+<select id="getFoundList">
+SELECT FOUND_TITLE, TO_CHAR(F_REG_DATE, 'YYYY-MM-DD') AS F_REG_DATE, F_VIEWS
+FROM   FOUND
+WHERE  EMAIL = #{email}
+</select>
+
+<delete id="deleteLost" parameterType="list">
+    DELETE FROM CS 
+    WHERE LOST_IDX IN 
+    <foreach item="lost_idx" index="index" collection="list" open="(" separator="," close=")">
+        #{email}
+    </foreach>
+</delete>
+
+<delete id="deleteCs" parameterType="list">
+    DELETE FROM CS 
+    WHERE CS_IDX IN 
+    <foreach item="cs_idx" index="index" collection="list" open="(" separator="," close=")">
+        #{email}
+    </foreach>
+</delete>
+
+<delete id="deleteFound" parameterType="list">
+    DELETE FROM CS 
+    WHERE FOUND_IDX IN 
+    <foreach item="found_idx" index="index" collection="list" open="(" separator="," close=")">
+        #{email}
+    </foreach>
+</delete>
+
+  <select id="getFound">
+        SELECT *
+        FROM FOUND
+        WHERE FOUND_IDX=#{found_idx}
+    </select>
+    
+     <select id="getLost">
+        SELECT *
+        FROM LOST_ITMES
+        WHERE LOST_IDX=#{lost_idx}
+    </select>
+    
+<select id="getLocations">
+        SELECT *
+        FROM LOCATIONS
+    </select>
+    
+    
+<select id="getItems">
+        SELECT *
+        FROM ITEMS
+    </select>
+    
+</mapper>
