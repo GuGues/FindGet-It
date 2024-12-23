@@ -7,6 +7,7 @@
 <head>
   <meta charset="UTF-8">
   <title>검색 결과</title>
+    <link rel="stylesheet" href="/css/common.css" />
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -14,6 +15,7 @@
       background: #f9f9f9;
     }
     h1 {
+      margin-left: 60px;
       margin-bottom: 20px;
     }
     .search-info {
@@ -25,18 +27,36 @@
       border-collapse: collapse;
       background: #fff;
       margin-bottom: 30px;
+      border: solid #FF914B;
+        border-radius: 10px;
+
+
     }
     th, td {
-      border: 1px solid #ddd;
       padding: 12px;
       text-align: left;
+
     }
     th {
       background: #FF914B;
       color: #fff;
     }
+    td {
+      border-left: #FE8015 solid 1px
+    }
     tr:nth-child(even) {
-      background: #f2f2f2;
+
+        background: #f2f2f2;
+    }
+
+    .listItem {
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+        border: solid #FF914B;
+
+    }
+    .listItem:hover {
+      background-color: #FFD5B2;
     }
     .pagination {
       text-align: center;
@@ -62,11 +82,41 @@
       margin-bottom: 10px;
       margin-top: 40px;
     }
+    a {
+      text-decoration: none;
+      color: black;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #ffffff;
+      margin-left: 20%;
+      padding: 0;
+    }
+
+    .lostbox {
+      max-width: 1300px;
+      height: 100%;
+      /*margin: 50px auto;*/
+      margin-left: 100px;
+      margin-right: 100px;
+      background: #fff;
+      border: none;
+      padding: 20px;
+    }
+
+  h1{
+      font-family: yangjin;
+  }
+
   </style>
 </head>
 <body>
+<%@include file="/WEB-INF/include/side.jsp" %>
+
+<div class="bigbox">
 
 <h1>"${keyword}" 검색 결과</h1>
+
 
 <c:choose>
   <c:when test="${empty lostItems and empty foundItems}">
@@ -74,33 +124,26 @@
   </c:when>
   <c:otherwise>
     <c:if test="${not empty lostItems}">
+      <div class="lostbox">
       <div class="section-title">분실물 정보 (총 <c:out value="${lostPaging.totalRecords}"/>건)</div>
       <table>
         <thead>
         <tr>
-          <th>관리ID</th>
+          <th>분실물</th>
           <th>이메일</th>
-          <th>분실물명(제목)</th>
-          <th>분실물내용</th>
           <th>분실일자</th>
-          <th>등록일자</th>
-          <th>조회수</th>
-          <th>장소 상세</th>
           <th>물품 상세</th>
+          <th>조회수</th>
         </tr>
         </thead>
         <tbody>
         <c:forEach var="item" items="${lostItems}">
-          <tr>
-            <td><c:out value="${item.lostIdx}"/></td>
-            <td><c:out value="${item.email}"/></td>
+          <tr class="listItem" onclick="location.href='/lost/view?lostIdx=${item.lostIdx}'">
             <td><c:out value="${item.lostTitle}"/></td>
-            <td><c:out value="${item.lostContent}"/></td>
+            <td><c:out value="${item.email}"/></td>
             <td><c:out value="${item.lostDate}"/></td>
-            <td><c:out value="${item.lRegDate}"/></td>
-            <td><c:out value="${item.lViews}"/></td>
-            <td><c:out value="${item.lLocationDetail}"/></td>
             <td><c:out value="${item.lItemDetail}"/></td>
+            <td><c:out value="${item.lViews}"/></td>
           </tr>
         </c:forEach>
         </tbody>
@@ -126,37 +169,31 @@
         </c:if>
       </div>
     </c:if>
+      </div>
 
     <c:if test="${not empty foundItems}">
+<div class="lostbox">
       <div class="section-title">습득물 정보 (총 <c:out value="${foundPaging.totalRecords}"/>건)</div>
       <table>
         <thead>
         <tr>
-          <th>관리ID</th>
+          <th>습득물</th>
           <th>이메일</th>
-          <th>습득물명(제목)</th>
-          <th>습득물내용</th>
           <th>습득일자</th>
-          <th>등록일자</th>
-          <th>조회수</th>
           <th>상태</th>
-          <th>장소 상세</th>
           <th>물품 상세</th>
+          <th>조회수</th>
         </tr>
         </thead>
         <tbody>
         <c:forEach var="fitem" items="${foundItems}">
-          <tr>
-            <td><c:out value="${fitem.foundIdx}"/></td>
-            <td><c:out value="${fitem.email}"/></td>
+          <tr class="listItem" onclick="location.href='/found/view?foundIdx=${fitem.foundIdx}'">
             <td><c:out value="${fitem.foundTitle}"/></td>
-            <td><c:out value="${fitem.foundContent}"/></td>
+            <td><c:out value="${fitem.email}"/></td>
             <td><c:out value="${fitem.foundDate}"/></td>
-            <td><c:out value="${fitem.fRegDate}"/></td>
-            <td><c:out value="${fitem.fViews}"/></td>
             <td><c:out value="${fitem.itemState}"/></td>
-            <td><c:out value="${fitem.fLocationDetail}"/></td>
             <td><c:out value="${fitem.fItemDetail}"/></td>
+            <td><c:out value="${fitem.fViews}"/></td>
           </tr>
         </c:forEach>
         </tbody>
@@ -184,6 +221,7 @@
     </c:if>
   </c:otherwise>
 </c:choose>
-
+</div>
+</div>
 </body>
 </html>

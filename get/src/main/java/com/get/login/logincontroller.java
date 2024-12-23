@@ -19,21 +19,16 @@ public class logincontroller {
 
     @RequestMapping("/login")
     public String login(){
-        return "loginpage";
+        return "login/loginpage";
     }
     @RequestMapping("/sighup")
     public String sighup(){
-        return "sighup";
+        return "login/sighup";
     }
     @RequestMapping("/sighup/reg")
     public String reg(Account account){
         if(accountService.join(account,account.getEmail(),account.getPassword()))
             return "redirect:/";
-        else return "login";
-    }
-
-    @RequestMapping("/user/{userid}")
-    public String mypage(@PathVariable("userid") int userid, HttpServletRequest request){
-        return "mypage";
+        else return "login/loginpage";
     }
 }

@@ -5,77 +5,31 @@
 
 <mapper namespace="com.get.chat.ChatMapper">
 
-    <insert id="createChatRoom">
-        INSERT INTO CHAT_ROOM (ROOM_ID, CREATED_AT) VALUES (NULL, SYSDATE)
+    <select id="findByRoomId">
+        SELECT *
+        FROM CHATTING_ROOM
+        WHERE CHATTING_NO = #{roomId}
+    </select>
+    <insert id="saveChat">
+        INSERT INTO MESSAGE
+        VALUES (null,
+                #{message_content},
+                'N',
+                SYSDATE,
+                #{sender_no},
+                #{chatting_no})
     </insert>
 
-    <insert id="addUserToRoom">
-        INSERT INTO CHAT_ROOM_USER(ROOM_ID, USER_EMAIL, JOINED_AT)
-        VALUES(#{roomId}, #{userEmail}, SYSDATE)
+    <select id="findAllRooms">
+        SELECT *
+        FROM CHATTING_ROOM
+    </select>
+
+    <insert id="createRoom">
+        INSERT INTO CHATTING_ROOM
+        VALUES ( #{chatting_no}
+               , SYSDATE
+               , #{open_member}
+               , #{open_member})
     </insert>
-
-    <select id="getUserChatRooms" resultType="com.get.chat.ChatRoomVo">
-        SELECT CR.ROOM_ID, CR.CREATED_AT
-        FROM CHAT_ROOM CR
-                 JOIN CHAT_ROOM_USER CRU ON CR.ROOM_ID = CRU.ROOM_ID
-        WHERE CRU.USER_EMAIL = #{userEmail}
-        ORDER BY CR.CREATED_AT DESC
-    </select>
-
-    <select id="getMessagesInRoom" resultType="com.get.chat.ChatMessageVo">
-        SELECT
-            MESSAGE_ID as messageId,
-            ROOM_ID as roomId,
-            SENDER_EMAIL as senderEmail,
-            MESSAGE_CONTENT as messageContent,
-            SENT_AT as sentAt
-        FROM CHAT_MESSAGE
-        WHERE ROOM_ID = #{roomId}
-        ORDER BY SENT_AT ASC
-    </select>
-
-    <insert id="insertMessage" parameterType="com.get.chat.ChatMessageVo">
-        INSERT INTO CHAT_MESSAGE(MESSAGE_ID, ROOM_ID, SENDER_EMAIL, MESSAGE_CONTENT, SENT_AT)
-        VALUES(NULL, #{roomId}, #{senderEmail}, #{messageContent}, SYSDATE)
-    </insert>
-
-    <insert id="insertMessageRead">
-        INSERT INTO CHAT_MESSAGE_READ(MESSAGE_ID, USER_EMAIL, READ_AT)
-        VALUES(#{messageId}, #{userEmail}, SYSDATE)
-    </insert>
-
-    <update id="updateMessageRead">
-        UPDATE CHAT_MESSAGE_READ
-        SET READ_AT = SYSDATE
-        WHERE MESSAGE_ID = #{messageId} AND USER_EMAIL = #{userEmail}
-    </update>
-
-    <select id="countUnreadMessages" resultType="int">
-        SELECT COUNT(*)
-        FROM CHAT_MESSAGE M
-        WHERE M.ROOM_ID = #{roomId}
-          AND M.MESSAGE_ID NOT IN (
-            SELECT MESSAGE_ID FROM CHAT_MESSAGE_READ
-            WHERE USER_EMAIL = #{userEmail}
-        )
-    </select>
-
-    <select id="getLastRoomId" resultType="long">
-        SELECT ROOM_SEQ.CURRVAL FROM DUAL
-    </select>
-
-    <select id="getRoomUsers" resultType="string">
-        SELECT USER_EMAIL FROM CHAT_ROOM_USER
-        WHERE ROOM_ID = #{roomId}
-    </select>
-
-    <update id="markAllAsRead">
-        <!-- 현재 유저가 읽지 않은 메시지에 대해 READ 기록 없으면 삽입, 있으면 업데이트 필요.
-             단순화를 위해, 미읽은 메시지에 대해 CHAT_MESSAGE_READ가 없으면 INSERT, 있으면 UPDATE
-             실제 구현 시에는 JDBC로 처리하거나, 아래는 미읽은 메시지를 insert하는 동적 SQL 필요.
-             여기서는 읽지 않은 메시지를 모두 insert하는 로직이 필요하지만, 복잡하므로 간략화 -->
-        <!-- 간략화를 위해: 이 메서드는 일단 읽지 않은 메시지를 전부 read 처리하는 논리를 넣어야 하나,
-             실제 구현은 Service 단에서 getMessagesInRoom 후 각각 insert/update하는 식으로 가능. -->
-    </update>
-
 </mapper>

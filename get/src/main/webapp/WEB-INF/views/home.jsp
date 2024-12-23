@@ -5,6 +5,7 @@
 <head>
   <meta charset="UTF-8">
   <title>홈 화면</title>
+  <link rel="stylesheet" href="/css/common.css" />
   <style>
     .home-background {
       background: url('/img/homebackground.jpg') no-repeat center center;
@@ -104,6 +105,7 @@
 </head>
 <body>
 <div class="home-background">
+<%@include file="/WEB-INF/include/homefab.jsp" %>
 
   <div class="top-container">
     <img src="/logo/logoopen.png" class="logo-banner default" alt="로고 배너">
@@ -118,11 +120,11 @@
   </div>
 
   <div class="button-container">
-    <div class="button">
+    <a class="button"  href="/lost">
       <img src="/icon/lost_gray.png" class="icon default" alt="분실물 게시판">
       <img src="/icon/lost_orange.png" class="icon hover" alt="분실물 게시판">
       <p>분실물 게시판</p>
-    </div>
+    </a>
 
     <div class="button">
       <img src="/icon/find_gray.png" class="icon default" alt="습득물 게시판">
@@ -137,7 +139,7 @@
     </div>
 
     <!-- 임시채팅버튼: 클릭 시 채팅방 목록 모달 표시 -->
-    <a class="button" href="chat/rooms">
+    <a class="button" href="/roomList">
       <img src="/icon/speaker_gray.png" class="icon default" alt="공지사항">
       <img src="/icon/speaker_orange.png" class="icon hover" alt="공지사항">
       <p>채팅방 목록</p>
@@ -146,10 +148,10 @@
     <a class="button" href="https://www.lost112.go.kr/">
       <img src="/icon/lost112_gray.png" class="icon default" alt="경찰청 신고">
       <img src="/icon/lost112_orange.png" class="icon hover" alt="경찰청 신고">
-      <a href="/Mypage/Lost">경찰청 분실물 신고</a>
+      <p>경찰청 분실물 신고</p>
     </a>
   </div>
 </div>
-  <%@include file="/WEB-INF/include/homefab.jsp" %>
+
 </body>
 </html>

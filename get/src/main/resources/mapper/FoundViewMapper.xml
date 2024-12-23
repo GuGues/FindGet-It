@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.get.foundview.FoundViewMapper">
+
+    <select id="selectFoundItemDetail">
+        SELECT
+            F.FOUND_IDX AS foundIdx,
+            F.EMAIL AS email,
+            F.FOUND_TITLE AS foundTitle,
+            F.FOUND_CONTENT AS foundContent,
+            F.FOUND_DATE AS foundDate,
+            F.F_REG_DATE AS fRegDate,
+            F.F_VIEWS AS fViews,
+            F.ITEM_STATE AS itemState,
+            F.LOCATION_CODE AS locationCode,
+            F.F_LOCATION_DETAIL AS fLocationDetail,
+            F.ITEM_CODE AS itemCode,
+            F.F_ITEM_DETAIL AS fItemDetail,
+            F.COLOR_CODE AS colorCode,
+            F.FOUND_STATE AS foundState,
+            I.ITEM AS itemName,
+            C.COLOR_NAME AS colorName,
+            L.SIDO_NAME AS sidoName,
+            L.GUGUN_NAME AS gugunName
+        FROM FOUND F
+                 LEFT JOIN ITEMS I ON F.ITEM_CODE = I.ITEM_CODE
+                 LEFT JOIN COLORS C ON F.COLOR_CODE = C.COLOR_CODE
+                 LEFT JOIN LOCATIONS L ON F.LOCATION_CODE = L.LOCATION_CODE
+        WHERE F.FOUND_IDX = #{foundIdx}
+    </select>
+
+</mapper>

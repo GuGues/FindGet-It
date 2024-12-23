@@ -1,14 +1,12 @@
 package com.get.search;
 
-import java.util.Date;
-
 public class FoundItemVo {
     private String foundIdx;
     private String email;
     private String foundTitle;
     private String foundContent;
-    private Date foundDate;
-    private Date fRegDate;
+    private String foundDate;
+    private String fRegDate;
     private int fViews;
     private String itemState;
     private Integer locationCode;
@@ -46,17 +44,17 @@ public class FoundItemVo {
         this.foundContent = foundContent;
     }
 
-    public Date getFoundDate() {
+    public String getFoundDate() {
         return foundDate;
     }
-    public void setFoundDate(Date foundDate) {
+    public void setFoundDate(String foundDate) {
         this.foundDate = foundDate;
     }
 
-    public Date getfRegDate() {
+    public String getfRegDate() {
         return fRegDate;
     }
-    public void setfRegDate(Date fRegDate) {
+    public void setfRegDate(String fRegDate) {
         this.fRegDate = fRegDate;
     }
 

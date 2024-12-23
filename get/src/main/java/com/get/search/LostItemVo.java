@@ -1,14 +1,12 @@
 package com.get.search;
 
-import java.util.Date;
-
 public class LostItemVo {
     private String lostIdx;
     private String email;
     private String lostTitle;
     private String lostContent;
-    private Date lostDate;
-    private Date lRegDate;
+    private String lostDate;
+    private String lRegDate;
     private int lViews;
     private Integer locationCode;
     private String lLocationDetail;
@@ -30,11 +28,11 @@ public class LostItemVo {
     public String getLostContent() { return lostContent; }
     public void setLostContent(String lostContent) { this.lostContent = lostContent; }
 
-    public Date getLostDate() { return lostDate; }
-    public void setLostDate(Date lostDate) { this.lostDate = lostDate; }
+    public String getLostDate() { return lostDate; }
+    public void setLostDate(String lostDate) { this.lostDate = lostDate; }
 
-    public Date getlRegDate() { return lRegDate; }
-    public void setlRegDate(Date lRegDate) { this.lRegDate = lRegDate; }
+    public String getlRegDate() { return lRegDate; }
+    public void setlRegDate(String lRegDate) { this.lRegDate = lRegDate; }
 
     public int getlViews() { return lViews; }
     public void setlViews(int lViews) { this.lViews = lViews; }
