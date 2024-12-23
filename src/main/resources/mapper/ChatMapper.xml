@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.get.chat.ChatMapper">
+
+    <select id="findByRoomId">
+        SELECT *
+        FROM CHATTING_ROOM
+        WHERE CHATTING_NO = #{roomId}
+    </select>
+    <insert id="saveChat">
+        INSERT INTO MESSAGE
+        VALUES (null,
+                #{message_content},
+                'N',
+                SYSDATE,
+                #{sender},
+                #{chatting_no})
+    </insert>
+
+    <select id="findAllRooms">
+        SELECT *
+        FROM CHATTING_ROOM
+    </select>
+
+    <insert id="createRoom">
+        INSERT INTO CHATTING_ROOM
+        VALUES ( null
+               , SYSDATE
+               , #{openerEmail}
+               , #{email})
+    </insert>
+    <select id="findRoomListByEmail">
+        SELECT *
+        FROM CHATTING_ROOM
+        WHERE OPEN_MEMBER=#{email} OR PARTICIPANT=#{email}
+    </select>
+    <select id="findAllChat">
+        SELECT *
+        FROM MESSAGE
+        WHERE CHATTING_NO=#{chatting_no}
+    </select>
+    <select id="findOpenedRoom">
+        SELECT *
+        FROM CHATTING_ROOM
+        WHERE (OPEN_MEMBER=#{email} AND PARTICIPANT=#{openerEmail}) OR (OPEN_MEMBER=#{openerEmail} AND PARTICIPANT=#{email})
+    </select>
+</mapper>
