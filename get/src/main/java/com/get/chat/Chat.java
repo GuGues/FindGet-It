@@ -11,26 +11,26 @@ public class Chat {
   private String message_content;
   private String read_fl;
   private String send_time;
-  private String sender_no;
+  private String sender;
   private String chatting_no;
 
   @Builder
-    public Chat(String message_no, String message_content, String read_fl, String send_time, String sender_no,String chatting_no) {
+    public Chat(String message_no, String message_content, String read_fl, String send_time, String sender,String chatting_no) {
       this.message_no = message_no;
       this.message_content = message_content;
       this.read_fl = read_fl;
       this.send_time = send_time;
-      this.sender_no = sender_no;
+      this.sender = sender;
       this.chatting_no = chatting_no;
   }
 
-  public static Chat createChat(String message_no, String message_content, String read_fl, String send_time, String sender_no,String chatting_no) {
+  public static Chat createChat(String message_no, String message_content, String read_fl, String send_time, String sender,String chatting_no) {
       return Chat.builder()
               .message_no(message_no)
               .message_content(message_content)
               .read_fl(read_fl)
               .send_time(send_time)
-              .sender_no(sender_no)
+              .sender(sender)
               .chatting_no(chatting_no).build();
   }
 }

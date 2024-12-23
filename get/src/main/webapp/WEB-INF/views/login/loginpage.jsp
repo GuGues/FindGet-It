@@ -103,8 +103,8 @@
             <div id="formTitle"><span>아이디 로그인</span></div>
             <div id="loginContent">
                 <div>
-                <input type="text" name="username" placeholder="아이디" value="BO"/>
-                <input type="password" name="password" placeholder="비밀번호" value="1234"/>
+                <input type="text" name="username" placeholder="아이디"/>
+                <input type="password" name="password" placeholder="비밀번호"/>
                 </div>
                 <button type="submit" id="submit">로그인</button>
             </div>

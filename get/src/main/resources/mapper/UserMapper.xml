@@ -4,6 +4,9 @@
     <select id="findUser">
         SELECT EMAIL,PASSWORD,USER_GRANT FROM MEMBERS WHERE EMAIL=#{email}
     </select>
+    <select id="findUserByEmail">
+        SELECT * FROM MEMBERS WHERE EMAIL=#{email}
+    </select>
     <insert id="save">
         INSERT INTO MEMBERS values (
  #{email}

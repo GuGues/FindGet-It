@@ -25,7 +25,21 @@ public class ChatService {
     public List<ChatRoom> findAllRoom() {
         return chatMapper.findAllRooms();
     }
-    public void createRoom(ChatRoom room){
-         chatMapper.createRoom(room);
+
+    public String createRoom(String email, String openerEmail) {
+        ChatRoom room = chatMapper.findOpenedRoom(openerEmail,email);
+        if(room == null) {
+            chatMapper.createRoom(openerEmail, email);
+            return "redirect:/chatting/roomList";
+        }
+        else return "redirect:/chatting/room/"+room.getChatting_no();
+    }
+
+    public List<ChatRoom> findRoomByEmail(String email) {
+        return chatMapper.findRoomListByEmail(email);
+    }
+
+    public List<Chat> findAllChat(String chattingNo) {
+        return chatMapper.findAllChat(chattingNo);
     }
 }

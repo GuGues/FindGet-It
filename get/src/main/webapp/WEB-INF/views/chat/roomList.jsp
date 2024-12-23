@@ -8,8 +8,14 @@
 <body>
     <h2>채팅방 리스트</h2>
     <c:forEach items="${roomList}" var="room">
-        <a href="/room/${room.chatting_no}">${room.chatting_no}번의 채팅방</a>
+        <c:choose>
+            <c:when test="${room.open_member eq sessionScope.email}">
+                <a href="/chatting/room/${room.chatting_no}">${room.participant}님 과의 채팅</a>
+            </c:when>
+            <c:otherwise>
+                <a href="/chatting/room/${room.chatting_no}">${room.open_member}님 과의 채팅</a>
+            </c:otherwise>
+        </c:choose>
     </c:forEach>
-    <a href="/roomForm">채팅방 만들기</a>
 </body>
 </html>

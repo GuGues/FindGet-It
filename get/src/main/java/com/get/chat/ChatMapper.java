@@ -13,5 +13,11 @@ public interface ChatMapper {
 
     List<ChatRoom> findAllRooms();
 
-    void createRoom(ChatRoom room);
+    void createRoom(String email, String openerEmail);
+
+    List<ChatRoom> findRoomListByEmail(String email);
+
+    List<Chat> findAllChat(String chattingNo);
+
+    ChatRoom findOpenedRoom(String openerEmail, String email);
 }

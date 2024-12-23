@@ -16,7 +16,7 @@
                 #{message_content},
                 'N',
                 SYSDATE,
-                #{sender_no},
+                #{sender},
                 #{chatting_no})
     </insert>
 
@@ -27,9 +27,24 @@
 
     <insert id="createRoom">
         INSERT INTO CHATTING_ROOM
-        VALUES ( #{chatting_no}
+        VALUES ( null
                , SYSDATE
-               , #{open_member}
-               , #{open_member})
+               , #{openerEmail}
+               , #{email})
     </insert>
+    <select id="findRoomListByEmail">
+        SELECT *
+        FROM CHATTING_ROOM
+        WHERE OPEN_MEMBER=#{email} OR PARTICIPANT=#{email}
+    </select>
+    <select id="findAllChat">
+        SELECT *
+        FROM MESSAGE
+        WHERE CHATTING_NO=#{chatting_no}
+    </select>
+    <select id="findOpenedRoom">
+        SELECT *
+        FROM CHATTING_ROOM
+        WHERE (OPEN_MEMBER=#{email} AND PARTICIPANT=#{openerEmail}) OR (OPEN_MEMBER=#{openerEmail} AND PARTICIPANT=#{email})
+    </select>
 </mapper>

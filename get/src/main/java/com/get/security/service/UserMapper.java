@@ -8,4 +8,6 @@ public interface UserMapper {
     Account findUser(Account account);
 
     void save(Account newUser);
+
+    Account findUserByEmail(String email);
 }

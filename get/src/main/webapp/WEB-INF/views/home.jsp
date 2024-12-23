@@ -105,7 +105,6 @@
 </head>
 <body>
 <div class="home-background">
-<%@include file="/WEB-INF/include/homefab.jsp" %>
 
   <div class="top-container">
     <img src="/logo/logoopen.png" class="logo-banner default" alt="로고 배너">
@@ -127,6 +126,7 @@
     </a>
 
     <div class="button">
+      <a class="button"  href="/found">
       <img src="/icon/find_gray.png" class="icon default" alt="습득물 게시판">
       <img src="/icon/find_orange.png" class="icon hover" alt="습득물 게시판">
       <p>습득물 게시판</p>
@@ -139,7 +139,7 @@
     </div>
 
     <!-- 임시채팅버튼: 클릭 시 채팅방 목록 모달 표시 -->
-    <a class="button" href="/roomList">
+    <a class="button" href="/chatting/roomList">
       <img src="/icon/speaker_gray.png" class="icon default" alt="공지사항">
       <img src="/icon/speaker_orange.png" class="icon hover" alt="공지사항">
       <p>채팅방 목록</p>
@@ -152,6 +152,5 @@
     </a>
   </div>
 </div>
-
 </body>
 </html>

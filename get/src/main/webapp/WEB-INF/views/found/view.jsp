@@ -213,7 +213,7 @@
 
   <!-- 버튼 영역 -->
   <div class="btn-container">
-    <button>1대1 문의 보내기</button>
+    <button id="chat">1대1 문의 보내기</button>
     <button>분실물 처리현황</button>
     <button>지도에 분실위치 보기</button>
   </div>
@@ -233,5 +233,10 @@
     <img src="/img/map-placeholder.jpg" alt="지도 첨부">
   </div>
 </div>
+<script>
+  document.querySelector("#chat").addEventListener('click',function (){
+    window.location.href="/chatting/room/open/${item.email}"
+  })
+</script>
 </body>
 </html>
