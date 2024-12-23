@@ -14,6 +14,8 @@
   main{
     margin-left: 20%;
     padding: 20px 40px;
+    height: 100%;
+    width: 80%;
   }
   .titleBox{
      min-height: 60px;
@@ -26,6 +28,17 @@
    a{ color: black; cursor: pointer; text-decoration: none;}
    .btn{ background-color: #B39977; color: white;}
    .btn:hover{ background-color: #8C6C55;}
+   .tableDiv { 
+     border: 2px solid #684F36;
+     border-radius: 7px;
+     padding: 30px;
+     box-shadow:3px 5px 5px 5px rgba(34,36,38,0.1);
+     min-height: 300px;
+     max-height: 700px;
+   }
+   .tableDiv tr:last-of-type *{
+     border-bottom: none;
+   }
 </style>
 <body>
 <%@include file="/WEB-INF/include/adminSide.jsp" %>
@@ -40,10 +53,12 @@
     <div><h4 style="padding-left: 20px; margin-bottom: 20px;">공지사항 상세보기</h4></div>
     <div class="right" style="padding-right: 5%; margin-bottom: 5px; margin-top: -30px;">
       <input type="button" value="수정" class="updateBtn btn" style="padding: 5px 15px;">
+      <input type="button" value="삭제" class="delBtn btn" style="padding: 5px 15px;">
+      &nbsp;&nbsp;&nbsp;
       <input type="button" value="목록" class="listBtn btn" style="padding: 5px 15px;">
     </div>
-    <div style="text-align: center;">
-      <table style="width: 100%;">
+    <div class="tableDiv">
+      <table class="table" style="width: 100%;">
         <colgroup>
           <col style="width: 10%;">
           <col style="width: 60%;">
@@ -62,7 +77,7 @@
           <td>조회수</td>
           <td>${ notice.n_views }</td>
         </tr>
-        <tr><td>내용</td></tr>
+        <tr><td colspan="4">내용</td></tr>
         <tr>
           <td colspan="4">
             ${ notice.notice_content }
@@ -75,6 +90,11 @@
     const updateBtn = document.querySelector('.updateBtn');
     updateBtn.addEventListener('click', function(){
     	window.location.href="/notice/update?notice_idx=${notice.notice_idx}";
+    });
+    
+    const delBtn = document.querySelector('.delBtn');
+    delBtn.addEventListener('click', function(){
+    	window.location.href="/notice/delete?notice_idx=${notice.notice_idx}";
     });
     
     const listBtn = document.querySelector('.listBtn');

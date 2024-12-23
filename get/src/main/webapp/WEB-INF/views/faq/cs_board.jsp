@@ -115,6 +115,10 @@
    }
    .none{ display: none; }
    tr:not(.tableTitle tr):hover{ background-color: #D3C4B1 }
+   .pagingDiv{
+     display: flex;
+     justify-content: center;
+   }
 </style>
 <body>
 <%@include file="/WEB-INF/include/adminSide.jsp" %>
@@ -237,4 +241,9 @@
 	  });
   </script>
 </body>
+<style>
+  .now { background-color: #8C6C55; }
+  .page-link { background-color: #B39977; }
+  .page-link:hover { background-color: #D3C4B1;  color: black;}
+</style>
 </html>
