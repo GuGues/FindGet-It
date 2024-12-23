@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.get.search.SearchMapper">
+
+    <!-- LOST_ITEMS 총 개수 -->
+    <select id="countLostItems" parameterType="string" resultType="int">
+        SELECT COUNT(*) FROM LOST_ITEMS
+        WHERE LOWER(LOST_TITLE) LIKE '%' || LOWER(#{keyword}) || '%'
+           OR LOWER(LOST_CONTENT) LIKE '%' || LOWER(#{keyword}) || '%'
+    </select>
+
+    <!-- LOST_ITEMS 검색 결과 (페이징) -->
+    <select id="searchLostItems" parameterType="map" resultType="com.get.search.LostItemVo">
+        SELECT
+            LOST_IDX AS lostIdx,
+            EMAIL,
+            LOST_TITLE AS lostTitle,
+            LOST_CONTENT AS lostContent,
+            LOST_DATE AS lostDate,
+            L_REG_DATE AS lRegDate,
+            L_VIEWS AS lViews,
+            LOCATION_CODE AS locationCode,
+            L_LOCATION_DETAIL AS lLocationDetail,
+            ITEM_CODE AS itemCode,
+            L_ITEM_DETAIL AS lItemDetail,
+            REWARD,
+            COLOR_CODE AS colorCode,
+            LOST_STATE AS lostState
+        FROM LOST_ITEMS
+        WHERE LOWER(LOST_TITLE) LIKE '%' || LOWER(#{keyword}) || '%'
+           OR LOWER(LOST_CONTENT) LIKE '%' || LOWER(#{keyword}) || '%'
+        ORDER BY L_REG_DATE DESC
+        OFFSET #{offset} ROWS FETCH NEXT #{limit} ROWS ONLY
+    </select>
+
+    <!-- FOUND 총 개수 -->
+    <select id="countFoundItems" parameterType="string" resultType="int">
+        SELECT COUNT(*) FROM FOUND
+        WHERE LOWER(FOUND_TITLE) LIKE '%' || LOWER(#{keyword}) || '%'
+           OR LOWER(FOUND_CONTENT) LIKE '%' || LOWER(#{keyword}) || '%'
+    </select>
+
+    <!-- FOUND 검색 결과 (페이징) -->
+    <select id="searchFoundItems" parameterType="map" resultType="com.get.search.FoundItemVo">
+        SELECT
+            FOUND_IDX AS foundIdx,
+            EMAIL,
+            FOUND_TITLE AS foundTitle,
+            FOUND_CONTENT AS foundContent,
+            FOUND_DATE AS foundDate,
+            F_REG_DATE AS fRegDate,
+            F_VIEWS AS fViews,
+            ITEM_STATE AS itemState,
+            LOCATION_CODE AS locationCode,
+            F_LOCATION_DETAIL AS fLocationDetail,
+            ITEM_CODE AS itemCode,
+            F_ITEM_DETAIL AS fItemDetail,
+            COLOR_CODE AS colorCode,
+            FOUND_STATE AS foundState
+        FROM FOUND
+        WHERE LOWER(FOUND_TITLE) LIKE '%' || LOWER(#{keyword}) || '%'
+           OR LOWER(FOUND_CONTENT) LIKE '%' || LOWER(#{keyword}) || '%'
+        ORDER BY F_REG_DATE DESC
+        OFFSET #{offset} ROWS FETCH NEXT #{limit} ROWS ONLY
+    </select>
+
+</mapper>
