@@ -26,7 +26,8 @@
   <select id="getBigItems">
     SELECT *
      FROM ITEMS
-     WHERE ITEM NOT LIKE('%-%')
+      WHERE ITEM NOT LIKE('%-%')
+     ORDER BY ITEM_CODE ASC
   </select>
   
   <select id="getItems">
@@ -34,16 +35,19 @@
      FROM ITEMS
      WHERE ITEM LIKE('%-%')
       AND ITEM_CODE LIKE('${code}__')
+     ORDER BY ITEM_CODE ASC
   </select>
   
   <select id="getColors">
     SELECT * FROM COLORS
+    ORDER BY COLOR_CODE ASC
   </select>
   
   <select id="getLocationBig">
     SELECT LOCATION_CODE, SIDO_NAME
      FROM LOCATIONS
      WHERE GUGUN_NAME IS NULL
+     ORDER BY LOCATION_CODE ASC
   </select>
   
   <select id="getLocationMiddle">
@@ -51,6 +55,7 @@
      FROM LOCATIONS, (SELECT SIDO_NAME FROM LOCATIONS WHERE LOCATION_CODE = #{location_code}) SIDO_T
      WHERE GUGUN_NAME IS NOT NULL
       AND SIDO_T.SIDO_NAME = LOCATIONS.SIDO_NAME
+     ORDER BY LOCATION_CODE ASC
   </select>
   
   <select id="getSearchLost">

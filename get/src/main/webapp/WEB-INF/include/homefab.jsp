@@ -84,7 +84,7 @@ a {
 		<!-- 확장 옵션 버튼들 -->
 		<div class="fab-options" id="fab-options">
 			<!-- 각 옵션 버튼 -->
-			<a class="fab-option" href="#">A</a>
+			<a class="fab-option" href="/login">login</a>
 			<a class="fab-option" href="#">B</a>
 			<a class="fab-option" href="#">C</a>
 			<a class="fab-option" href="#">Top</a>

@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>찾GET어 : FAQ</title>
+<title>찾GET어 : 공지사항</title>
 <link rel="icon" type="image/png" href="/img/favicon.ico" />
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="/css/common.css">
@@ -24,9 +24,7 @@
    }
    .right{ width: 100%; padding: 0 20px; text-align:right; margin: 0;}
    a{ color: black; cursor: pointer; text-decoration: none;}
-   .hidden+.answer{ display: none; }
-   .open{ background-color: #D3C4B1 }
-   .open+.answer{ display: run-in; }
+   tr:not(.tableTitle tr):hover{ background-color: #D3C4B1 }
    .contentBox{ width: 100%; }
    input[type="button"]{ background-color: #B39977; border: none; border-radius: 5px; padding: 5px; color: white;}
    .tableTitle{ height: 80px; }
@@ -51,8 +49,9 @@
   td:not(.tableTitle td, .answer td)  { border-bottom: 1px solid #ddd;  /* 셀에 경계 추가 */}
   tr td:nth-child(1):not(.tableTitle td, .answer td)  { border-right: 2px solid #B39977;  /* 셀에 경계 추가 */}
   tr td:nth-child(1):not(.tableTitle td) { width: 10%; }
-  tr td:nth-child(2):not(.tableTitle td) { width: 70%; }
+  tr td:nth-child(2):not(.tableTitle td) { width: 60%; }
   tr td:nth-child(3):not(.tableTitle td) { width: 20%; }
+  tr td:nth-child(4):not(.tableTitle td) { width: 10%; }
   .answer{ min-height: 100px; display: table; border: 15px white solid; border-radius: 5px; border-collapse: separate;}
   .answer td{ background-color: #F3E6D5; }
   .modal{
@@ -90,19 +89,18 @@
    .btn{ background-color: #B39977; color: white;}
    .btn:hover{ background-color: #8C6C55;}
    input[type="text"]{ width: 70%; }
-   tr:not(.tableTitle tr):hover{ background-color: #D3C4B1 }
 </style>
 <body>
 <%@include file="/WEB-INF/include/adminSide.jsp" %>
   <main>
     <div class="titleBox">
       <div class="right" style="font-size: 13px;">
-        <a href="/">HOME</a>&nbsp;&gt;&nbsp;<a href="/faq">FAQ</a>&nbsp;&gt;&nbsp;<a href="/faq">자주묻는질문</a>
+        <a href="/">HOME</a>&nbsp;&gt;&nbsp;<a href="/notice">공지사항</a>
       </div>
-      <h3 class="title">FAQ</h3>
+      <h3 class="title">공지사항</h3>
     </div>
     <hr style="color: #8C6C55; border-width: 3px;">
-    <div><h4 style="padding-left: 20px; margin-bottom: 20px;">자주묻는질문 관리</h4></div>
+    <div><h4 style="padding-left: 20px; margin-bottom: 20px;">공지사항 관리</h4></div>
     <div class="right" style="padding-right: 5%; margin-bottom: 5px; margin-top: -30px;">
       <input type="button" value="작성" class="write" style="padding: 5px 15px;">
     </div>
@@ -110,64 +108,42 @@
     <table style="width: 100%;">
       <colgroup>
         <col style="width: 10%;">
-        <col style="width: 70%;">
+        <col style="width: 60%;">
         <col style="width: 20%;">
+        <col style="width: 10%;">
       </colgroup>
       <thead class="tableTitle list">
         <tr>
         <td>순번</td>
-        <td>질문/답변</td>
+        <td>제목</td>
         <td>등록일</td>
+        <td>조회수</td>
         </tr>
       </thead>
     </table>
     <table class="contentBox list">
-      <c:forEach items="${ faqList }" var="faq" varStatus="i">
-        <tr class="question hidden ${ faq.faq_idx }">
-          <td>${ i.index + 1 }</td>
-          <td class="faq_question">${ faq.faq_question }</td>
-          <td>${ faq.faq_reg_date }&nbsp;&nbsp;&nbsp;&nbsp;
-            <input type="button" value="수정" class="${ faq.faq_idx } upBtn">
-            <input type="button" value="삭제" class="${ faq.faq_idx } delBtn">
-          </td>
-        </tr>
-        <tr class="answer ${ faq.faq_idx }">
-          <td></td>
-          <td class="faq_answer">${ faq.faq_answer }</td>
-          <td class="right" style="padding-right: 3%;"></td>
+      <c:forEach items="${ noticeList }" var="notice" varStatus="i">
+        <tr class="question ${ notice.notice_idx }">
+          <td>${ (pagingHelper.nowPage - 1 )* 15 + i.index + 1 }</td>
+          <td class="faq_question">${ notice.notice_title }</td>
+          <td>${ notice.n_reg_date }</td>
+          <td>${ notice.n_views }</td>
         </tr>
       </c:forEach>
     </table>
     </div>
-    <div class="modal">
-      <div class="modal_content">
-        <form method="POST" class="submit">
-        <h3>자주묻는질문 수정</h3>
-        <div class="content">
-          <input type="hidden" name="faq_idx" class="idx">
-          <div style="text-align: left; margin-left: 10%;">질문: <input type="text" class="modalQuestion" name="faq_question"></div>
-          <div style="text-align: left; margin-left: 10%;">답변:</div>
-          <div><textarea rows="5" cols="50" class="modalAnswer" name="faq_answer"></textarea> </div>
-        </div>
-        <span class="okBtn btn">확인</span>
-        <span class="closeBtn btn">닫기</span>
-        </form>
-      </div>
+    <div class="pagingDiv">
+      <%@include file="/WEB-INF/include/paging.jsp" %>
     </div>
   </main>
   <script>
 	  const contentBox = document.querySelector('.contentBox');
 	  contentBox.addEventListener('click', function(e){
-		
-		  //질문 클릭시(hidden class 제거)
+		  
 		  if(e.target.parentNode.classList.contains('question')){
-			  let open = document.querySelector('.open');
-			  if(open){
-				  open.classList.remove('open');
-				  open.classList.add('hidden');
-			  }
-			  e.target.parentNode.classList.remove('hidden');
-			  e.target.parentNode.classList.add('open');
+			  let notice_idx = e.target.parentNode.classList[1];
+			  console.log(notice_idx);
+			  window.location.href="/notice/view?notice_idx="+notice_idx;
 		  }
 		  
 		  //수정 버튼 클릭시(modal)
@@ -184,7 +160,7 @@
 				  }
 				  else if(faq[i].querySelector('.faq_answer')){
 				    let answer = faq[i].querySelector('.faq_answer');
-				    document.querySelector('.modalAnswer').value = answer.innerHTML.replaceAll("<br>","");
+				    document.querySelector('.modalAnswer').value = answer.innerHTML;
 				  }
 			  }
 			  
@@ -215,7 +191,7 @@
 	  //작성 버튼 클릭시
 	  const write = document.querySelector('.write');
 	  write.addEventListener('click', function(){
-		  window.location.href = '/faq/insert';
+		  window.location.href = '/notice/insert';
 	  });
   </script>
 </body>

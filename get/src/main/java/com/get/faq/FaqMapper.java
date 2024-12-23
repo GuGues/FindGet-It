@@ -18,4 +18,12 @@ public interface FaqMapper {
 
 	void insertFaq(Map<String, String> map);
 
+	List<csVo> getCsList(int offset, int recordsPerPage);
+
+	void updateCs(Map<String, String> map);
+
+	csVo getCsQuestion(String cs_idx);
+
+	int getTotalCsCount();
+
 }

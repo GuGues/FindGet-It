@@ -127,7 +127,7 @@
     <c:if test="${url.contains('/faq') || url.contains('/cs')}">
      <li><h3>FAQ</h3></li>
      <li><a href="/faq">자주 묻는 질문</a></li>
-     <li><a href="/cs/write">1:1 문의</a></li>
+     <li><a href="/faq/cs/write">1:1 문의</a></li>
     </c:if>
     <c:if test="${url.contains('/notice')}">
      <li><h3>공지사항</h3></li>

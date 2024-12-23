@@ -18,7 +18,6 @@ public class ChatController {
 
     @MessageMapping("/chat/{roomId}")
     public Chat chat(@DestinationVariable("roomId") String roomId, Chat chat) {
-        System.out.println("chat = " + chat);
         Chat newChat = chatService.createChat(roomId,chat);
         sendingOperations.convertAndSend("/queue/chat/room/" + roomId, newChat);
         return newChat;

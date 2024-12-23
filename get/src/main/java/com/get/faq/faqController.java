@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.get.paging.pagingHelper;
 import com.get.vo.faqVo;
 
 @Controller
@@ -24,6 +26,12 @@ public class faqController {
 	public ModelAndView faqBoard() {
 		
 		List<faqVo> faqList = faqMapper.getFaqList();
+		
+		for(int i = 0; i < faqList.size(); i++) {
+			faqVo faq_answer = faqList.get(i);
+			faq_answer.setFaq_answer(faqList.get(i).getFaq_answer().replace("\n", "<br>"));
+			faqList.set(i, faq_answer);
+		}
 		
 		ModelAndView mv = new ModelAndView();
 		mv.addObject("faqList", faqList);
@@ -65,6 +73,39 @@ public class faqController {
 		
 		ModelAndView mv = new ModelAndView();
 		mv.setViewName("redirect:/faq");
+		return mv;
+	}
+	
+	@GetMapping("/cs")
+	public ModelAndView csBoard(@RequestParam(value = "page", defaultValue = "1") int page) {
+		int recordsPerPage = 15;  // 페이지당 보여줄 게시글 수
+        int offset = (page - 1) * recordsPerPage;  // 오프셋 계산
+        int totalRecords = faqMapper.getTotalCsCount();  // 전체 게시글 수
+        pagingHelper pagingHelper = new pagingHelper(totalRecords, page, recordsPerPage);
+        
+		List<csVo> csList = faqMapper.getCsList(offset, recordsPerPage);
+		
+		ModelAndView mv = new ModelAndView();
+		mv.addObject("csList", csList);
+		mv.addObject("pagingHelper", pagingHelper);
+		mv.setViewName("faq/cs_board");
+		return mv;
+	}
+	
+	@GetMapping("/cs/question")
+	public ResponseEntity<csVo> csQuestion(@RequestParam(name="cs_idx") String cs_idx){
+		System.out.println(cs_idx);
+		csVo vo = faqMapper.getCsQuestion(cs_idx);
+		return ResponseEntity.ok(vo);
+	}
+	
+	@PostMapping("/cs/update")
+	public ModelAndView csUpdate(@RequestParam Map<String, String> map) {
+		System.out.println("map: "+map);
+		//{cs_idx=CS00000091, cs_answer=hihihi}
+		faqMapper.updateCs(map);
+		ModelAndView mv = new ModelAndView();
+		mv.setViewName("redirect:/faq/cs");
 		return mv;
 	}
 	
