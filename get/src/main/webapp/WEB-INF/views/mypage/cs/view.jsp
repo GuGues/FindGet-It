@@ -15,6 +15,7 @@
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
+            margin-left: 20%;
         }
         h2 {
             font-size: 24px;
@@ -71,7 +72,12 @@
 </head>
 <body>
     <main>
+    	<%@include file="/WEB-INF/include/side.jsp"%>
+    	<div>
+    	<h5><a href="/">Home</a>><a href="#">Mypage</a></h5>
+    	</div>
         <h2>1:1 문의</h2>
+        <hr>
         <table>
             <tr>
                 <th>성명</th>
@@ -95,5 +101,6 @@
             <p>관리자가 답변을 작성할 공간입니다.</p>
         </div>
     </main>
+    	<%@include file="/WEB-INF/include/pagefab.jsp"%>
 </body>
 </html>

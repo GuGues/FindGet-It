@@ -12,68 +12,82 @@ WHERE  EMAIL = #{email}
 </select>
 
 <select id="getLostList">
-SELECT LOST_TITLE, TO_CHAR(L_REG_DATE, 'YYYY-MM-DD')AS L_REG_DATE, L_VIEWS
+SELECT LOST_IDX, LOST_TITLE, TO_CHAR(L_REG_DATE, 'YYYY-MM-DD')AS L_REG_DATE, L_VIEWS
 FROM   LOST_ITEMS
 WHERE  EMAIL = #{email}
 </select>
 
 <select id="getCsList">
-SELECT CS_TITLE, TO_CHAR(CS_REG_DATE, 'YYYY-MM-DD') AS CS_REG_DATE, CS_STATE
+SELECT CS_IDX, CS_TITLE, TO_CHAR(CS_REG_DATE, 'YYYY-MM-DD') AS CS_REG_DATE, CS_STATE
 FROM   CS_CENTER
 WHERE  EMAIL = #{email}
 </select>
 
 <select id="getFoundList">
-SELECT FOUND_TITLE, TO_CHAR(F_REG_DATE, 'YYYY-MM-DD') AS F_REG_DATE, F_VIEWS
+SELECT FOUND_IDX, FOUND_TITLE, TO_CHAR(F_REG_DATE, 'YYYY-MM-DD') AS F_REG_DATE, F_VIEWS
 FROM   FOUND
 WHERE  EMAIL = #{email}
 </select>
 
 <delete id="deleteLost" parameterType="list">
-    DELETE FROM CS 
+    DELETE FROM LOST_ITEMS
     WHERE LOST_IDX IN 
     <foreach item="lost_idx" index="index" collection="list" open="(" separator="," close=")">
-        #{email}
+        #{lost_idx}
     </foreach>
 </delete>
 
 <delete id="deleteCs" parameterType="list">
-    DELETE FROM CS 
+    DELETE FROM CS_CENTER 
     WHERE CS_IDX IN 
     <foreach item="cs_idx" index="index" collection="list" open="(" separator="," close=")">
-        #{email}
+        #{cs_idx}
     </foreach>
 </delete>
 
 <delete id="deleteFound" parameterType="list">
-    DELETE FROM CS 
+    DELETE FROM FOUND
     WHERE FOUND_IDX IN 
     <foreach item="found_idx" index="index" collection="list" open="(" separator="," close=")">
-        #{email}
+        #{found_idx}
     </foreach>
 </delete>
 
   <select id="getFound">
         SELECT *
         FROM FOUND
-        WHERE FOUND_IDX=#{found_idx}
+        WHERE FOUND_IDX = #{found_idx}
+    </select>
+    
+    <select id="getCs">
+        SELECT *
+        FROM  CS_CENTER
+        WHERE CS_IDX = #{cs_idx}
     </select>
     
      <select id="getLost">
         SELECT *
-        FROM LOST_ITMES
-        WHERE LOST_IDX=#{lost_idx}
+        FROM  LOST_ITEMS
+        WHERE LOST_IDX = #{lost_idx}
     </select>
     
 <select id="getLocations">
         SELECT *
         FROM LOCATIONS
+        WHERE LOCATION_CODE = #{location_code}
     </select>
     
     
 <select id="getItems">
         SELECT *
         FROM ITEMS
+        WHERE ITEM_CODE = #{item_code}
+    </select>
+
+<select id="getMember">
+        SELECT *
+        FROM MEMBERS
+        WHERE EMAIL = #{email}
     </select>
     
 </mapper>

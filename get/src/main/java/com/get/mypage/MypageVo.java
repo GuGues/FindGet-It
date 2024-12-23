@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MypageVo {
+	//LOST TABLE
 	private String lost_idx;       
 	private String email;
 	private String lost_title;
@@ -23,7 +24,7 @@ public class MypageVo {
 	private int    color_code;
 	private int    lost_state;
  
-	
+	//MEMBERS TABLE
 	private String nickname;
 	private String passward;
 	private String username;
@@ -36,11 +37,13 @@ public class MypageVo {
 	private String com_date;
 	private String user_grant;
 	
+	//LOCATIONS TABLE
 	private String sido_name;
 	private String gugun_name;
-	
+	//ITEM TABLE
 	private String item;
 	
+	//STORAGE TABLE
 	private String storage_idx;
 	private String file_path;
 	private String file_name;
@@ -49,6 +52,7 @@ public class MypageVo {
 	private String store_date;
 	private int    storage_state;
 	
+	//FOUND TABLE
 	private String found_idx;
 	private String found_title;
 	private String found_content;
@@ -60,6 +64,7 @@ public class MypageVo {
 	private String f_item_detail;
 	private int    found_state;
 	
+	//CS TABLE
 	private String cs_idx;
 	private String cs_title;
 	private String cs_content;

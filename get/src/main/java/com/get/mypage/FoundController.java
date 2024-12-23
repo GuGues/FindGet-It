@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-@RequestMapping("Mapage/Found")
+@RequestMapping("Mypage/Found")
 public class FoundController {
 
 	@Autowired
@@ -54,14 +54,14 @@ public class FoundController {
 
 	@Transactional
 	@PostMapping("/Delete")
-	public ResponseEntity<String> deleteCs(@RequestBody List<String> found_idx) {
+	public ResponseEntity<String> deleteFound(@RequestBody List<String> found_idx) {
 
 		if (found_idx == null || found_idx.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("삭제할 습득물글이 없습니다.");
 		}
 
 		try {
-			mypageMapper.deleteCs(found_idx);
+			mypageMapper.deleteFound(found_idx);
 			return ResponseEntity.ok("선택된 습득물글이 삭제되었습니다.");
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("습득물글 삭제 중 오류가 발생했습니다.");
@@ -86,6 +86,7 @@ public class FoundController {
 		MypageVo found = mypageMapper.getFound(found_idx);
 		MypageVo locations = mypageMapper.getLocations(found.getLocation_code());
 		MypageVo items = mypageMapper.getItems(found.getItem_code());
+		
 
 		mv.addObject("found", found);
 		mv.addObject("items", items);

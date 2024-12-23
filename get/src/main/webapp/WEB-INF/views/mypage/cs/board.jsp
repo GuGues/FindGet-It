@@ -83,7 +83,7 @@ a:hover {
 							<c:forEach items="${ csList }" var="cs" varStatus="c_status">
 								<tr onclick="markAsVisited(this)">
 									<td><a href="#">${c_status.index + 1}</a></td>
-									<td><a href="#">${cs.lost_title}</a></td>
+									<td><a href="/Mypage/Cs/View/${cs.cs_idx }">${cs.cs_title}</a></td>
 									<td><a href="#">${cs.cs_reg_date}</a></td>
 									<td><a href="#">${cs.cs_state}</a></td>
 									<td><input type="checkbox" value="${cs.cs_idx}" /></td>
@@ -109,7 +109,7 @@ a:hover {
 
         if (selectedbox.length > 0) {
             // AJAX 요청으로 삭제 처리
-            fetch('/MyPage/Cs/Delete', {
+            fetch('/Mypage/Cs/Delete', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

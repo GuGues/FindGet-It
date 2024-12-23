@@ -70,6 +70,7 @@ a:hover {
 								<th>제목</th>
 								<th>등록일</th>
 								<th>조회수</th>
+								<th>삭제</th>
 							</tr>
 						</thead>
 						<c:if test="${ empty foundList }">
@@ -82,7 +83,7 @@ a:hover {
 								varStatus="f_status">
 								<tr onclick="markAsVisited(this)">
 									<td><a href="#">${f_status.index + 1}</a></td>
-									<td><a href="#">${found.found_title}</a></td>
+									<td><a href="/Mypage/Found/View/${ found.found_idx }">${found.found_title}</a></td>
 									<td><a href="#">${found.f_reg_date}</a></td>
 									<td><a href="#">${found.f_views}</a></td>
 									<td><input type="checkbox" value="${found.found_idx}" />
@@ -108,7 +109,7 @@ a:hover {
 
         if (selectedbox.length > 0) {
             // AJAX 요청으로 삭제 처리
-            fetch('/MyPage/Found/Delete', {
+            fetch('/Mypage/Found/Delete', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -129,7 +130,7 @@ a:hover {
                 alert('삭제 요청 중 에러가 발생했습니다.');
             });
         } else {
-            alert('삭제할 스크랩을 선택하세요.');
+            alert('삭제할 글을 선택하세요.');
         }
     });
 </script>

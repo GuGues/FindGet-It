@@ -84,7 +84,7 @@ a:hover {
 								<tr onclick="markAsVisited(this)">
 									<!-- 클릭 시 해당 행에 visited 클래스 추가 -->
 									<td><a href="#">${l_status.index + 1}</a></td>
-									<td><a href="#">${lost.lost_title}</a></td>
+									<td><a href="/Mypage/Lost/View/${ lost.lost_idx }">${lost.lost_title}</a></td>
 									<td><a href="#">${lost.l_reg_date}</a></td>
 									<td><a>${lost.l_views}</a></td>
 									<td><input type="checkbox" value="${lost.lost_idx}" /></td>
@@ -111,7 +111,7 @@ a:hover {
 
         if (selectedbox.length > 0) {
             // AJAX 요청으로 삭제 처리
-            fetch('/MyPage/Lost/Delete', {
+            fetch('/Mypage/Lost/Delete', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -132,7 +132,7 @@ a:hover {
                 alert('삭제 요청 중 에러가 발생했습니다.');
             });
         } else {
-            alert('삭제할 스크랩을 선택하세요.');
+            alert('삭제할 글을 선택하세요.');
         }
     });
 </script>

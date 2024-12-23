@@ -26,4 +26,12 @@ public interface MypageMapper {
 
 	MypageVo getLost(String lost_idx);
 
+	MypageVo getMember(String email);
+
+	MypageVo getCs(String cs_idx);
+
+	void deleteLost(List<String> lost_idx);
+
+	void deleteFound(List<String> found_idx);
+
 }

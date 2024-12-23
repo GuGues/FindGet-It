@@ -96,16 +96,16 @@ textarea {
 						<td><strong>분실 날짜:</strong> ${lost.lost_date }</td>
 					</tr>
 					<tr>
-						<td><strong>분실 지역:</strong> ${ locations.location_name }</td>
+						<td><strong>분실 지역:</strong> ${ locations.sido_name },${ locations.gugun_name }</td>
 					</tr>
 					<tr>
-						<td><strong>물품분류:</strong> ${ items.item_name }</td>
+						<td><strong>물품분류:</strong> ${ items.item }</td>
 					</tr>
 					<tr>
-						<td><strong>분실물 상세정보:</strong> ${ items.item_deteail }</td>
+						<td><strong>분실물 상세정보:</strong> ${ items.l_item_detail }</td>
 					</tr>
 					<tr>
-						<td><strong>분실 상세 장소:</strong> ${ lost.l_location_deteail }</td>
+						<td><strong>분실 상세 장소:</strong> ${ lost.l_location_detail }</td>
 					</tr>
 					<tr>
 						<c:choose>
@@ -125,7 +125,7 @@ textarea {
 
 					</tr>
 					<tr>
-						<td><strong>분실자 연락처:</strong> ${ member.phone }</td>
+						<td><strong>분실자 연락처:</strong> 111</td>
 					</tr>
 				</table>
 			</div>

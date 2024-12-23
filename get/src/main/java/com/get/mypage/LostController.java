@@ -62,7 +62,7 @@ public class LostController {
 		}
 
 		try {
-			mypageMapper.deleteCs(lost_idx);
+			mypageMapper.deleteLost(lost_idx);
 			return ResponseEntity.ok("선택된 분실물글이 삭제되었습니다.");
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("분실물글 삭제 중 오류가 발생했습니다.");
@@ -91,7 +91,7 @@ public class LostController {
 		mv.addObject("lost", lost);
 		mv.addObject("items", items);
 		mv.addObject("locations", locations);
-		mv.setViewName("mypage/found/view");
+		mv.setViewName("mypage/lost/view");
 		return mv;
 	}
 

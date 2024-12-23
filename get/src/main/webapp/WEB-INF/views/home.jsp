@@ -146,7 +146,7 @@
     <a class="button" href="https://www.lost112.go.kr/">
       <img src="/icon/lost112_gray.png" class="icon default" alt="경찰청 신고">
       <img src="/icon/lost112_orange.png" class="icon hover" alt="경찰청 신고">
-      <a href="/Mypage/Lost">경찰청 분실물 신고</a>
+      <a href="/Mypage/Lost/Board">경찰청 분실물 신고</a>
     </a>
   </div>
 </div>

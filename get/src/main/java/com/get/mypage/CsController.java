@@ -10,10 +10,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+
 
 @Controller
 @RequestMapping("/Mypage/Cs")
@@ -51,7 +54,30 @@ public class CsController {
 		return mv;
 	}
 
-	@RequestMapping("/View")
+	@GetMapping("/View/{cs_idx}")
+	public ModelAndView view(@PathVariable("cs_idx") String cs_idx) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String email = null;
+
+		if (authentication != null && authentication.isAuthenticated()) {
+			Object principal = authentication.getPrincipal();
+			if (principal instanceof UserDetails) {
+				email = ((UserDetails) principal).getUsername(); // 이메일 또는 사용자 ID
+			} else if (principal instanceof String) {
+				email = (String) principal;
+			}
+		}
+
+		ModelAndView mv = new ModelAndView();
+		MypageVo member = mypageMapper.getMember(email);
+		MypageVo cs = mypageMapper.getCs(cs_idx);
+
+		mv.addObject("cs", cs);
+		mv.addObject("member", member);
+		mv.setViewName("mypage/cs/view");
+		return mv;
+	}
+
 
 	@Transactional
 	@PostMapping("/Delete")
@@ -68,5 +94,4 @@ public class CsController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("문의글 삭제 중 오류가 발생했습니다.");
 		}
 	}
-
 }

@@ -96,13 +96,13 @@ textarea {
 						<td><strong>습득일:</strong> ${found.found_date }</td>
 					</tr>
 					<tr>
-						<td><strong>습득장소:</strong> ${ locations.location_name }</td>
+						<td><strong>습득장소:</strong> ${ locations.sido_name },${ locations.gugun_name }</td>
 					</tr>
 					<tr>
-						<td><strong>물품분류:</strong> ${ items.item_name }</td>
+						<td><strong>물품분류:</strong> ${ items.item }</td>
 					</tr>
 					<tr>
-						<td><strong>보관장소:</strong> ${ found.location_deteail }</td>
+						<td><strong>보관장소:</strong> ${ found.f_location_detail }</td>
 					</tr>
 					<tr>
 						<c:choose>
@@ -118,7 +118,7 @@ textarea {
 
 					</tr>
 					<tr>
-						<td><strong>보관자 연락처:</strong> ${ member.phone }</td>
+						<td><strong>보관자 연락처:</strong> 1121212</td>
 					</tr>
 				</table>
 			</div>
@@ -126,9 +126,9 @@ textarea {
 
 		<!-- 버튼 -->
 		<div class="btn-box my-3">
-			<a href="/some-link" class="button-link">1대1 톡 보내기</a> <a
-				href="/some-link" class="button-link">습득물 처리절차</a> <a
-				href="/some-link" class="button-link">지도로 보관위치 찾기</a>
+			<a href="#" class="button-link">1대1 톡 보내기</a> 
+			<a href="#" class="button-link">습득물 처리절차</a> 
+			<a href="#" class="button-link">지도로 보관위치 찾기</a>
 		</div>
 
 		<hr>
