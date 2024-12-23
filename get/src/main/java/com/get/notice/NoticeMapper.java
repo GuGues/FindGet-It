@@ -20,5 +20,7 @@ public interface NoticeMapper {
 
 	void insertNotice(Map<String, String> map);
 
+	void deleteNotice(String notice_idx);
+
 
 }

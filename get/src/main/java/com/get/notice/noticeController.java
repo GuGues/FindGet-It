@@ -85,4 +85,13 @@ public class noticeController {
 		return mv;
 	}
 	
+	@GetMapping("/delete")
+	public ModelAndView noticDelete(@RequestParam(name="notice_idx") String notice_idx) {
+		noticeMapper.deleteNotice(notice_idx);
+		
+		ModelAndView mv = new ModelAndView();
+		mv.setViewName("redirect:/notice");
+		return mv;
+	}
+	
 }
