@@ -11,13 +11,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-@RequestMapping("/Mypage")
+@RequestMapping("/")
 public class MypageController {
 
     @Autowired
     private MypageMapper mypageMapper;
 
-   
+   @RequestMapping("/Mypage")
+   public String() {
+	   retrun "hi";
+   }
     
     
    
