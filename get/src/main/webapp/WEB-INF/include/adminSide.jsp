@@ -115,24 +115,26 @@
   
   <ul id="menu_detail">
     <c:if test="${url.contains('/admin/ban')}">
+    <li><h3 class="side-title">사용자 관리</h3></li>
      <li><a href="/lost">사용자 관리</a></li>
     </c:if>
     <c:if test="${url.contains('/lost') || url.contains('/found') || url.contains('/admin/post')}">
      <li><h3 class="side-title">분실물/습득물</h3></li>
      <li><a href="/lost">분실물 관리</a></li>
-     <li><a href="/lost/write">습득물 관리</a></li>
+     <li><a href="/found">습득물 관리</a></li>
      <li><a href="/lost/write">신고 게시글</a></li>
     </c:if>
     <c:if test="${url.contains('/faq') || url.contains('/cs')}">
-     <li><h3>FAQ</h3></li>
+     <li><h3 class="side-title">FAQ</h3></li>
      <li><a href="/faq">자주 묻는 질문</a></li>
      <li><a href="/faq/cs">1:1 문의</a></li>
     </c:if>
     <c:if test="${url.contains('/notice')}">
-     <li><h3>공지사항</h3></li>
+     <li><h3 class="side-title">공지사항</h3></li>
      <li><a href="/notice">공지사항</a></li>
     </c:if>
     <c:if test="${url.contains('/admin/state')}">
+     <li><h3 class="side-title">데이터 통계</h3></li>
      <li><a href="/admin/state">데이터 통계</a></li>
     </c:if>
   </ul>

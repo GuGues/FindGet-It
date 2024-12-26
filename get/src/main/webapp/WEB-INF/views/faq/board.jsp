@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,7 +10,6 @@
 <link rel="icon" type="image/png" href="/img/favicon.ico" />
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="/css/common.css">
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 </head>
 <style>
   main{
@@ -93,7 +94,14 @@
    tr:not(.tableTitle tr):hover{ background-color: #D3C4B1 }
 </style>
 <body>
-<%@include file="/WEB-INF/include/adminSide.jsp" %>
+  <c:choose>
+    <c:when test="${ sessionScope.grant eq 'ADMIN' }">
+      <%@include file="/WEB-INF/include/adminSide.jsp" %>
+    </c:when>
+    <c:when test="${ sessionScope.grant ne 'ADMIN' || !sessionScope.grant }">
+      <%@include file="/WEB-INF/include/side.jsp" %>
+    </c:when>
+  </c:choose>
   <main>
     <div class="titleBox">
       <div class="right" style="font-size: 13px;">

@@ -154,9 +154,14 @@
   </style>
 </head>
 <body>
-<%@include file="/WEB-INF/include/side.jsp" %>
-
-
+<c:choose>
+    <c:when test="${ sessionScope.grant eq 'ADMIN' }">
+      <%@include file="/WEB-INF/include/adminSide.jsp" %>
+    </c:when>
+    <c:when test="${ sessionScope.grant ne 'ADMIN' || !sessionScope.grant }">
+      <%@include file="/WEB-INF/include/side.jsp" %>
+    </c:when>
+  </c:choose>
 <div class="detail-container">
   <div class="top-label">
     <h5>
