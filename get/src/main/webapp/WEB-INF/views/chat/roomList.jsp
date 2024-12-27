@@ -5,33 +5,23 @@
     <title>Title</title>
 </head>
 <style>
-    #modalOpenButton, #modalCloseButton {
-        cursor: pointer;
-    }
 
-    #modalContainer {
-        width: 100%;
-        height: 100%;
-        position: fixed;
-        top: 0;
-        left: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background: rgba(0, 0, 0, 0.5);
+    #body {
+
     }
 
     #modalContent {
         position: absolute;
         background-color: #ffffff;
-        width: 330px;
-        height: 600px;
-        overflow-y: scroll;
+        width: 100%;
+        height: 100%;
+        /*overflow-y: scroll;*/
+        /*overflow-x: hidden;*/
         padding: 15px;
     }
 
     .roomList {
-        width: 300px;
+        width: 100%;
         height: 50px;
         margin: 10px 0;
         border: 1px solid silver;

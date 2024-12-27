@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -137,6 +136,14 @@
      padding: 5px 15px;
      color: #FE8015;
    }
+
+  .writeBtn{
+    border: solid 1px #FE8015;
+    border-radius: 5px;
+    padding: 5px 15px;
+    color: #FE8015;
+  }
+
    .searchBtn:hover{
      background-color: #FFD5B2;
      transition: background-color 0.3s ease;
@@ -313,6 +320,8 @@
       <%@include file="/WEB-INF/include/paging.jsp" %>
     </div>
     </div>
+    <a class="writeBtn" href="/lost/write">게시글 작성 </a>
+
   </main>
   <script>
     const cateBtn = document.querySelector('#cateBtn');

@@ -54,8 +54,8 @@
                     <c:when test="${chat.sender eq sessionScope.email}">
                         <div class="send">
                             <div>
-                                <span class="time">${chat.send_time}</span>
-                                <span class="chat">${chat.message_content}</span>
+                            <span class="time">${chat.send_time}</span>
+                            <span class="chat">${chat.message_content}</span>
                             </div>
                         </div>
                     </c:when>
@@ -168,9 +168,9 @@
     }
     document.querySelector('#chatting').scrollTo(0,  document.querySelector('#chatting').scrollHeight);
 
-    document.getElementById("back").addEventListener('click',function (){
-        window.location.href = "/chatting/roomList";
-    })
+document.getElementById("back").addEventListener('click',function (){
+    window.location.href = "/chatting/roomList";
+})
 </script>
 </body>
 </html>

@@ -84,24 +84,34 @@
             top: 0;
             width: 100%; /* 전체 너비 */
             height: 100%; /* 전체 높이 */
-            overflow: auto; /* 필요 시 스크롤 */
-            background-color: rgba(0, 0, 0, 0.5); /* 배경 반투명 검정색 */
+            overflow: auto; /* 필요 시 스크롤 *!*/
+            /*background-color: rgba(0, 0, 0, 0.5); !* 배경 반투명 검정색 *!*/
         }
 
         .modal-content {
-            background-color: #fefefe; /* 모달 내용 배경색 */
-            margin: 5% auto; /* 상하 5% 여백을 두고 가운데 정렬 */
-            padding: 20px; /* 내부 여백 */
+            background-color: #FFAE6B; /* 모달 내용 배경색 */
+            /*margin: 5% auto; !* 상하 5% 여백을 두고 가운데 정렬 *!*/
+            margin-top: 15%;
+            margin-bottom: 15%;
+            padding-bottom: 30px;
+            padding-left: 3px;
+            padding-right: 3px;
             border: 1px solid #888; /* 테두리 */
-            width: 500px; /* 너비 설정 */
+            width: 450px; /* 너비 설정 */
+            height: 700px;
             max-width: 90%; /* 최대 너비 제한 */
             position: relative; /* 닫기 버튼 위치를 위해 필요 */
             border-radius: 10px; /* 모서리 반지름 추가로 둥근 모서리 적용 */
             box-sizing: border-box; /* 박스 크기를 포함하도록 설정 */
         }
+        .chatroomHead {
+            display: flex;
+            height: 20px;
+            margin-bottom: -20px;
+        }
 
         .close-button {
-            color: #aaa; /* 글자 색상 */
+            color: #ff7600; /* 글자 색상 */
             float: right; /* 우측 정렬 */
             font-size: 28px; /* 글자 크기 */
             font-weight: bold; /* 글자 두께 */
@@ -118,7 +128,7 @@
         /* 모달 내 iframe 스타일 */
         #modal-iframe {
             width: 100%; /* 전체 너비 */
-            height: 650px; /* 높이 설정 */
+            height: 100%; /* 높이 설정 */
             border: none; /* 테두리 제거 */
             border-radius: 10px; /* 모서리 반지름 추가로 둥근 모서리 적용 */
         }
@@ -156,6 +166,7 @@
 </div>
 <div id="modal" class="modal">
     <div class="modal-content">
+        <h3 class="chatroomHead">${sessionScope.nickname}님의 채팅방</h3>
         <span class="close-button" onclick="closeModal()">&times;</span>
         <iframe id="modal-iframe" src="" frameborder="0"></iframe>
     </div>

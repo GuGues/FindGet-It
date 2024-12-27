@@ -80,13 +80,13 @@
 <main>
   <div class="titleBox">
     <div class="right" style="font-size: 13px;">
-      <a href="/">HOME</a>&nbsp;&gt;&nbsp;<a href="/lost">분실물</a>&nbsp;&gt;&nbsp;<a href="/lost">분실물 작성</a>
+      <a href="/">HOME</a>&nbsp;&gt;&nbsp;<a href="/lost">습득물</a>&nbsp;&gt;&nbsp;<a href="/lost">습득물 작성</a>
     </div>
-    <h3 class="title">분실물 작성</h3>
+    <h3 class="title">습득물 작성</h3>
     <span>분실하신 물건 여부를 확인하시고, 아래 기재된 보관장소연락처로 보관번호를 말씀해주시기 바랍니다.</span>
   </div>
 
-  <form action="/lost/write" method="post">
+  <form action="/found/write" method="post">
 
     <div class="form-group">
       <label for="nickname">작성자 닉네임</label>
@@ -95,7 +95,7 @@
     <input type="hidden" name="email" value="${userEmail}" />
 
     <div class="form-group">
-      <label for="locationCode">분실 지역</label>
+      <label for="locationCode">습득 지역</label>
       <select id="locationCode" name="locationCode" class="form-control" required>
         <option value="">선택</option>
         <c:forEach var="loc" items="${locations}">
@@ -109,13 +109,13 @@
 
 
     <div class="form-group">
-      <label for="lLocationDetail">상세 주소</label>
-      <input type="text" id="lLocationDetail" name="lLocationDetail" class="form-control" required>
+      <label for="fLocationDetail">상세 주소</label>
+      <input type="text" id="fLocationDetail" name="fLocationDetail" class="form-control" required>
     </div>
 
     <div class="form-group">
-      <label for="lostDate">분실일자</label>
-      <input type="date" id="lostDate" name="lostDate" class="form-control" required>
+      <label for="foundDate">습득일자</label>
+      <input type="date" id="foundDate" name="foundDate" class="form-control" required>
     </div>
 
     <div class="form-group">
@@ -135,15 +135,22 @@
       <input type="text" id="lItemDetail" name="lItemDetail" class="form-control">
     </div>
 
-    <div class="form-group image-upload-section">
-      <label>물품 이미지 업로드 (추후 구현 예정)</label>
-      <p style="color:gray;">※ 이미지 업로드 기능은 나중에 구현됩니다.</p>
+    <div class="form-group">
+      <label for="itemState">물품 상태 정보</label>
+      <input type="text" id="itemState" name="itemState" class="form-control">
     </div>
 
-    <div class="form-group">
-      <label for="reward">사례금</label>
-      <input type="number" id="reward" name="reward" class="form-control" min="0">
+    <!-- 이미지 업로드 섹션 -->
+    <div class="form-group image-upload-section">
+      <label for="imageUpload">물품 이미지 업로드</label>
+      <input type="file" id="imageUpload" accept="image/*" multiple
+             class="form-control" />
+      <div class="image-preview" id="imagePreview"></div>
+
+      <!-- 업로드된 imageStorage PK를 담을 hidden 필드 컨테이너 -->
+      <div id="uploadedImagesContainer"></div>
     </div>
+
 
     <div class="form-group">
       <label for="colorCode">색상</label>
@@ -158,13 +165,13 @@
 
 
     <div class="form-group">
-      <label for="lostTitle">공지 제목</label>
-      <input type="text" id="lostTitle" name="lostTitle" class="form-control" required>
+      <label for="foundTitle">공지 제목</label>
+      <input type="text" id="foundTitle" name="foundTitle" class="form-control" required>
     </div>
 
     <div class="form-group">
-      <label for="lostContent">내용 및 특이사항</label>
-      <textarea id="lostContent" name="lostContent" rows="5" class="form-control" required></textarea>
+      <label for="foundContent">내용 및 특이사항</label>
+      <textarea id="foundContent" name="foundContent" rows="5" class="form-control" required></textarea>
     </div>
 
     <div class="spinner" id="loadingSpinner"></div>
@@ -175,6 +182,91 @@
     </div>
   </form>
 </main>
+
+<script>
+  // 단일 이미지 미리보기
+  const imageFile = document.getElementById("imageFile");
+  const imagePreview = document.getElementById("imagePreview");
+
+  imageFile.addEventListener("change", ()=>{
+    const file = imageFile.files[0];
+    if(!file){
+      imagePreview.innerHTML = "";
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      imagePreview.innerHTML = `<img src="${e.target.result}" alt="preview" />`;
+    };
+    reader.readAsDataURL(file);
+  });
+
+  // 폼 submit -> 이미지 업로드 -> hidden 값 -> 최종 submit
+  const foundForm = document.getElementById("foundForm");
+  const uploadedContainer = document.getElementById("uploadedImagesContainer");
+
+  foundForm.addEventListener("submit", function(e){
+    e.preventDefault(); // 기본 submit 막고, JS에서 순서 제어
+
+    const file = imageFile.files[0];
+    if(!file){
+      // 이미지 없는 경우 => 그냥 submit or 필수?
+      // 요구사항: "게시글당 하나의 이미지만" => 이미지 없는 경우 등록 불가?
+      alert("이미지를 첨부해주세요.");
+      return;
+    }
+
+    // 1) 이미지 업로드(8080)
+    uploadImageToServer(file)
+            .then(storageIdx => {
+              // 2) hidden input 추가
+              const hidden = document.createElement("input");
+              hidden.type = "hidden";
+              hidden.name = "uploadedStorageIdx";
+              hidden.value = storageIdx;  // ex) "IM00000001"
+              uploadedContainer.appendChild(hidden);
+
+              // 3) 최종 폼 submit
+              foundForm.submit();
+            })
+            .catch(err => {
+              // 업로드 실패 => 등록 중단
+              alert("이미지 업로드 실패: " + err.message);
+            });
+  });
+
+  // 실제 업로드
+  function uploadImageToServer(file){
+    return new Promise((resolve, reject)=>{
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("usingTable", "FOUND");
+      formData.append("usingTableIdx", "TEMP"); // 아직 foundIdx 없음
+
+      fetch("http://192.168.0.214:8080/images/upload", {
+        method: "POST",
+        body: formData
+      })
+              .then(res => {
+                if(!res.ok){
+                  throw new Error("이미지 서버 응답 오류");
+                }
+                return res.json(); // {storageIdx:"IM00000001"}
+              })
+              .then(json => {
+                if(!json.storageIdx){
+                  throw new Error("storageIdx가 응답에 없습니다.");
+                }
+                resolve(json.storageIdx);
+              })
+              .catch(err => {
+                reject(err);
+              });
+    });
+  }
+</script>
+
+
 
 </body>
 </html>
