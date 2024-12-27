@@ -39,6 +39,7 @@ public class LostController {
 		}
 
 		ModelAndView mv = new ModelAndView();
+		//이메일을 가져왔는지 확인
 		if (email != null) {
 			// 이메일로 사용자 정보 가져오기
 			MypageVo user = mypageMapper.getEmail(email);

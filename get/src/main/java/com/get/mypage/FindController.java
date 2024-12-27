@@ -19,7 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @RequestMapping("Mypage/Found")
-public class FoundController {
+public class FindController {
 
 	@Autowired
 	private MypageMapper mypageMapper;

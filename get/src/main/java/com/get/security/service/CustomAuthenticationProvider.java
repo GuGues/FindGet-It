@@ -25,7 +25,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         //로그인을 시도한 정보를 받아온다
         String memberId = authentication.getName();
         String password = (String)authentication.getCredentials();
-       System.out.println("memberId = "+memberId+"\n password="+password);
+        System.out.println("memberId = "+memberId+"\n password="+password);
 
        //DB에서 로그인 정보와 일치하는 사용자 정보를 찾아 DTO에 담아 비교
         UserDetails userDetails = userDetailsService.loadUserByUsername(memberId);
