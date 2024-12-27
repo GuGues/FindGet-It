@@ -197,7 +197,31 @@
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
       text-align: left;
     }
-
+  <c:if test="${ sessionScope.grant eq 'ADMIN'}">
+    .detail-header {
+      border-bottom: solid #8C6C55;
+    }
+    .btn-container button {
+      background-color: #8C6C55;
+    }
+    .content-container {
+      border-top: solid #8C6C55;
+      border-bottom: solid #8C6C55;
+    }
+    .btn-container2 button {
+      background-color: #8C6C55;
+    }
+    .content-container {
+      border-top: solid #8C6C55;
+      border-bottom: solid #8C6C55;
+    }
+    .btn-container button:hover {
+      background-color: #D3C4B1;
+    }
+    .btn-container2 button:hover {
+      background-color: #D3C4B1;
+    }
+  </c:if>
 
 
   </style>

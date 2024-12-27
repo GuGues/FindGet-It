@@ -177,6 +177,36 @@
    .listTable tr:not(tr:first-child, tr:nth-child(2), tr:last-child){ border-top: solid 1px #DFD4D4; }
    .listTable tr:nth-child(1), .listTable tr:last-child{ height: 20px;}
    a{ color: black; cursor: pointer; text-decoration: none;}
+   .writeBtn{
+    border: solid 1px #FE8015;
+    border-radius: 5px;
+    padding: 5px 15px;
+    color: #FE8015;
+  }
+   <c:if test="${ sessionScope.grant eq 'ADMIN' }">
+     input[type="button"]{
+       border: solid 1px #8C6C55;
+       background-color: #8C6C55;
+       color: white;
+     }
+     .searchBtn{
+       border: solid 1px #8C6C55;
+       color: #8C6C55;
+     }
+     .searchBtn img{
+       filter: opacity(0.5) drop-shadow(0 0 0 #8C6C55);
+     }
+     .searchBtn:hover{
+       background-color: #8C6C55;
+       color: white;
+     }
+     .list { border: #684F36 solid 2.5px; }
+     .list tr:not(.listHead) td:not(td:first-child){
+     border-left: #684F36 solid 1px
+   }.list tr:not(.listHead, tr:nth-child(1), tr:last-child):hover{
+     background-color: #D3C4B1;
+   }
+   </c:if>
 </style>
 </head>
 <body>
@@ -313,6 +343,9 @@
       <%@include file="/WEB-INF/include/paging.jsp" %>
     </div>
     </div>
+    <c:if test="${ sessionScope.grant eq 'USER' }">
+      <a class="writeBtn" href="/found/write">게시글 작성 </a>
+    </c:if>
   </main>
   <script>
     const cateBtn = document.querySelector('#cateBtn');
@@ -639,4 +672,11 @@
     
   </script>
 </body>
+<style>
+  <c:if test="${ sessionScope.grant eq 'ADMIN' }">
+   .now { background-color: #8C6C55; }
+  .page-link { background-color: #B39977; }
+  .page-link:hover { background-color: #D3C4B1;  color: black;}
+   </c:if>
+</style>
 </html>
