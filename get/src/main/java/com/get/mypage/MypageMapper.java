@@ -38,4 +38,12 @@ public interface MypageMapper {
 
 	List<MypageVo> getPostCount(MypageVo user);
 
+	MypageVo getMyFind(String email);
+
+	MypageVo getAllLocation();
+
+	MypageVo getAllItem();
+
+	MypageVo getArhieve(String email);
+
 }

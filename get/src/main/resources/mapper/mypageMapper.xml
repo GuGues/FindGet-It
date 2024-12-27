@@ -11,6 +11,12 @@ FROM   MEMBERS
 WHERE  EMAIL = #{email}
 </select>
 
+<select id="getMyFind">
+SELECT *
+FROM   MY_FIND
+WHERE  MEM_IDX = #{mem_idx}
+</select>
+
 <select id="getLostList">
 SELECT LOST_IDX, LOST_TITLE, TO_CHAR(L_REG_DATE, 'YYYY-MM-DD')AS L_REG_DATE, L_VIEWS
 FROM   LOST_ITEMS
@@ -58,7 +64,7 @@ WHERE  EMAIL = #{email}
         FROM FOUND
         WHERE FOUND_IDX = #{found_idx}
     </select>
-    
+
     <select id="getCs">
         SELECT *
         FROM  CS_CENTER
@@ -71,18 +77,36 @@ WHERE  EMAIL = #{email}
         WHERE LOST_IDX = #{lost_idx}
     </select>
     
+     <select id="getArhieve">
+        SELECT *
+        FROM  USER_ARHIEVE
+        WHERE MEM_IDX = #{mem_idx}
+    </select>
+    
+    
 <select id="getLocations">
         SELECT *
         FROM LOCATIONS
         WHERE LOCATION_CODE = #{location_code}
     </select>
-    
-    
+
+<select id="getAllLocation">
+SELECT *
+FROM   LOCATIONS
+</select>
+
 <select id="getItems">
         SELECT *
         FROM ITEMS
         WHERE ITEM_CODE = #{item_code}
     </select>
+
+
+<select id="getAllItem">
+        SELECT *
+        FROM ITEMS
+    </select>
+
 
 <select id="getMember">
         SELECT *

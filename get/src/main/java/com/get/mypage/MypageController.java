@@ -38,16 +38,30 @@ public class MypageController {
 		ModelAndView mv = new ModelAndView();
 		if(email != null) {
 			MypageVo user = mypageMapper.getEmail(email);
+			MypageVo myfind = mypageMapper.getMyFind(email);
+			MypageVo arhieve = mypageMapper.getArhieve(email);
+			MypageVo alllocation = mypageMapper.getAllLocation();
+			MypageVo allitem = mypageMapper.getAllItem();
+
+			MypageVo userlocation = mypageMapper.getLocations(myfind.getLocation_code());
+			MypageVo useritem = mypageMapper.getItems(myfind.getItem_code());
 
 			// 데이터 가져오기
 			List<MypageVo> history = mypageMapper.getHistoryList(user);
 			List<MypageVo> postCount = mypageMapper.getPostCount(user);
 			mv.addObject("postCount", postCount);
 			mv.addObject("history", history);
-		}
+			mv.addObject("user", user);
+			mv.addObject("alllocation", alllocation);
+			mv.addObject("userlocation", userlocation);
+			mv.addObject("allitem", allitem);
+			mv.addObject("useritem", useritem);
+			mv.addObject("arhieve", arhieve);
+			}
+
 		mv.setViewName("mypage/myhome");
 		return mv;
 	}
-   
+
 
 }
