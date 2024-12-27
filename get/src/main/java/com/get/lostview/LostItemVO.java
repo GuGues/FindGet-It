@@ -8,12 +8,12 @@ public class LostItemVO {
     private String lostDate;
     private String lRegDate;
     private int lViews;
-    private int locationCode;
+    private String locationCode;       // 수정됨
     private String lLocationDetail;
-    private int itemCode;
+    private String itemCode;           // 수정됨
     private String lItemDetail;
     private Long reward;
-    private int colorCode;
+    private String colorCode;          // 수정됨
     private int lostState;
 
     // 조인한 아이템명, 컬러명
@@ -21,6 +21,13 @@ public class LostItemVO {
     private String colorName;
     private String sidoName;
     private String gugunName;
+    private String nickname;
+
+
+
+    public String getNickname() { return nickname; }
+
+    public void setNickname(String nickname) { this.nickname = nickname; }
 
     public String getSidoName() {
         return sidoName;
@@ -86,11 +93,11 @@ public class LostItemVO {
         this.lViews = lViews;
     }
 
-    public int getLocationCode() {
+    public String getLocationCode() {
         return locationCode;
     }
 
-    public void setLocationCode(int locationCode) {
+    public void setLocationCode(String locationCode) {
         this.locationCode = locationCode;
     }
 
@@ -102,11 +109,11 @@ public class LostItemVO {
         this.lLocationDetail = lLocationDetail;
     }
 
-    public int getItemCode() {
+    public String getItemCode() {
         return itemCode;
     }
 
-    public void setItemCode(int itemCode) {
+    public void setItemCode(String itemCode) {
         this.itemCode = itemCode;
     }
 
@@ -126,11 +133,11 @@ public class LostItemVO {
         this.reward = reward;
     }
 
-    public int getColorCode() {
+    public String getColorCode() {
         return colorCode;
     }
 
-    public void setColorCode(int colorCode) {
+    public void setColorCode(String colorCode) {
         this.colorCode = colorCode;
     }
 

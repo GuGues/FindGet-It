@@ -7,6 +7,8 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Controller;
 
+import java.util.List;
+
 @Controller
 public class ChatController {
 
@@ -22,4 +24,6 @@ public class ChatController {
         sendingOperations.convertAndSend("/queue/chat/room/" + roomId, newChat);
         return newChat;
     }
+
+
 }
