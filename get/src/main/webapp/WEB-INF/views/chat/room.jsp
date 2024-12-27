@@ -11,7 +11,7 @@
 <style>
     #chatting {
         width: 400px;
-        height: 600px;
+        height: 550px;
         border: 1px solid silver;
         border-radius: 5%;
         background: azure;
@@ -22,26 +22,29 @@
 
     .time {
         font-size: 10px;
-        background: white;
     }
 
     .chat {
-        display: block;
+        display: inline-block;
+        padding: 5px 5px;
         border: 1px solid silver;
         max-width: 300px;
         border-radius: 10px;
+        background: white;
     }
     .receive{
+        margin: 4px;
         display: flex;
         justify-content: left;
     }
     .send {
+        margin: 4px;
         display: flex;
         justify-content: right;    }
 </style>
 <body>
-<div class="row">
-    <h3>채팅방</h3>
+<div>
+    <button id="back"><</button>
 </div>
 <div class="row">
     <div class="col-md-12">
@@ -50,15 +53,18 @@
                 <c:choose>
                     <c:when test="${chat.sender eq sessionScope.email}">
                         <div class="send">
-                            &nbsp;
-                            <span class="chat">${chat.message_content}<br><span
-                                    class="time">${chat.send_time}</span></span>
+                            <div>
+                            <span class="time">${chat.send_time}</span>
+                            <span class="chat">${chat.message_content}</span>
+                            </div>
                         </div>
                     </c:when>
                     <c:otherwise>
-                        <div class="receive">&nbsp;
-                            <span class="chat">${chat.message_content}<br><span
-                                    class="time">${chat.send_time}</span></span>
+                        <div class="receive">
+                            <div>
+                                <span class="chat">${chat.message_content}</span>
+                                <span class="time">${chat.send_time}</span>
+                            </div>
                         </div>
                     </c:otherwise>
                 </c:choose>
@@ -130,20 +136,41 @@
             })
         });
         document.querySelector("#message_content").value = "";
+
+
     }
 
     function showGreeting(chat) {
+        stompClient.publish({
+            destination: "/app/roomList/" + '${room.open_member}',
+            body: JSON.stringify({
+                'message_content': $("#message_content").val(),
+                'chatting_no': ${chatting_no},
+                'sender': '<c:out value="${sessionScope.email}"/>',
+            })
+        });
+        stompClient.publish({
+            destination: "/app/roomList/" + '${room.participant}',
+            body: JSON.stringify({
+                'message_content': $("#message_content").val(),
+                'chatting_no': ${chatting_no},
+                'sender': '<c:out value="${sessionScope.email}"/>',
+            })
+        });
         if (chat.sender =='${sessionScope.email}') {
-            $("#chatting").append('<div class="send"><div class="chat">' + chat.message_content+'<br><span class="time">'+ chat.send_time+'</span></div></div>')
+            $("#chatting").append('<div class="send"><div><span class="time">'+ chat.send_time+'</span><span class="chat">' + chat.message_content+'</span></div></div>')
         }
         else{
-            $("#chatting").append('<div class="receive"><div class="chat">' + chat.message_content+'<br><span class="time">'+ chat.send_time+'</span></div></div>')
+            $("#chatting").append('<div class="receive"><div><span class="chat">' + chat.message_content+'</span><span class="time">'+ chat.send_time+'</span></div></div>')
         }
 
         document.querySelector('#chatting').scrollTo(0,  document.querySelector('#chatting').scrollHeight);
     }
+    document.querySelector('#chatting').scrollTo(0,  document.querySelector('#chatting').scrollHeight);
 
-
+document.getElementById("back").addEventListener('click',function (){
+    window.location.href = "/chatting/roomList";
+})
 </script>
 </body>
 </html>

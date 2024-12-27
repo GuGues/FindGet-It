@@ -45,7 +45,6 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     @Override
     public boolean supports(Class<?> authentication) {
         //provider의 동작 여부를 결정한다. false가 리턴되면 authenticate 메서드는 호출되지 않는다
-        return authentication.equals(UsernamePasswordAuthenticationToken.class);
+        return true;
     }
-
 }
