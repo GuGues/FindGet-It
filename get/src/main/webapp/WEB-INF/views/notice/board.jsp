@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -24,13 +25,11 @@
    }
    .right{ width: 100%; padding: 0 20px; text-align:right; margin: 0;}
    a{ color: black; cursor: pointer; text-decoration: none;}
-   tr:not(.tableTitle tr):hover{ background-color: #D3C4B1 }
    .contentBox{ width: 100%; }
    input[type="button"]{ background-color: #B39977; border: none; border-radius: 5px; padding: 5px; color: white;}
    .tableTitle{ height: 80px; }
    .contentBox {
     display: block;
-	border: solid 2px #8C6C55;
 	border-radius: 10px;
 	width: 100%;
    }
@@ -47,7 +46,6 @@
     padding: 8px;
   }
   td:not(.tableTitle td, .answer td)  { border-bottom: 1px solid #ddd;  /* 셀에 경계 추가 */}
-  tr td:nth-child(1):not(.tableTitle td, .answer td)  { border-right: 2px solid #B39977;  /* 셀에 경계 추가 */}
   tr td:nth-child(1):not(.tableTitle td) { width: 10%; }
   tr td:nth-child(2):not(.tableTitle td) { width: 60%; }
   tr td:nth-child(3):not(.tableTitle td) { width: 20%; }
@@ -93,9 +91,26 @@
      display: flex;
      justify-content: center;
    }
+   <c:if test="${ sessionScope.grant eq 'ADMIN' }">
+   .contentBox { border: solid 2px #8C6C55; }
+   tr td:nth-child(1):not(.tableTitle td, .answer td)  { border-right: 2px solid #B39977;  /* 셀에 경계 추가 */}
+   tr:not(.tableTitle tr):hover{ background-color: #D3C4B1 }
+   </c:if>
+   <c:if test="${ sessionScope.grant ne 'ADMIN' }">
+   .contentBox { border: solid 2px #FE8015; }
+   tr td:nth-child(1):not(.tableTitle td, .answer td)  { border-right: 2px solid #FE8015;  /* 셀에 경계 추가 */}
+   tr:not(.tableTitle tr):hover{ background-color: #FFD5B2 }
+   </c:if>
 </style>
 <body>
-<%@include file="/WEB-INF/include/adminSide.jsp" %>
+  <c:choose>
+    <c:when test="${ sessionScope.grant eq 'ADMIN' }">
+      <%@include file="/WEB-INF/include/adminSide.jsp" %>
+    </c:when>
+    <c:when test="${ sessionScope.grant ne 'ADMIN' || !sessionScope.grant }">
+      <%@include file="/WEB-INF/include/side.jsp" %>
+    </c:when>
+  </c:choose>
   <main>
     <div class="titleBox">
       <div class="right" style="font-size: 13px;">
@@ -104,10 +119,17 @@
       <h3 class="title">공지사항</h3>
     </div>
     <hr style="color: #8C6C55; border-width: 3px;">
-    <div><h4 style="padding-left: 20px; margin-bottom: 20px;">공지사항 관리</h4></div>
-    <div class="right" style="padding-right: 5%; margin-bottom: 5px; margin-top: -30px;">
-      <input type="button" value="작성" class="write" style="padding: 5px 15px;">
+    <div>
+      <h4 style="padding-left: 20px; margin-bottom: 20px;">
+        <c:if test="${ sessionScope.grant eq 'ADMIN' }">공지사항 관리</c:if>
+        <c:if test="${ sessionScope.grant ne 'ADMIN' }">공지사항 목록</c:if>
+      </h4>
     </div>
+    <c:if test="${ sessionScope.grant eq 'ADMIN' }">
+      <div class="right" style="padding-right: 5%; margin-bottom: 5px; margin-top: -30px;">
+        <input type="button" value="작성" class="write" style="padding: 5px 15px;">
+      </div>
+    </c:if>
     <div style="text-align: center;">
     <table style="width: 100%;">
       <colgroup>
@@ -200,8 +222,13 @@
   </script>
 </body>
 <style>
-  .now { background-color: #8C6C55; }
+  <c:if test="${ sessionScope.grant eq 'ADMIN' }">
+   .contentBox { border: solid 2px #8C6C55; }
+   tr td:nth-child(1):not(.tableTitle td, .answer td)  { border-right: 2px solid #B39977;  /* 셀에 경계 추가 */}
+   tr:not(.tableTitle tr):hover{ background-color: #D3C4B1 }
+   .now { background-color: #8C6C55; }
   .page-link { background-color: #B39977; }
   .page-link:hover { background-color: #D3C4B1;  color: black;}
+   </c:if>
 </style>
 </html>

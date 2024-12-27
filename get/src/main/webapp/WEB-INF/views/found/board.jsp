@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -179,7 +180,14 @@
 </style>
 </head>
 <body>
-  <%@include file="/WEB-INF/include/side.jsp" %>
+  <c:choose>
+    <c:when test="${ sessionScope.grant eq 'ADMIN' }">
+      <%@include file="/WEB-INF/include/adminSide.jsp" %>
+    </c:when>
+    <c:when test="${ sessionScope.grant ne 'ADMIN' || !sessionScope.grant }">
+      <%@include file="/WEB-INF/include/side.jsp" %>
+    </c:when>
+  </c:choose>
   <main>
     <div class="titleBox">
       <div class="right" style="font-size: 13px;">
@@ -191,7 +199,7 @@
     
     <form method="GET" class="search">
       <div>
-        <span>물품명&nbsp;<input type="text" id="lost_title" style="width: 50%;"></span>
+        <span>물품명&nbsp;<input type="text" id="found_title" style="width: 50%;"></span>
         <span>물품카테고리
           <input type="text" placeholder="자동입력" class="cateText item" readonly>
           <input type="button" value="찾기" id="cateBtn">
@@ -591,7 +599,7 @@
     	}
     	
     	let searchData = new URLSearchParams();
-    	searchData.append('lost_title',document.querySelector('#lost_title').value );
+    	searchData.append('found_title',document.querySelector('#found_title').value );
     	searchData.append('item_code',document.querySelector('.item').id );
     	searchData.append('location_code',document.querySelector('.addr').id );
     	searchData.append('start_date',document.querySelector('#startDate').value );

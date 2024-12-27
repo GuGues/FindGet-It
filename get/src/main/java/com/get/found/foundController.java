@@ -24,12 +24,12 @@ public class foundController {
 	public ModelAndView foundBoard(@RequestParam(value = "page", defaultValue = "1") int page) {
 		
 		int recordsPerPage = 15;  // 페이지당 보여줄 게시글 수
-        int arg0 = (page - 1) * recordsPerPage;  // 오프셋 계산
+        int offset = (page - 1) * recordsPerPage;  // 오프셋 계산
         int totalRecords = foundMapper.getTotalFoundCount();  // 전체 게시글 수
         pagingHelper pagingHelper = new pagingHelper(totalRecords, page, recordsPerPage);
 		
 		//분실물 전체 리스트
-		List<foundCustomVo> foundList = foundMapper.getFoundList(arg0, recordsPerPage);
+		List<foundCustomVo> foundList = foundMapper.getFoundList(offset, recordsPerPage);
 		ModelAndView mv = new ModelAndView();
 		mv.addObject("foundList",foundList);
 		mv.addObject("pagingHelper",pagingHelper);

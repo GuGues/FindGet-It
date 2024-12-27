@@ -90,7 +90,7 @@ public class searchController {
 		map.put("arg0", String.valueOf(arg0));
 		map.put("arg1", String.valueOf(recordsPerPage));
 		//System.out.println(map);
-		//{lost_title=sdsd, item_code=201205, location_code=100699, start_date=2024-12-10, end_date=2024-12-18, color_code=6}
+		//{found_title=sdsd, item_code=201205, location_code=100699, start_date=2024-12-10, end_date=2024-12-18, color_code=6}
 		List<foundCustomVo> searchFound = foundMapper.getSearchFound(map);
 		
 		ModelAndView mv = new ModelAndView();
