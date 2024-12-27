@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.get.search.SearchMapper">
+
+    <!-- LOST_ITEMS 총 개수 -->
+    <select id="countLostItems">
+        SELECT COUNT(*) FROM LOST_ITEMS
+        WHERE LOWER(LOST_TITLE) LIKE '%' || LOWER(#{keyword}) || '%'
+           OR LOWER(LOST_CONTENT) LIKE '%' || LOWER(#{keyword}) || '%'
+    </select>
+
+    <!-- LOST_ITEMS 검색 결과 (페이징) -->
+    <select id="searchLostItems">
+        SELECT
+            LOST_IDX AS lostIdx,
+            EMAIL,
+            LOST_TITLE AS lostTitle,
+            LOST_CONTENT AS lostContent,
+            TO_CHAR(LOST_DATE, 'YYYY-MM-DD') AS lostDate,
+            TO_CHAR(L_REG_DATE, 'YYYY-MM-DD') AS lRegDate,
+            L_VIEWS AS lViews,
+            LOCATION_CODE AS locationCode,
+            L_LOCATION_DETAIL AS lLocationDetail,
+            ITEM_CODE AS itemCode,
+            L_ITEM_DETAIL AS lItemDetail,
+            REWARD,
+            COLOR_CODE AS colorCode,
+            LOST_STATE AS lostState
+        FROM LOST_ITEMS
+        WHERE LOWER(LOST_TITLE) LIKE '%' || LOWER(#{keyword}) || '%'
+           OR LOWER(LOST_CONTENT) LIKE '%' || LOWER(#{keyword}) || '%'
+        ORDER BY L_REG_DATE DESC
+        OFFSET #{offset} ROWS FETCH NEXT #{limit} ROWS ONLY
+    </select>
+
+    <!-- FOUND 총 개수 -->
+    <select id="countFoundItems">
+        SELECT COUNT(*) FROM FOUND
+        WHERE LOWER(FOUND_TITLE) LIKE '%' || LOWER(#{keyword}) || '%'
+           OR LOWER(FOUND_CONTENT) LIKE '%' || LOWER(#{keyword}) || '%'
+    </select>
+
+    <!-- FOUND 검색 결과 (페이징) -->
+    <select id="searchFoundItems" >
+        SELECT
+            FOUND_IDX AS foundIdx,
+            EMAIL,
+            FOUND_TITLE AS foundTitle,
+            FOUND_CONTENT AS foundContent,
+            TO_CHAR(FOUND_DATE, 'YYYY-MM-DD') AS foundDate,
+            TO_CHAR(F_REG_DATE, 'YYYY-MM-DD') AS fRegDate,
+            F_VIEWS AS fViews,
+            ITEM_STATE AS itemState,
+            LOCATION_CODE AS locationCode,
+            F_LOCATION_DETAIL AS fLocationDetail,
+            ITEM_CODE AS itemCode,
+            F_ITEM_DETAIL AS fItemDetail,
+            COLOR_CODE AS colorCode,
+            FOUND_STATE AS foundState
+        FROM FOUND
+        WHERE LOWER(FOUND_TITLE) LIKE '%' || LOWER(#{keyword}) || '%'
+           OR LOWER(FOUND_CONTENT) LIKE '%' || LOWER(#{keyword}) || '%'
+        ORDER BY F_REG_DATE DESC
+        OFFSET #{offset} ROWS FETCH NEXT #{limit} ROWS ONLY
+    </select>
+
+    <!-- ================== 경찰 습득물(PoliceFound) 추가 부분 ================== -->
+
+    <!-- POLICE_FOUND 총 개수 -->
+    <select id="countPoliceFoundItems">
+        SELECT COUNT(*)
+        FROM POLICE_FOUND
+        WHERE LOWER(FDPRDTNM) LIKE '%' || LOWER(#{keyword}) || '%'
+           OR LOWER(FDSBJT) LIKE '%' || LOWER(#{keyword}) || '%'
+    </select>
+
+    <!-- POLICE_FOUND 검색 결과 (페이징) -->
+    <select id="searchPoliceFoundItems">
+        SELECT
+            ATCID            AS atcId,
+            DEPPLACE         AS depPlace,
+            FDFILEPATHIMG    AS fdFilePathImg,
+            FDPRDTNM         AS fdPrdtNm,
+            FDSN             AS fdsn,
+            FDSBJT           AS fdSbjt,
+            FDYMD            AS fdYmd,
+            PRDTCLNM         AS prdtClNm,
+            CLRNM            AS clrNm
+        FROM POLICE_FOUND
+        WHERE LOWER(FDPRDTNM) LIKE '%' || LOWER(#{keyword}) || '%'
+           OR LOWER(FDSBJT) LIKE '%' || LOWER(#{keyword}) || '%'
+        ORDER BY FDYMD DESC
+        OFFSET #{offset} ROWS FETCH NEXT #{limit} ROWS ONLY
+    </select>
+
+</mapper>

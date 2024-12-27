@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.get.found.FoundMapper">
+  
+  <select id="getFoundList">
+    SELECT FOUND_IDX,
+           MEMBERS.NICKNAME,
+           FOUND_TITLE,
+           ITEM_STATE,
+           TO_CHAR(FOUND_DATE, 'YY-MM-DD') FOUND_DATE,
+           F_VIEWS,
+           LOCATIONS.SIDO_NAME||' '||LOCATIONS.GUGUN_NAME LOCATION,
+           SUBSTR(ITEMS.ITEM, INSTR(ITEMS.ITEM, '-') + 1) ITEM,
+           COLORS.COLOR_NAME
+      FROM FOUND LEFT JOIN MEMBERS USING(EMAIL)
+	                  LEFT JOIN LOCATIONS USING(LOCATION_CODE)
+	                  LEFT JOIN ITEMS USING(ITEM_CODE)
+	                  LEFT JOIN COLORS USING(COLOR_CODE)
+	  WHERE FOUND_STATE = 2
+	  OFFSET #{arg0} ROWS FETCH NEXT #{arg1} ROWS ONLY
+  </select>
+  
+  <select id="getTotalFoundCount">
+    SELECT COUNT(*) FROM FOUND
+  </select>
+  
+  <select id="getTotalSearchFoundCount">
+    SELECT COUNT(*)
+     FROM FOUND LEFT JOIN MEMBERS USING(EMAIL)
+	                  LEFT JOIN LOCATIONS USING(LOCATION_CODE)
+	                  LEFT JOIN ITEMS USING(ITEM_CODE)
+	                  LEFT JOIN COLORS USING(COLOR_CODE)
+	  WHERE FOUND_STATE = 2
+	   <if test="found_title != null and found_title != ''">
+	     AND FOUND_TITLE LIKE('%${found_title}%')
+	   </if>
+	   <if test="item_code != null and item_code != ''">
+	     AND ITEM_CODE = TO_NUMBER(#{item_code})
+	   </if>
+	   <if test="location_code != null and location_code != ''">
+	     AND LOCATION_CODE = TO_NUMBER(#{ location_code })
+	   </if>
+	   <if test="start_date != null and start_date != ''">
+	     AND LOST_DATE &gt;= TO_DATE(#{start_date}, 'YYYY-MM-DD')
+	   </if>
+	   <if test="end_date != null and end_date != ''">
+	     AND LOST_DATE &lt;= TO_DATE(#{end_date}, 'YYYY-MM-DD')
+	   </if>
+	   <if test="color_code != null and color_code != ''">
+	     AND COlOR_CODE = TO_NUMBER(#{color_code})
+	   </if>
+  </select>
+  
+  <select id="getSearchFound">
+    SELECT FOUND_IDX,
+           MEMBERS.NICKNAME,
+           FOUND_TITLE,
+           TO_CHAR(FOUND_DATE, 'YY-MM-DD') FOUND_DATE,
+           F_VIEWS,
+           LOCATIONS.SIDO_NAME||' '||LOCATIONS.GUGUN_NAME LOCATION,
+           SUBSTR(ITEMS.ITEM, INSTR(ITEMS.ITEM, '-') + 1) ITEM,
+           COLORS.COLOR_NAME
+      FROM FOUND LEFT JOIN MEMBERS USING(EMAIL)
+	                  LEFT JOIN LOCATIONS USING(LOCATION_CODE)
+	                  LEFT JOIN ITEMS USING(ITEM_CODE)
+	                  LEFT JOIN COLORS USING(COLOR_CODE)
+	  WHERE FOUND_STATE = 2
+	   <if test="found_title != null and found_title != ''">
+		   AND FOUND_TITLE LIKE('%${found_title}%')
+	   </if>
+	   <if test="item_code != null and item_code != ''">
+	     AND ITEM_CODE = TO_NUMBER(#{item_code})
+	   </if>
+	   <if test="location_code != null and location_code != ''">
+	     AND LOCATION_CODE = TO_NUMBER(#{ location_code })
+	   </if>
+	   <if test="start_date != null and start_date != ''">
+	     AND LOST_DATE &gt;= TO_DATE(#{start_date}, 'YYYY-MM-DD')
+	   </if>
+	   <if test="end_date != null and end_date != ''">
+	     AND LOST_DATE &lt;= TO_DATE(#{end_date}, 'YYYY-MM-DD')
+	   </if>
+	   <if test="color_code != null and color_code != ''">
+	     AND COlOR_CODE = TO_NUMBER(#{color_code})
+	   </if>
+	 OFFSET #{arg0} ROWS FETCH NEXT #{arg1} ROWS ONLY
+  </select>
+  
+</mapper>
