@@ -33,7 +33,7 @@
 	                  LEFT JOIN COLORS USING(COLOR_CODE)
 	  WHERE FOUND_STATE = 2
 	   <if test="found_title != null and found_title != ''">
-	     AND LOST_TITLE LIKE('%${lost_title}%')
+	     AND FOUND_TITLE LIKE('%${found_title}%')
 	   </if>
 	   <if test="item_code != null and item_code != ''">
 	     AND ITEM_CODE = TO_NUMBER(#{item_code})
@@ -42,10 +42,10 @@
 	     AND LOCATION_CODE = TO_NUMBER(#{ location_code })
 	   </if>
 	   <if test="start_date != null and start_date != ''">
-	     AND LOST_DATE &gt;= TO_DATE(#{start_date}, 'YYYY-MM-DD')
+	     AND FOUND_DATE &gt;= TO_DATE(#{start_date}, 'YYYY-MM-DD')
 	   </if>
 	   <if test="end_date != null and end_date != ''">
-	     AND LOST_DATE &lt;= TO_DATE(#{end_date}, 'YYYY-MM-DD')
+	     AND FOUND_DATE &lt;= TO_DATE(#{end_date}, 'YYYY-MM-DD')
 	   </if>
 	   <if test="color_code != null and color_code != ''">
 	     AND COlOR_CODE = TO_NUMBER(#{color_code})
@@ -67,7 +67,7 @@
 	                  LEFT JOIN COLORS USING(COLOR_CODE)
 	  WHERE FOUND_STATE = 2
 	   <if test="found_title != null and found_title != ''">
-	     AND LOST_TITLE LIKE('%${lost_title}%')
+	     AND FOUND_TITLE LIKE('%${found_title}%')
 	   </if>
 	   <if test="item_code != null and item_code != ''">
 	     AND ITEM_CODE = TO_NUMBER(#{item_code})
@@ -76,10 +76,10 @@
 	     AND LOCATION_CODE = TO_NUMBER(#{ location_code })
 	   </if>
 	   <if test="start_date != null and start_date != ''">
-	     AND LOST_DATE &gt;= TO_DATE(#{start_date}, 'YYYY-MM-DD')
+	     AND FOUND_DATE &gt;= TO_DATE(#{start_date}, 'YYYY-MM-DD')
 	   </if>
 	   <if test="end_date != null and end_date != ''">
-	     AND LOST_DATE &lt;= TO_DATE(#{end_date}, 'YYYY-MM-DD')
+	     AND FOUND_DATE &lt;= TO_DATE(#{end_date}, 'YYYY-MM-DD')
 	   </if>
 	   <if test="color_code != null and color_code != ''">
 	     AND COlOR_CODE = TO_NUMBER(#{color_code})

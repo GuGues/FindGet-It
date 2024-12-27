@@ -94,13 +94,12 @@
 <c:set var="url" value="${ REQ_URL.toString() }"/>
 <nav id="side_menu">
   <a href="/"><img alt="Logo" src="/logo/logo_open_brown.png"></a>
-  
   <ul id="menu">
-    <c:if test="${!url.contains('/admin/ban')}">
-     <li><a href="/admin/ban">사용자 관리</a></li>
+    <c:if test="${!url.contains('/admin/user')}">
+     <li><a href="/admin">회원 관리</a></li>
     </c:if>
-    <c:if test="${!url.contains('/lost') && !url.contains('/found') && !url.contains('/admin/post')}">
-     <li><a href="/admin/post">게시물 관리</a></li>
+    <c:if test="${!url.contains('/lost') && !url.contains('/found') && !url.contains('/admin/report')}">
+     <li><a href="/lost">게시물 관리</a></li>
     </c:if>
     <c:if test="${!url.contains('/faq') && !url.contains('/cs')}">
      <li><a href="/faq">FAQ</a></li>
@@ -114,15 +113,17 @@
   </ul>
   
   <ul id="menu_detail">
-    <c:if test="${url.contains('/admin/ban')}">
-    <li><h3 class="side-title">사용자 관리</h3></li>
-     <li><a href="/lost">사용자 관리</a></li>
+    <c:if test="${url.contains('/admin/user')}">
+    <li><h3 class="side-title">회원 관리</h3></li>
+     <li><a href="/admin">회원 목록</a></li>
+     <li><a href="/admin/ban">차단회원 목록</a></li>
     </c:if>
-    <c:if test="${url.contains('/lost') || url.contains('/found') || url.contains('/admin/post')}">
-     <li><h3 class="side-title">분실물/습득물</h3></li>
+    <c:if test="${url.contains('/lost') || url.contains('/found') || url.contains('/admin/report')}">
+     <li><h3 class="side-title">게시물 관리</h3></li>
      <li><a href="/lost">분실물 관리</a></li>
      <li><a href="/found">습득물 관리</a></li>
-     <li><a href="/lost/write">신고 게시글</a></li>
+     <li><a href="/admin/post">신고 게시글 목록</a></li>
+     <li><a href="/admin/post/ban">차단 게시글 목록</a></li>
     </c:if>
     <c:if test="${url.contains('/faq') || url.contains('/cs')}">
      <li><h3 class="side-title">FAQ</h3></li>

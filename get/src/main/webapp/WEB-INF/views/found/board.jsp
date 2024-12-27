@@ -199,7 +199,7 @@
     
     <form method="GET" class="search">
       <div>
-        <span>물품명&nbsp;<input type="text" id="lost_title" style="width: 50%;"></span>
+        <span>물품명&nbsp;<input type="text" id="found_title" style="width: 50%;"></span>
         <span>물품카테고리
           <input type="text" placeholder="자동입력" class="cateText item" readonly>
           <input type="button" value="찾기" id="cateBtn">
@@ -599,7 +599,7 @@
     	}
     	
     	let searchData = new URLSearchParams();
-    	searchData.append('lost_title',document.querySelector('#lost_title').value );
+    	searchData.append('found_title',document.querySelector('#found_title').value );
     	searchData.append('item_code',document.querySelector('.item').id );
     	searchData.append('location_code',document.querySelector('.addr').id );
     	searchData.append('start_date',document.querySelector('#startDate').value );

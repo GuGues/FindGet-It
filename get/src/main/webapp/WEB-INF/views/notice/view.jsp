@@ -30,7 +30,6 @@
    .btn{ background-color: #B39977; color: white;}
    .btn:hover{ background-color: #8C6C55;}
    .tableDiv { 
-     border: 2px solid #684F36;
      border-radius: 7px;
      padding: 30px;
      box-shadow:3px 5px 5px 5px rgba(34,36,38,0.1);
@@ -40,6 +39,14 @@
    .tableDiv tr:last-of-type *{
      border-bottom: none;
    }
+  <c:if test="${ sessionScope.grant eq 'ADMIN' }">
+     hr{ color: #8C6C55; border-width: 3px; }
+     .tableDiv { border: 2px solid #684F36; }
+  </c:if>
+  <c:if test="${ sessionScope.grant ne 'ADMIN' }">
+     hr{ color: #FE8015; border-width: 3px; }
+     .tableDiv { border: 2px solid #FE8015; }
+  </c:if>
 </style>
 <body>
 <c:choose>
@@ -57,14 +64,16 @@
       </div>
       <h3 class="title">공지사항</h3>
     </div>
-    <hr style="color: #8C6C55; border-width: 3px;">
+    <hr>
     <div><h4 style="padding-left: 20px; margin-bottom: 20px;">공지사항 상세보기</h4></div>
-    <div class="right" style="padding-right: 5%; margin-bottom: 5px; margin-top: -30px;">
-      <input type="button" value="수정" class="updateBtn btn" style="padding: 5px 15px;">
-      <input type="button" value="삭제" class="delBtn btn" style="padding: 5px 15px;">
-      &nbsp;&nbsp;&nbsp;
-      <input type="button" value="목록" class="listBtn btn" style="padding: 5px 15px;">
-    </div>
+    <c:if test="${ sessionScope.grant eq 'ADMIN' }">
+      <div class="right" style="padding-right: 5%; margin-bottom: 5px; margin-top: -30px;">
+        <input type="button" value="수정" class="updateBtn btn" style="padding: 5px 15px;">
+        <input type="button" value="삭제" class="delBtn btn" style="padding: 5px 15px;">
+        &nbsp;&nbsp;&nbsp;
+        <input type="button" value="목록" class="listBtn btn" style="padding: 5px 15px;">
+      </div>
+    </c:if>
     <div class="tableDiv">
       <table class="table" style="width: 100%;">
         <colgroup>
