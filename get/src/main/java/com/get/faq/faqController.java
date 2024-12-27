@@ -99,7 +99,6 @@ public class faqController {
 	
 	@PostMapping("/cs/insert")
 	public ModelAndView csInsert(@RequestParam Map<String, Object> map) {
-		System.out.println("======================="+map);
 		//email=user1@example.com, cs_title=asdf, cs_content=safsd
 		//faqMapper.insertCs(map);
 		ModelAndView mv = new ModelAndView();
