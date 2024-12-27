@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.get.lost.LostMapper">
+
+  <select id="getLostList">
+    SELECT LOST_IDX,
+           MEMBERS.NICKNAME,
+           LOST_TITLE,
+           TO_CHAR(LOST_DATE, 'YY-MM-DD') LOST_DATE,
+           L_VIEWS,
+           LOCATIONS.SIDO_NAME||' '||LOCATIONS.GUGUN_NAME LOCATION,
+           SUBSTR(ITEMS.ITEM, INSTR(ITEMS.ITEM, '-') + 1) ITEM,
+           REWARD,
+           COLORS.COLOR_NAME
+      FROM LOST_ITEMS LEFT JOIN MEMBERS USING(EMAIL)
+	                  LEFT JOIN LOCATIONS USING(LOCATION_CODE)
+	                  LEFT JOIN ITEMS USING(ITEM_CODE)
+	                  LEFT JOIN COLORS USING(COLOR_CODE)
+	  WHERE LOST_STATE = 2
+	  ORDER BY LOST_DATE DESC
+	  OFFSET #{arg0} ROWS FETCH NEXT #{arg1} ROWS ONLY
+  </select>
+  
+  <select id="getBigItems">
+    SELECT *
+     FROM ITEMS
+      WHERE ITEM NOT LIKE('%-%')
+     ORDER BY ITEM_CODE ASC
+  </select>
+  
+  <select id="getItems">
+    SELECT *
+     FROM ITEMS
+     WHERE ITEM LIKE('%-%')
+      AND ITEM_CODE LIKE('${code}__')
+     ORDER BY ITEM_CODE ASC
+  </select>
+  
+  <select id="getColors">
+    SELECT * FROM COLORS
+    ORDER BY COLOR_CODE ASC
+  </select>
+  
+  <select id="getLocationBig">
+    SELECT LOCATION_CODE, SIDO_NAME
+     FROM LOCATIONS
+     WHERE GUGUN_NAME IS NULL
+     ORDER BY LOCATION_CODE ASC
+  </select>
+  
+  <select id="getLocationMiddle">
+    SELECT LOCATION_CODE, LOCATIONS.SIDO_NAME, GUGUN_NAME
+     FROM LOCATIONS, (SELECT SIDO_NAME FROM LOCATIONS WHERE LOCATION_CODE = #{location_code}) SIDO_T
+     WHERE GUGUN_NAME IS NOT NULL
+      AND SIDO_T.SIDO_NAME = LOCATIONS.SIDO_NAME
+     ORDER BY LOCATION_CODE ASC
+  </select>
+  
+  <select id="getSearchLost">
+    SELECT LOST_IDX,
+           MEMBERS.NICKNAME,
+           LOST_TITLE,
+           TO_CHAR(LOST_DATE, 'YY-MM-DD') LOST_DATE,
+           L_VIEWS,
+           LOCATIONS.SIDO_NAME||' '||LOCATIONS.GUGUN_NAME LOCATION,
+           SUBSTR(ITEMS.ITEM, INSTR(ITEMS.ITEM, '-') + 1) ITEM,
+           REWARD,
+           COLOR_CODE
+      FROM LOST_ITEMS LEFT JOIN MEMBERS USING(EMAIL)
+	                  LEFT JOIN LOCATIONS USING(LOCATION_CODE)
+	                  LEFT JOIN ITEMS USING(ITEM_CODE)
+	                  LEFT JOIN COLORS USING(COLOR_CODE)
+	  WHERE LOST_STATE = 2
+	   <if test="lost_title != null and lost_title != ''">
+	     AND LOST_TITLE LIKE('%${lost_title}%')
+	   </if>
+	   <if test="item_code != null and item_code != ''">
+	     AND ITEM_CODE = TO_NUMBER(#{item_code})
+	   </if>
+	   <if test="location_code != null and location_code != ''">
+	     AND LOCATION_CODE = TO_NUMBER(#{ location_code })
+	   </if>
+	   <if test="start_date != null and start_date != ''">
+	     AND LOST_DATE &gt;= TO_DATE(#{start_date}, 'YYYY-MM-DD')
+	   </if>
+	   <if test="end_date != null and end_date != ''">
+	     AND LOST_DATE &lt;= TO_DATE(#{end_date}, 'YYYY-MM-DD')
+	   </if>
+	   <if test="color_code != null and color_code != ''">
+	     AND COlOR_CODE = TO_NUMBER(#{color_code})
+	   </if>
+	 ORDER BY LOST_DATE DESC
+	 OFFSET #{arg0} ROWS FETCH NEXT #{arg1} ROWS ONLY
+  </select>
+  
+  <select id="getTotalLostCount">
+    SELECT COUNT(*) FROM LOST_ITEMS
+  </select>
+  
+  <select id="getTotalSearchLostCount">
+    SELECT COUNT(*)
+     FROM LOST_ITEMS LEFT JOIN MEMBERS USING(EMAIL)
+	                  LEFT JOIN LOCATIONS USING(LOCATION_CODE)
+	                  LEFT JOIN ITEMS USING(ITEM_CODE)
+	                  LEFT JOIN COLORS USING(COLOR_CODE)
+	  WHERE LOST_STATE = 2
+	   <if test="lost_title != null and lost_title != ''">
+	     AND LOST_TITLE LIKE('%${lost_title}%')
+	   </if>
+	   <if test="item_code != null and item_code != ''">
+	     AND ITEM_CODE = TO_NUMBER(#{item_code})
+	   </if>
+	   <if test="location_code != null and location_code != ''">
+	     AND LOCATION_CODE = TO_NUMBER(#{ location_code })
+	   </if>
+	   <if test="start_date != null and start_date != ''">
+	     AND LOST_DATE &gt;= TO_DATE(#{start_date}, 'YYYY-MM-DD')
+	   </if>
+	   <if test="end_date != null and end_date != ''">
+	     AND LOST_DATE &lt;= TO_DATE(#{end_date}, 'YYYY-MM-DD')
+	   </if>
+	   <if test="color_code != null and color_code != ''">
+	     AND COlOR_CODE = TO_NUMBER(#{color_code})
+	   </if>
+  </select>
+  
+</mapper>

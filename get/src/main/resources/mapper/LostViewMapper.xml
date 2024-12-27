@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.get.lostview.LostViewMapper">
+
+    <select id="selectLostItemDetail">
+        SELECT
+            L.LOST_IDX AS lostIdx,
+            L.EMAIL AS email,
+            L.LOST_TITLE AS lostTitle,
+            L.LOST_CONTENT AS lostContent,
+            TO_CHAR(L.LOST_DATE, 'YYYY-MM-DD') AS lostDate,
+            TO_CHAR(L.L_REG_DATE, 'YYYY-MM-DD') AS lRegDate,
+            L.L_VIEWS AS lViews,
+            L.LOCATION_CODE AS locationCode,
+            L.L_LOCATION_DETAIL AS lLocationDetail,
+            L.ITEM_CODE AS itemCode,
+            L.L_ITEM_DETAIL AS lItemDetail,
+            L.REWARD AS reward,
+            L.COLOR_CODE AS colorCode,
+            L.LOST_STATE AS lostState,
+            I.ITEM AS itemName,
+            C.COLOR_NAME AS colorName
+        FROM LOST_ITEMS L
+                 LEFT JOIN ITEMS I ON L.ITEM_CODE = I.ITEM_CODE
+                 LEFT JOIN COLORS C ON L.COLOR_CODE = C.COLOR_CODE
+        WHERE L.LOST_IDX = #{lostIdx}
+    </select>
+
+    <!-- 지역 목록 조회 -->
+    <select id="selectLocations" >
+        SELECT
+            LOCATION_CODE AS locationCode,
+            SIDO_NAME AS sidoName,
+            GUGUN_NAME AS gugunName
+        FROM LOCATIONS
+        ORDER BY SIDO_NAME, GUGUN_NAME
+    </select>
+
+    <!-- 물품 목록 조회 -->
+    <select id="selectItems">
+        SELECT
+            ITEM_CODE AS itemCode,
+            ITEM AS itemName
+        FROM ITEMS
+        ORDER BY ITEM
+    </select>
+
+    <!-- 색상 목록 조회 -->
+    <select id="selectColors">
+        SELECT
+            COLOR_CODE AS colorCode,
+            COLOR_NAME AS colorName
+        FROM COLORS
+        ORDER BY COLOR_NAME
+    </select>
+
+
+    <!-- 분실물 등록 -->
+    <insert id="insertLostItem">
+        INSERT INTO LOST_ITEMS (
+            LOST_IDX,
+            EMAIL,
+            LOST_TITLE,
+            LOST_CONTENT,
+            LOST_DATE,
+            LOCATION_CODE,
+            L_LOCATION_DETAIL,
+            ITEM_CODE,
+            L_ITEM_DETAIL,
+            REWARD,
+            COLOR_CODE,
+            LOST_STATE
+        ) VALUES (
+                     'LI_' || TO_CHAR(SEQ_LOST_IDX.NEXTVAL, 'FM0000000000'),
+                     #{email},
+                     #{lostTitle},
+                     #{lostContent},
+                     TO_DATE(#{lostDate}, 'YYYY-MM-DD'),
+                     #{locationCode},
+                     #{lLocationDetail},
+                     #{itemCode},
+                     #{lItemDetail},
+                     #{reward},
+                     #{colorCode},
+                     #{lostState}
+                 )
+    </insert>
+
+</mapper>
