@@ -216,9 +216,11 @@
 	  
 	  //작성 버튼 클릭시
 	  const write = document.querySelector('.write');
-	  write.addEventListener('click', function(){
-		  window.location.href = '/notice/insert';
-	  });
+	  if(write){
+		  write.addEventListener('click', function(){
+			  window.location.href = '/notice/insert';
+		  });
+	  }
   </script>
 </body>
 <style>

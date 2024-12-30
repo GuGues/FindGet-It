@@ -1,5 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -252,10 +253,16 @@
         <br>아래와 같은 물품을 습득하셨다면 관할기관 신고나 채팅으로 연락 부탁드립니다.</h4>
     </div>
   </div>
-
+  <!-- C:\Users\GGG\Desktop\get_storage_img\2024\12\30\29655b79-9bb4-489d-a49d-87b7092216b5_dodbogi.png -->
   <div class="info-section">
     <div class="image-container">
-      <img src="/img/noimg.png" alt="이미지가 없습니다">
+      <c:if test="${ not empty filePath }">
+        <img src="<spring:url value='${ severUrl }imgView?filePath=${ filePath }'/>" alt="이미지가 없습니다">
+      </c:if>
+      <c:if test="${ empty filePath }">
+        <img src="/img/noimg.png" alt="이미지가 없습니다">
+      </c:if>
+
       <div class="no-image"></div>
     </div>
 

@@ -33,6 +33,8 @@ public interface LostViewMapper {
 
     void  updateLostItem(LostItemVO vo);
 
+	String getFilePath(String lostIdx);
+
 
 
 }
