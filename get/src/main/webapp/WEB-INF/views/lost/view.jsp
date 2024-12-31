@@ -18,8 +18,8 @@
     .detail-container {
       max-width: 1000px;
       height: 100%;
-      margin-left: 30%;
-      margin-right: 0;
+      margin-left:  30%;
+      margin-right: 100px;
       background: #fff;
       border: none;
       padding: 20px;

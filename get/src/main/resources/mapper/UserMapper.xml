@@ -21,6 +21,7 @@
  ,#{postnumber}
  ,SYSDATE
  ,'USER'
+,0
                                   )
     </insert>
 </mapper>
