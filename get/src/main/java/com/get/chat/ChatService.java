@@ -44,27 +44,27 @@ public class ChatService {
     }
 
     public Map<String,Object> findRoomByEmail(String email) {
-        List<ChatRoom> roomList = chatMapper.findRoomListByEmail(email);
-        List<ChatRoom> tempRoomList = new ArrayList<>();
-        tempRoomList.addAll(roomList);
+       List<ChatRoom> roomList = chatMapper.findRoomListByEmail(email);
+       List<ChatRoom> tempRoomList = new ArrayList<>();
+         tempRoomList.addAll(roomList);
         List<Chat> chatList = new ArrayList<>();
         List<ChatRoom> emptyRoomList = new ArrayList<>();
 
         int count = 0;
 
-        for(ChatRoom room : tempRoomList){
-            Chat chat = chatMapper.findChatLastest(room.getChatting_no());
-            if(chat != null){
-                chatList.add(chat);
-            }
-            else{
-                emptyRoomList.add(room);
-                roomList.remove(count);
-                continue;
-            }
-            System.out.println(count);
-            count++;
-        }
+       for(ChatRoom room : tempRoomList){
+           Chat chat = chatMapper.findChatLastest(room.getChatting_no());
+           if(chat != null){
+           chatList.add(chat);
+           }
+           else{
+               emptyRoomList.add(room);
+               roomList.remove(count);
+               continue;
+           }
+           System.out.println(count);
+           count++;
+       }
 
 
         Collections.sort(chatList, new Comparator<Chat>() {

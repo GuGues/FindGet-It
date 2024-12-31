@@ -3,13 +3,17 @@ package com.get.login;
 import com.get.security.service.Account;
 import com.get.security.service.AccountService;
 import com.get.security.service.UserMapper;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -37,7 +41,6 @@ public class logincontroller {
     }
     @RequestMapping("/loginSuccess")
     public String loginSuccess(HttpServletRequest request){
-        System.out.println("================================석세스 페이지 작동!======================================");
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = null;

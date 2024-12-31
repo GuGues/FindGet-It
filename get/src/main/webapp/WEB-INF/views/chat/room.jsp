@@ -54,8 +54,8 @@
                     <c:when test="${chat.sender eq sessionScope.email}">
                         <div class="send">
                             <div>
-                                <span class="time">${chat.send_time}</span>
-                                <span class="chat">${chat.message_content}</span>
+                            <span class="time">${chat.send_time}</span>
+                            <span class="chat">${chat.message_content}</span>
                             </div>
                         </div>
                     </c:when>
@@ -89,22 +89,36 @@
 <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 <script type="text/javascript">
+const updateView = function(){
+    fetch("/chatting/update-view",{
+        method:"POST",
+        headers:{
+            'Content-Type':'application/json'
+        },
+        body:JSON.stringify({
+            chatting_no:${chatting_no},
+            email:'${sessionScope.email}',
+        })
+    }).then(json=>json.text())
+        .then(result=>console.log(result))
+}
+const stompClient = new StompJs.Client({
+    brokerURL: 'ws://192.168.0.214:9090/ws-connect'
+});
     // 페이지 로드 시 connect() 메서드 실행
     window.onload = function () {
         connect();
     }
 
-    const stompClient = new StompJs.Client({
-        brokerURL: 'ws://192.168.0.214:9090/ws-connect'
-    });
+
 
     stompClient.onConnect = (frame) => {
         console.log('Connected: ' + frame);
 
         stompClient.subscribe('/queue/chat/room/' + ${chatting_no}, (greeting) => {
-            console.log("Send Message!!");
+            updateView();
             showGreeting(JSON.parse(greeting.body));
-        });
+        },{id:"message"});
     };
 
     stompClient.onWebSocketError = (error) => {
@@ -118,10 +132,8 @@
 
     function connect() {
         console.log("연결 시도");
-        var chatroomId = ${chatting_no};
-
-        console.log("채팅방 번호 " + chatroomId);
         stompClient.activate();
+        updateView();
     }
 
     function sendMessage(event) {
@@ -168,9 +180,10 @@
     }
     document.querySelector('#chatting').scrollTo(0,  document.querySelector('#chatting').scrollHeight);
 
-    document.getElementById("back").addEventListener('click',function (){
-        window.location.href = "/chatting/roomList";
-    })
+document.getElementById("back").addEventListener('click',function (){
+    stompClient.unsubscribe("message");
+    window.location.href = "/chatting/roomList";
+})
 </script>
 </body>
 </html>

@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -41,6 +43,14 @@
       padding: 10px; width: 1000px; height: 70px; border: 3px solid transparent;
       transition: all 0.3s ease;
     }
+    .search-button {
+      background: none;
+      border: none;
+    }
+    .search-button:hover, .search-button:focus-within {
+      background: none;
+      border: none;
+    }
     .search-container:hover, .search-container:focus-within {
       background: rgba(255, 255, 255, 1); border-color: #FF914B;
     }
@@ -58,8 +68,15 @@
     }
 
     .button-container {
-      position: absolute; bottom: 30%; display: flex; justify-content: center;
-      width: 100%; gap: 20px; z-index: 1;
+      position: absolute;
+      bottom: 30%;
+      display: flex;
+      justify-content: center;
+      width: 80%;
+      margin-left: 10%;
+      margin-right: 10%;
+      gap: 20px;
+      z-index: 1;
     }
 
     .button {
@@ -112,8 +129,10 @@
 
     <!-- 검색 폼 -->
     <form class="search-container" action="/search" method="get">
-      <img src="/icon/dodbogi.png" class="search-icon default" alt="돋보기 아이콘">
-      <img src="/icon/dodbogi_orange.png" class="search-icon hover" alt="돋보기 아이콘">
+      <button type="submit" class="search-button" aria-label="검색">
+        <img src="/icon/dodbogi.png" class="search-icon default" alt="돋보기 아이콘">
+        <img src="/icon/dodbogi_orange.png"  class="search-icon hover" alt="돋보기 아이콘">
+      </button>
       <input type="text" name="keyword" placeholder="분실물을 검색하세요" class="search-input" required>
     </form>
   </div>
@@ -125,32 +144,32 @@
       <p>분실물 게시판</p>
     </a>
 
-    <div class="button">
-      <a class="button"  href="/found">
+    <a class="button" href="/found">
       <img src="/icon/find_gray.png" class="icon default" alt="습득물 게시판">
       <img src="/icon/find_orange.png" class="icon hover" alt="습득물 게시판">
       <p>습득물 게시판</p>
-    </div>
+    </a>
 
-    <div class="button">
+    <a class="button" href="/faq">
       <img src="/icon/faq_gray.png" class="icon default" alt="FAQ">
       <img src="/icon/faq_orange.png" class="icon hover" alt="FAQ">
       <p>FAQ</p>
-    </div>
+    </a>
 
     <!-- 임시채팅버튼: 클릭 시 채팅방 목록 모달 표시 -->
-    <a class="button" href="/chatting/roomList">
+    <a class="button" href="/roomList">
       <img src="/icon/speaker_gray.png" class="icon default" alt="공지사항">
       <img src="/icon/speaker_orange.png" class="icon hover" alt="공지사항">
       <p>채팅방 목록</p>
     </a>
 
-    <a class="button" href="https://www.lost112.go.kr/">
+    <a class="button" href="/police/found">
       <img src="/icon/lost112_gray.png" class="icon default" alt="경찰청 신고">
       <img src="/icon/lost112_orange.png" class="icon hover" alt="경찰청 신고">
-      <p>경찰청 분실물 신고</p>
+      <p>경찰청 분실물 게시판</p>
     </a>
   </div>
 </div>
+<%@ include file="/WEB-INF/include/homefad.jsp" %>
 </body>
 </html>
