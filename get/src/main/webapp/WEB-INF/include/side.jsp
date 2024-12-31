@@ -152,7 +152,6 @@
   
   <div id="side_com">Ⓒnot_null</div>
 </nav>
-
 <%@include file="/WEB-INF/include/fab.jsp" %>
 <c:if test="${url.contains('/lost/view') || url.contains('/found/view') || url.contains('/search')}">
 <%@include file="/WEB-INF/include/gyufab.jsp" %>

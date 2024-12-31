@@ -327,7 +327,7 @@
   <div class="info-section">
     <div class="image-container">
       <c:if test="${ not empty filePath }">
-        <img src="<spring:url value='${ severUrl }imgView?filePath=${ filePath }'/>" alt="이미지가 없습니다">
+        <img src="<spring:url value='${ severUrl }imgView?filePath=${ filePath }'/>" alt="${ filePath }">
       </c:if>
       <c:if test="${ empty filePath }">
         <img src="/img/noimg.png" alt="이미지가 없습니다">
@@ -440,7 +440,7 @@
         <div id="pagination"></div>
     </div>
   </div>
-
+  
   <!-- 카카오 맵 API 스크립트 포함 -->
   <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=a38a546a4aaada7aec2c459d8d1d085a&libraries=services"></script>
   <script>
