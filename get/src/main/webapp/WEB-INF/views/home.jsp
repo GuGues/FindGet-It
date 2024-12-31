@@ -98,7 +98,7 @@
 
     .button p {
       position: absolute; bottom: -50px; width: 100%; text-align: center;
-      font-size: 14px; font-weight: bold; color: black; transition: color 0.3s;
+      font-size: 14px; font-weight: bold; color: white; transition: color 0.3s;
     }
 
     .button:hover p { color: #FF914B; }
@@ -157,7 +157,7 @@
     </a>
 
     <!-- 임시채팅버튼: 클릭 시 채팅방 목록 모달 표시 -->
-    <a class="button" href="/roomList">
+    <a class="button" href="/notice">
       <img src="/icon/speaker_gray.png" class="icon default" alt="공지사항">
       <img src="/icon/speaker_orange.png" class="icon hover" alt="공지사항">
       <p>채팅방 목록</p>

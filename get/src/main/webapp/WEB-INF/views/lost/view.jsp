@@ -197,6 +197,66 @@
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
       text-align: left;
     }
+    <c:if test="${ sessionScope.grant eq 'ADMIN' }">
+    .detail-header {
+      text-align: left;
+      margin-bottom: 20px;
+      border-bottom: solid #8C6C55;
+    }
+    .btn-container2 button {
+      background-color: #8C6C55;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      margin: 0 5px;
+      transition: background-color 0.3s;
+    }
+
+    .btn-container2 button:hover {
+      background-color: #684F36;
+    }
+
+    .content {
+      padding-top: 20px;
+      text-align: left;
+      height: 150px;
+    }
+    .content-container {
+      text-align: center;
+      border-top: solid #8C6C55;
+      border-bottom: solid #8C6C55;
+    }
+
+    .map-section {
+      margin-top: 30px;
+      text-align: left;
+    }
+    .btn-container button {
+      background-color: #8C6C55;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      margin: 0 5px;
+      transition: background-color 0.3s;
+    }
+
+    .btn-container button:hover {
+      background-color: #684F36;
+    }
+
+    .content-container {
+      text-align: center;
+      border-top: solid #8C6C55;
+      border-bottom: solid #8C6C55;
+      margin-bottom: 20px;
+    }
+
+
+    </c:if>
 
   /*---------------------지도 영역--------------------------*/
     .map_wrap, .map_wrap * {margin:0;padding:0;font-family:'Malgun Gothic',dotum,'돋움',sans-serif;font-size:12px;}
@@ -332,6 +392,34 @@
           <!-- 작성자인 경우 수정 버튼 -->
           <button onclick="location.href='/lost/update?lostIdx=${item.lostIdx}'">수정</button>
         </c:when>
+        <c:when test="${ sessionScope.grant eq 'ADMIN'}" >
+       <form class="form" method="post">
+
+    <input type="hidden" name="resiver_idx" value="${item.lostIdx}">
+    <button type="button" class="banBtn btn">게시글 블라인드</button>
+</form>
+
+<script>
+    // 버튼 요소를 가져옵니다.
+    const banBtn = document.querySelector('.banBtn');
+    if (banBtn) {
+        banBtn.addEventListener('click', function () {
+            // 폼 태그를 가져옵니다.
+            const form = document.querySelector('.form');
+            if (form) {
+                // 폼의 액션 설정 및 제출
+                form.action = "/admin/post/ban";
+                form.submit();
+            } else {
+                console.error('폼 태그가 존재하지 않습니다.');
+            }
+        });
+    } else {
+        console.error('banBtn 버튼이 존재하지 않습니다.');
+    }
+</script>
+
+        </c:when>
         <c:otherwise>
           <!-- 작성자가 아니면 신고하기 버튼 -->
           <button type="button" onclick="openReportModal()">신고하기</button>
@@ -376,7 +464,6 @@
 
   // JSP에서 전달된 지역 상세 정보를 키워드로 설정
   var keyword = "<c:out value='${item.lLocationDetail}'/>";
-
   // 키워드로 장소를 검색합니다
   searchPlaces();
 
@@ -638,3 +725,4 @@
 </div>
 </body>
 </html>
+
