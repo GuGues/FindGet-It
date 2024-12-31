@@ -45,14 +45,15 @@ public class LostViewController {
         if( filePath != null) {
         	filePath = filePath.replace("\\", "/");
         	filePath = filePath.split("Desktop/")[1];
+        	
+        	model.addAttribute("filePath", filePath);
+            model.addAttribute("severUrl", severUrl);
         }
 
         LostItemVO item = lostViewMapper.selectLostItemDetail(lostIdx);
 
         model.addAttribute("item", item);
         model.addAttribute("loginEmail", email);
-        model.addAttribute("filePath", filePath);
-        model.addAttribute("severUrl", severUrl);
         System.out.println(filePath);
         return "lost/view";
         // 예: /WEB-INF/views/lost/view.jsp (View Resolver 설정에 따라 달라질 수 있음)
