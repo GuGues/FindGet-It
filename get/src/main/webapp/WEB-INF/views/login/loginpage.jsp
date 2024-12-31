@@ -91,7 +91,7 @@
     }
 </style>
 <body>
-
+<h2>${errorMessage}</h2>
 <div id="headImage">
     <img src="/img/loginHeader.png" alt="img">
 </div>

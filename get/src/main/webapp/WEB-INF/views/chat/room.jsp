@@ -18,7 +18,7 @@
         border-top-right-radius: 10px;
         overflow-y: scroll;
         overflow-x: hidden;
-        
+
         background-color: white;
         background-image: url('/logo/logo_open_gray.png');
         background-size: contain; /* 이미지 크기를 요소에 맞게 조정 */
@@ -35,6 +35,7 @@
         border: 1px solid silver;
         max-width: 300px;
         border-radius: 10px;
+        background: white;
     }
     .send .chat{background: #FFAE6B;}
     .receive .chat{background: #D9D9D9;}
@@ -53,7 +54,7 @@
        padding: 5px 15px;
        border: solid 2px #FFE3CC;
        border-radius: 5px;
-       background-color: #FFE3CC; 
+       background-color: #FFE3CC;
      }
      #back:hover{ border: solid 2px #FE8015; }
      ::-webkit-scrollbar {
@@ -78,13 +79,16 @@
     }
     .chatInput button{
       border: 1px solid #D9D9D9;
-      background-color: #FFAE6B; 
+      background-color: #FFAE6B;
       border-radius: 5px;
       padding: 7px 15px;
     }
     .col-md-6{ text-align: center;}
 </style>
 <body>
+<div>
+    <button id="back"><</button>
+</div>
 <div class="row">
     <div class="col-md-12">
         <div id="chatting">
@@ -122,25 +126,40 @@
     </form>
   </div>
 </div>
+
 <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 <script type="text/javascript">
+const updateView = function(){
+    fetch("/chatting/update-view",{
+        method:"POST",
+        headers:{
+            'Content-Type':'application/json'
+        },
+        body:JSON.stringify({
+            chatting_no:${chatting_no},
+            email:'${sessionScope.email}',
+        })
+    }).then(json=>json.text())
+        .then(result=>console.log(result))
+}
+const stompClient = new StompJs.Client({
+    brokerURL: 'ws://192.168.0.214:9090/ws-connect'
+});
     // 페이지 로드 시 connect() 메서드 실행
     window.onload = function () {
         connect();
     }
 
-    const stompClient = new StompJs.Client({
-        brokerURL: 'ws://192.168.0.214:9090/ws-connect'
-    });
+
 
     stompClient.onConnect = (frame) => {
         console.log('Connected: ' + frame);
 
         stompClient.subscribe('/queue/chat/room/' + ${chatting_no}, (greeting) => {
-            console.log("Send Message!!");
+            updateView();
             showGreeting(JSON.parse(greeting.body));
-        });
+        },{id:"message"});
     };
 
     stompClient.onWebSocketError = (error) => {
@@ -154,10 +173,8 @@
 
     function connect() {
         console.log("연결 시도");
-        var chatroomId = ${chatting_no};
-
-        console.log("채팅방 번호 " + chatroomId);
         stompClient.activate();
+        updateView();
     }
 
     function sendMessage(event) {
@@ -205,6 +222,7 @@
     document.querySelector('#chatting').scrollTo(0,  document.querySelector('#chatting').scrollHeight);
 
 document.getElementById("back").addEventListener('click',function (){
+    stompClient.unsubscribe("message");
     window.location.href = "/chatting/roomList";
 })
 </script>
