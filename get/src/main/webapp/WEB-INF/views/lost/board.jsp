@@ -222,6 +222,7 @@
     </c:when>
   </c:choose>
   <main>
+
     <div class="titleBox">
       <div class="right" style="font-size: 13px;">
         <a href="/">HOME</a>&nbsp;&gt;&nbsp;<a href="/lost">분실물</a>&nbsp;&gt;&nbsp;<a href="/lost">분실물 검색</a>
