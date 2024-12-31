@@ -123,6 +123,10 @@
     }
     h1 {
       font-family: yangjin;
+      margin-left: 7%;
+    }
+    .bigbox {
+      margin-left: 15%;
     }
   </style>
 </head>

@@ -28,7 +28,7 @@
             color: white; /* 버튼 텍스트 색 (흰색) */
             font-size: 30px; /* 텍스트 크기 */
             text-align: center; /* 텍스트 수평 정렬 */
-            line-height: 60px; /* 텍스트 수직 정렬 (버튼 가운데 배치) */
+            line-height: 65px; /* 텍스트 수직 정렬 (버튼 가운데 배치) */
             border-radius: 50%; /* 원 모양 버튼 만들기 */
             cursor: pointer; /* 마우스를 올리면 클릭 가능한 커서로 변경 */
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3); /* 그림자 효과 */
@@ -76,7 +76,7 @@
         }
 
         /* 모달 스타일 */
-        .modal {
+        #modal {
             display: none; /* 기본적으로 숨김 */
             position: fixed; /* 화면에 고정 */
             /*z-index: 1000;*/ /* 다른 요소보다 위에 표시 */
@@ -86,7 +86,7 @@
             height: 100%;
             /*background-color: rgba(0, 0, 0, 0.5); !* 배경 반투명 검정색 *!*/
             background: none;
-            z-index: 1;
+            z-index: 9999999999;
         }
 
         .modal-content {
@@ -155,9 +155,9 @@
             <img src="/icon/info.png" alt="Mypage" style="width:30px; height:30px;">
         </a>
         <c:if test="${ not empty sessionScope.idx }">
-        <a class="fab-option" href="#" onclick="openIdCheckModal()">
+        <button class="fab-option" onclick="openIdCheckModal()">
             <img src="/icon/get_talk_black.png" alt="Chat" style="width:30px; height:30px;">
-        </a>
+        </button>
         </c:if>
 
         <a class="fab-option" href="#">
@@ -166,7 +166,7 @@
     </div>
 </div>
   
-  <div class="modal" id="modal">
+  <div id="modal">
     <div class="modal-content">
         <h3 class="chatroomHead">${sessionScope.nickname}님의 채팅방</h3>
         <span class="close-button" onclick="closeModal()">&times;</span>
@@ -204,8 +204,8 @@
     }
     
     //배경 클릭시 채팅창 닫힘
-    const modal = document.querySelector('.modal');
-    modal.addEventListener('click', function(e){
+    const fabModal = document.querySelector('#modal');
+    fabModal.addEventListener('click', function(e){
     	if(e.target.classList!="modal-content"){
     		closeModal();
     	}
