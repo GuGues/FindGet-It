@@ -373,7 +373,7 @@
 
   <!-- 상단 버튼 (예: 1:1문의, 처리현황, 지도보기) -->
   <div class="btn-container">
-    <button>1대1 문의 보내기</button>
+    <button onclick="openChat()">1대1 채팅 보내기</button>
     <button>분실물 처리현황</button>
     <button>지도에 분실위치 보기</button>
   </div>
@@ -721,6 +721,14 @@
                 alert(err.message);
               });
     });
+      //-----------chat open-----------
+  function openChat() {
+        // 모달 표시
+        var modal = document.getElementById('modal');
+        var iframe = document.getElementById('modal-iframe');
+        iframe.src = '/chatting/room/open/${item.email}';
+        modal.style.display = 'block';
+    }
   </script>
 </div>
 </body>
