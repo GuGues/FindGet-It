@@ -86,7 +86,7 @@
     <span>분실하신 물건 여부를 확인하시고, 아래 기재된 보관장소연락처로 보관번호를 말씀해주시기 바랍니다.</span>
   </div>
 
-  <form action="/lost/write" method="post">
+  <form action="http://192.168.0.214:9090/lost/insert" method="POST" enctype="multipart/form-data">
 
     <div class="form-group">
       <label for="nickname">작성자 닉네임</label>
@@ -136,8 +136,8 @@
     </div>
 
     <div class="form-group image-upload-section">
-      <label>물품 이미지 업로드 (추후 구현 예정)</label>
-      <p style="color:gray;">※ 이미지 업로드 기능은 나중에 구현됩니다.</p>
+      <label>물품 이미지 업로드</label>
+      <p style="color:gray;"><input type="file" class="fileInput" name="uploadFile"></p>
     </div>
 
     <div class="form-group">

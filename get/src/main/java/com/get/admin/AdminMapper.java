@@ -7,11 +7,11 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface AdminMapper {
 
-	List<membersVo> getMembers(int offset, int recordsPerPage);
+	List<membersVo> getMembers(int arg0, int arg1);
 
 	int getTotalMembersCount();
 
-	List<membersVo> getBanMembers(int offset, int recordsPerPage);
+	List<membersVo> getBanMembers(int arg0, int arg1);
 
 	int getTotalBanMemberCount();
 
@@ -21,7 +21,7 @@ public interface AdminMapper {
 
 	void userBanClear(String mem_idx);
 
-	List<reportVo> adminPostList(int offset, int recordsPerPage);
+	List<reportVo> adminPostList(int arg0, int arg1);
 
 	int getTotaladminPostCount();
 

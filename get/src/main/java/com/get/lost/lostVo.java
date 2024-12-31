@@ -20,7 +20,7 @@ public class lostVo {
 	private String l_location_detail;
 	private int item_code;
 	private String l_item_detail;
-	private int reward;
+	private long reward;
 	private int color_code;
 	private int lost_state;
 	

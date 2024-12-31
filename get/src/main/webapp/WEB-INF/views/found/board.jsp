@@ -177,6 +177,36 @@
    .listTable tr:not(tr:first-child, tr:nth-child(2), tr:last-child){ border-top: solid 1px #DFD4D4; }
    .listTable tr:nth-child(1), .listTable tr:last-child{ height: 20px;}
    a{ color: black; cursor: pointer; text-decoration: none;}
+   .writeBtn{
+    border: solid 1px #FE8015;
+    border-radius: 5px;
+    padding: 5px 15px;
+    color: #FE8015;
+  }
+   <c:if test="${ sessionScope.grant eq 'ADMIN' }">
+     input[type="button"]{
+       border: solid 1px #8C6C55;
+       background-color: #8C6C55;
+       color: white;
+     }
+     .searchBtn{
+       border: solid 1px #8C6C55;
+       color: #8C6C55;
+     }
+     .searchBtn img{
+       filter: opacity(0.5) drop-shadow(0 0 0 #8C6C55);
+     }
+     .searchBtn:hover{
+       background-color: #8C6C55;
+       color: white;
+     }
+     .list { border: #684F36 solid 2.5px; }
+     .list tr:not(.listHead) td:not(td:first-child){
+     border-left: #684F36 solid 1px
+   }.list tr:not(.listHead, tr:nth-child(1), tr:last-child):hover{
+     background-color: #D3C4B1;
+   }
+   </c:if>
 </style>
 </head>
 <body>
@@ -196,7 +226,7 @@
       <h3 class="title">찾GET어 습득물</h3>
       <span>분실하신 물건 여부를 확인하시고, 아래 기재된 관할기관 신고나 습득자 채팅으로 연락바랍니다.</span>
     </div>
-    
+
     <form method="GET" class="search">
       <div>
         <span>물품명&nbsp;<input type="text" id="found_title" style="width: 50%;"></span>
@@ -225,7 +255,7 @@
         <span class="searchBtn"><img alt="" src="/img/dodbogi_orange.png">검색</span>
       </div>
     </form>
-    
+
     <!-- modal -->
     <div class="modal cate">
       <div class="modal_content">
@@ -313,6 +343,9 @@
       <%@include file="/WEB-INF/include/paging.jsp" %>
     </div>
     </div>
+    <c:if test="${ sessionScope.grant eq 'USER' }">
+      <a class="writeBtn" href="/found/write">게시글 작성 </a>
+    </c:if>
   </main>
   <script>
     const cateBtn = document.querySelector('#cateBtn');
@@ -320,7 +353,7 @@
     cateBtn.addEventListener('click', function(){
     	let modal = document.querySelector('.modal.cate');
     	modal.style.display = 'block';
-    	
+
     	//확인버튼
     	const ok = document.querySelector('.cateOk');
     	ok.addEventListener('click', function(){
@@ -346,7 +379,7 @@
     	close.addEventListener('click', function(){
     		modal.style.display = 'none';
     	});
-    	
+
     	//대분류출력
     	fetch('/getBigCate',{
     		method: 'GET',
@@ -363,13 +396,13 @@
     		bigCate.innerHTML = html;
     	});
     });
-    
+
     //선택 카테고리 소분류 출력
     const bigCate = document.querySelector('.bigCate');
     bigCate.addEventListener('click', function(e){
     	//console.log(e.target.classList);
     	const smallCate = document.querySelector('.smallCate');
-    	
+
     	if(e.target.classList == 'itemBigCate'){
     		let checked = document.querySelector('.itemBigCate.checked');
         	if(checked){
@@ -391,7 +424,7 @@
         		smallCate.innerHTML = html;
         	});
     	}
-    	
+
     	//소분류 카테고리 선택
     	smallCate.addEventListener('click', function(e){
     		if(e.target.classList == 'itemCate'){
@@ -403,14 +436,14 @@
     		}
     	});
     });
-    
-    
+
+
     const colorBtn = document.querySelector('#colorBtn');
     //모달 색상 분류
     colorBtn.addEventListener('click', function(){
     	let modal = document.querySelector('.modal.color');
     	modal.style.display = 'block';
-    	
+
     	//확인버튼
     	const ok = document.querySelector('.colorOk');
     	//console.log(ok);
@@ -438,7 +471,7 @@
     	close.addEventListener('click', function(){
     		modal.style.display = 'none';
     	});
-    	
+
     	fetch('/getColor', {
     		method: 'GET',
     		headers: { 'Content-Type': 'application/json' },
@@ -453,7 +486,7 @@
        		const colorCate = document.querySelector('.colorCate');
        		colorCate.innerHTML = html;
     	});
-    	
+
     	const colorContent = document.querySelector('.colorContent');
     	colorContent.addEventListener('click', function(e){
     		if(e.target.classList == 'colorList'){
@@ -465,13 +498,13 @@
     		}
     	});
     });
-    
+
     const addBtn = document.querySelector('#addBtn');
     //모달 주소 대분류
     addBtn.addEventListener('click', function(){
     	let modal = document.querySelector('.modal.addrSearch');
     	modal.style.display = 'block';
-    	
+
     	//확인버튼
     	const ok = document.querySelector('.locationOk');
     	ok.addEventListener('click', function(){
@@ -499,7 +532,7 @@
     	close.addEventListener('click', function(){
     		modal.style.display = 'none';
     	});
-    	
+
     	//대분류출력
     	fetch('/getLocationBig',{
     		method: 'GET',
@@ -516,12 +549,12 @@
     		locationBig.innerHTML = html;
     	});
     });
-    
+
     const locationContent = document.querySelector('.locationContent');
     locationContent.addEventListener('click', function(e){
     	//console.log(e.target);
     	const locationMiddle = document.querySelector('.locationMiddle');
-    	
+
     	if(e.target.classList == 'bigLocations'){
     		let checked = document.querySelector('.bigLocations.checked');
         	if(checked){
@@ -551,11 +584,11 @@
         	e.target.classList.add('checked');
     	}
     });
-    
+
     //검색
     const searchBtn = document.querySelector('.searchBtn');
     searchBtn.addEventListener('click', function(){
-    	
+
     	// 날짜 데이터 확인
     	let startDateStr = document.querySelector('#startDate');
     	let endDateStr = document.querySelector('#endDate');
@@ -597,7 +630,7 @@
     			return false;
     		}
     	}
-    	
+
     	let searchData = new URLSearchParams();
     	searchData.append('found_title',document.querySelector('#found_title').value );
     	searchData.append('item_code',document.querySelector('.item').id );
@@ -605,15 +638,15 @@
     	searchData.append('start_date',document.querySelector('#startDate').value );
     	searchData.append('end_date',document.querySelector('#endDate').value );
     	searchData.append('color_code',document.querySelector('.colorText').id );
-    	
+
     	window.location.href = '/getFoundSearch?' + searchData.toString();
-    	
+
     })
     //내용 삭제버튼
     const cateDelBtn = document.querySelector('#cateDelBtn');
     const addrDelBtn = document.querySelector('#addrDelBtn');
     const colorDelBtn = document.querySelector('#colorDelBtn');
-    
+
     cateDelBtn.addEventListener('click',function(){
     	document.querySelector('.item').removeAttribute('id');
     	document.querySelector('.item').value = "";
@@ -626,7 +659,7 @@
     	document.querySelector('.colorText').removeAttribute('id');
     	document.querySelector('.colorText').value = "";
     })
-    
+
     //tr 누르면 이동
     const listTable = document.querySelector('.listTable');
     listTable.addEventListener('click', function(e){
@@ -636,7 +669,15 @@
     		window.location.href = '/found/view?foundIdx='+e.target.parentNode.id;
     	}
     });
-    
+
   </script>
 </body>
+<style>
+  <c:if test="${ sessionScope.grant eq 'ADMIN' }">
+   .now { background-color: #8C6C55; }
+  .page-link { background-color: #B39977; }
+  .page-link:hover { background-color: #D3C4B1;  color: black;}
+  .page-arrow:hover { background-color: #D3C4B1; }
+   </c:if>
+</style>
 </html>
