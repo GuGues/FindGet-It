@@ -20,8 +20,8 @@
       max-width: 1000px;
       height: 100%;
       /*margin: 50px auto;*/
-      margin-left: 100px;
-      margin-right: 100px;
+      margin-left: 30%;
+      margin-right: 10%;
       background: #fff;
       border: none;
       padding: 20px;
@@ -29,7 +29,7 @@
 
     .detail-header {
       text-align: left;
-      margin-bottom: 20px;
+      margin-bottom: 5%;
       border-bottom: solid #FF914B;
     }
 
@@ -162,7 +162,7 @@
       z-index: 1000;
     }
 
-    .modal-content {
+    .modal-content2 {
       background: white;
       padding: 20px;
       border-radius: 8px;
@@ -652,7 +652,7 @@
 
 <!-- 신고 모달 영역 -->
 <div id="reportModalOverlay" class="modal-overlay">
-  <div class="modal-content">
+  <div class="modal-content2">
     <h3>신고 작성</h3>
     <form id="reportForm">
       <input type="hidden" name="reporterIdx" value="${loginMemIdx}" />

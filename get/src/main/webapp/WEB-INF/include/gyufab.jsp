@@ -29,7 +29,7 @@
             height: 60px; /* 버튼의 높이 */
             font-size: 30px; /* 텍스트 크기 */
             text-align: center; /* 텍스트 수평 정렬 */
-            line-height: 60px; /* 텍스트 수직 정렬 (버튼 가운데 배치) */
+            line-height: 65px; /* 텍스트 수직 정렬 (버튼 가운데 배치) */
             border-radius: 50%; /* 원 모양 버튼 만들기 */
             cursor: pointer; /* 마우스를 올리면 클릭 가능한 커서로 변경 */
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3); /* 그림자 효과 */
@@ -55,6 +55,7 @@
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3); /* 그림자 효과 */
             transition: transform 0.2s; /* 변환 효과 시간 설정 */
         }
+
         /* 링크 기본 스타일 없애기 */
         a {
             text-decoration: none; /* 링크의 밑줄 제거 */
@@ -135,8 +136,8 @@
             background-color: #8C6C55; /* 배경색을 주황색으로 변경 */
             transform: scale(1.2); /* 버튼 크기를 1.2배 확대 */
         }
-        </c:if> 
-        <c:if test="${url.contains('/home')}">
+        </c:if>
+        <c:if test="${url.contains('/home')">
           .fab{
             background-color: #373737; /* 버튼의 배경색 (어두운 회색) */
             color: white; /* 버튼 텍스트 색 (흰색) */
@@ -148,22 +149,12 @@
         .fab-option:hover {
             background-color: #FE8015; /* 배경색을 주황색으로 변경 */
             transform: scale(1.1); /* 마우스를 올리면 1.1배 확대 */
-        } 
+        }
         /* FAB 버튼에 마우스를 올렸을 때 */
         .fab:hover {
             background-color: #FE8015; /* 배경색을 주황색으로 변경 */
             transform: scale(1.2); /* 버튼 크기를 1.2배 확대 */
         }
-        </c:if>
-        <c:if test="${url.contains('/home') && sessionScope.grant eq 'ADMIN'}">
-        .fab:hover {
-            background-color: #8C6C55; /* 배경색을 주황색으로 변경 */
-            transform: scale(1.2); /* 버튼 크기를 1.2배 확대 */
-        }
-        .fab-option:hover {
-            background-color: #8C6C55; /* 배경색을 주황색으로 변경 */
-            transform: scale(1.1); /* 마우스를 올리면 1.1배 확대 */
-        } 
         </c:if>
         <c:if test="${!url.contains('/home') && sessionScope.grant ne 'ADMIN'}">
           .fab{
@@ -194,8 +185,8 @@
     <div class="fab-options" id="fab-options">
 <sec:authorize access="isAnonymous()">
   <a class="fab-option" href="/login">
-    <c:if test="${url.contains('/home')}">
-      <img src="/icon/login_white.png" alt="Login" style="width:25px; height:25px;">
+    <c:if test="${url.contains('/home') || sessionScope.grant eq 'ADMIN'}">
+      <img src="/icon/login.png" alt="Login" style="width:30px; height:30px;">
     </c:if>
     <c:if test="${!url.contains('/home') && sessionScope.grant ne 'ADMIN'}">
       <img src="/icon/login_orange.png" alt="Login" style="width:30px; height:30px;">
@@ -206,7 +197,7 @@
 <sec:authorize access="isAuthenticated()">
   <a class="fab-option" href="/logout">
     <c:if test="${url.contains('/home') || sessionScope.grant eq 'ADMIN'}">
-      <img src="/icon/logout_white.png" alt="Logout" style="width:30px; height:27px;">
+      <img src="/icon/logout.png" alt="Logout" style="width:30px; height:30px;">
     </c:if>
     <c:if test="${!url.contains('/home') && sessionScope.grant ne 'ADMIN'}">
       <img src="/icon/logout_orange.png" alt="Logout" style="width:30px; height:30px;">
@@ -216,13 +207,14 @@
 
         <a class="fab-option" href="/mypage">
           <c:if test="${url.contains('/home') || sessionScope.grant eq 'ADMIN'}">
-            <img src="/icon/info_white.png" alt="Mypage" style="width:28px; height:25px;">
+            <img src="/icon/info.png" alt="Mypage" style="width:30px; height:30px;">
           </c:if>
           <c:if test="${!url.contains('/home') && sessionScope.grant ne 'ADMIN'}">
             <img src="/icon/info_orange.png" alt="Mypage" style="width:30px; height:30px;">
           </c:if>
         </a>
         <c:if test="${ not empty sessionScope.idx }">
+<<<<<<<< HEAD:get/src/main/webapp/WEB-INF/include/fab.jsp
         <a class="fab-option" href="#" onclick="openIdCheckModal()">
           <c:if test="${url.contains('/home') || sessionScope.grant eq 'ADMIN'}">
             <img src="/icon/get_talk_white.png" alt="Chat" style="width:30px; height:30px;">
@@ -231,6 +223,11 @@
             <img src="/icon/get_talk_orange.png" alt="Chat" style="width:30px; height:30px;">
           </c:if>
         </a>
+========
+        <button class="fab-option" onclick="openIdCheckModal()">
+            <img src="/icon/get_talk_black.png" alt="Chat" style="width:30px; height:30px;">
+        </button>
+>>>>>>>> origin/develop:get/src/main/webapp/WEB-INF/include/gyufab.jsp
         </c:if>
 
         <a class="fab-option" href="">
@@ -238,7 +235,11 @@
         </a>
     </div>
 </div>
+<<<<<<<< HEAD:get/src/main/webapp/WEB-INF/include/fab.jsp
+
+========
   
+>>>>>>>> origin/develop:get/src/main/webapp/WEB-INF/include/gyufab.jsp
   <div id="modal">
     <div class="modal-content">
         <h3 class="chatroomHead">${sessionScope.nickname}님의 채팅방</h3>
@@ -275,7 +276,7 @@
         iframe.src = ''; // iframe 내용 제거
         modal.style.display = 'none';
     }
-    
+
     //배경 클릭시 채팅창 닫힘
     const fabModal = document.querySelector('#modal');
     fabModal.addEventListener('click', function(e){

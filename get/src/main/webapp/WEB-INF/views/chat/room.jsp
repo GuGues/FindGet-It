@@ -90,9 +90,10 @@
     <div class="col-md-12">
         <div id="chatting">
           <button id="back">⬅︎</button>
-            <div class="send">&nbsp;</div>
-            <div class="send">&nbsp;</div>
-          <c:forEach items="${chatList}" var="chat">
+          <c:forEach items="${chatList}" var="chat" varStatus="i">
+            <c:if test="${ i.index==0 }">
+              <div>&nbsp;</div><div>&nbsp;</div>
+            </c:if>
               <c:choose>
                   <c:when test="${chat.sender eq sessionScope.email}">
                       <div class="send">
