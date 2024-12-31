@@ -30,7 +30,7 @@
    .btn:hover{ background-color: #8C6C55;}
    .modal{
     display:none;
-    
+
     justify-content: center;
     top:0;
     left:0;
@@ -39,25 +39,25 @@
     height:100%;
 
     background-color: rgba(0,0,0,0.3);
-    z-index: 3; 
+    z-index: 3;
    }
    .modal_content{
       position:absolute;
-      
+
       top: 50%;
       left: 50%;
       width:700px;
       height:800px;
-      transform: translate(-50%, -50%);	
+      transform: translate(-50%, -50%);
 
-      padding:40px;  
+      padding:40px;
 
       text-align: center;
 
       background-color: rgb(255,255,255);
-      border-radius:10px; 
+      border-radius:10px;
       box-shadow:0 2px 3px 0 rgba(34,36,38,0.15);
-      
+
    }
    .content{ height: 60%; margin-top: 40px;}
    .member_detail {
@@ -119,8 +119,9 @@
     <table class="memberThead">
       <colgroup>
         <col style="width: 5%;">
-        <col style="width: 55%;">
+        <col style="width: 45%;">
         <col style="width: 20%;">
+        <col style="width: 10%;">
         <col style="width: 10%;">
         <col style="width: 10%;">
       </colgroup>
@@ -128,6 +129,7 @@
         <td>순번</td>
         <td>제목</td>
         <td>작성자</td>
+        <td>상태</td>
         <td>신고횟수</td>
         <td>작성일</td>
       </tr>
@@ -135,8 +137,9 @@
     <table class="memberTable">
       <colgroup>
         <col style="width: 5%;">
-        <col style="width: 55%;">
+        <col style="width: 45%;">
         <col style="width: 20%;">
+        <col style="width: 10%;">
         <col style="width: 10%;">
         <col style="width: 10%;">
       </colgroup>
@@ -145,6 +148,14 @@
           <td>${ (pagingHelper.nowPage - 1 )* 15 + i.index + 1 }</td>
           <td>${ report.title }</td>
           <td>${ report.email }</td>
+          <td>
+            <c:if test="${ report.post_state eq 1 }">
+              완료
+            </c:if>
+            <c:if test="${ report.post_state eq 2 }">
+              진행
+            </c:if>
+          </td>
           <td>${ report.resiver_idx_cnt }</td>
           <td>${ report.p_reg_date }</td>
         </tr>
@@ -195,7 +206,7 @@
     closeBtn.addEventListener('click', function(){
     	modal.style.display = 'none';
     });
-    
+
     //멤버클릭시
     const memberTable = document.querySelector('.memberTable');
     memberTable.addEventListener('click', function(e){
@@ -210,25 +221,24 @@
     		.then(result => result.json())
     		.then(map => {
     			//신고받은 게시글
-    			console.log(map);
     			const resive = document.querySelector('.resive');
     			let resiveHTML;
     			if(map.found){
-    				let found = map.found; 
+    				let found = map.found;
     				resiveHTML = '게시판 구분 : 습득물 게시판<br>'
     					       + '제목 : ' + found.foundTitle + '<br>'
     				           + '내용 : ' + found.foundContent + '<br>';
-    				
+
     			}
     			else if(map.lost){
-    				let lost = map.lost; 
+    				let lost = map.lost;
     				resiveHTML = '게시판 구분 : 분실물 게시판<br>'
 					           + '제목:' + lost.lostTitle + '<br>'
     				           + '내용 : ' + lost.lostContent + '<br>'
     				           + '사례금 : '+ lost.reward;
     			}
     			resive.innerHTML = resiveHTML;
-    			
+
     			//신고목록
     			let report = map.reports;
     			let reportHTML ='';
@@ -241,25 +251,32 @@
     			      +'</tr>';
     			  reports.innerHTML = reportHTML;
     			}
-    			
+
     			//게시글 상세보기 클릭시
     	    	const aBtn = document.querySelector('.aBtn');
     	        aBtn.addEventListener('click', function(){
     	        	console.log(e.target.parentNode.id);
     	        	if(map.found){
-    	        	  window.location.href = "/found/view?foundIdx="+e.target.parentNode.id;    	        		
+    	        	  window.location.href = "/found/view?foundIdx="+e.target.parentNode.id;
     	        	}
     	        	else if(map.lost){
-    	        	  window.location.href = "/lost/view?lostIdx="+e.target.parentNode.id;    	        		
+    	        	  window.location.href = "/lost/view?lostIdx="+e.target.parentNode.id;
     	        	}
     	        });
-    	        
+
     	        document.querySelector('.resiver_idx').value = e.target.parentNode.id;
     	        //차단버튼 클릭시
     	        const banBtn = document.querySelector('.banBtn');
     	        banBtn.addEventListener('click', function(){
     	        	const form = document.querySelector('.form');
-    	        	form.action = "/admin/post/ban";
+    	        	let stateUrl = '';
+    	        	if(map.lost){
+    	        		stateUrl = "lostState="+map.lost.lostState
+    	        	}
+    	        	else if(map.found){
+    	        		stateUrl = "foundState="+map.found.foundState
+    	        	}
+    	        	form.action = "/admin/post/ban?"+stateUrl;
     	        	form.submit();
     	        })
     		});
@@ -267,9 +284,4 @@
     });
   </script>
 </body>
-<style>
-  .now { background-color: #8C6C55; }
-  .page-link { background-color: #B39977; }
-  .page-link:hover { background-color: #D3C4B1;  color: black;}
-</style>
 </html>

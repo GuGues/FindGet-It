@@ -1,17 +1,18 @@
 package com.get.admin;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface AdminMapper {
 
-	List<membersVo> getMembers(int offset, int recordsPerPage);
+	List<membersVo> getMembers(int arg0, int arg1);
 
 	int getTotalMembersCount();
 
-	List<membersVo> getBanMembers(int offset, int recordsPerPage);
+	List<membersVo> getBanMembers(int arg0, int arg1);
 
 	int getTotalBanMemberCount();
 
@@ -21,16 +22,16 @@ public interface AdminMapper {
 
 	void userBanClear(String mem_idx);
 
-	List<reportVo> adminPostList(int offset, int recordsPerPage);
+	List<reportVo> adminPostList(int arg0, int arg1);
 
 	int getTotaladminPostCount();
 
 	List<reportVo> getReport(String resiver_idx);
 
-	void postBan(String resiver_idx);
+	void postBan(Map<String, String> map);
 
 	List<reportVo> adminBanPostList(int offset, int recordsPerPage);
 
-	void postBanClear(String resiver_idx);
+	void postBanClear(Map<String, String> map);
 
 }

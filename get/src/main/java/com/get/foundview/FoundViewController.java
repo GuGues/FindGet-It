@@ -1,6 +1,7 @@
 package com.get.foundview;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,6 +20,9 @@ public class FoundViewController {
 
     @Autowired
     private FoundViewMapper foundViewMapper;
+    
+    @Value("${server.img.url}")
+    private String severUrl;
 
     /**
      * 습득물 상세 보기
@@ -35,6 +39,15 @@ public class FoundViewController {
             } else if (principal instanceof String) {
                 email = (String) principal;
             }
+        }
+        
+        String filePath = foundViewMapper.getFoundFilePath(foundIdx);
+        if( filePath != null) {
+        	filePath = filePath.replace("\\", "/");
+        	filePath = filePath.split("Desktop/")[1];
+        	
+        	model.addAttribute("filePath", filePath);
+            model.addAttribute("severUrl", severUrl);
         }
 
 

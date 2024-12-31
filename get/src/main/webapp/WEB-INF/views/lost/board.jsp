@@ -1,7 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<!DOCTYPE html>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
@@ -15,11 +16,11 @@
     padding: 20px 40px;
   }
   .searchBtn img{
-    max-width: 20px;
+    max-width: 20px; 
   }
   .modal{
     display:none;
-
+    
     justify-content: center;
     top:0;
     left:0;
@@ -28,23 +29,23 @@
     height:100%;
 
     background-color: rgba(0,0,0,0.3);
-    z-index: 3;
+    z-index: 3; 
    }
    .modal_content{
       position:absolute;
-
+      
       top: 50%;
       left: 50%;
       width:400px;
       height:600px;
-      transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%);	
 
-      padding:40px;
+      padding:40px;  
 
       text-align: center;
 
       background-color: rgb(255,255,255);
-      border-radius:10px;
+      border-radius:10px; 
       box-shadow:0 2px 3px 0 rgba(34,36,38,0.15);
    }
    .content{
@@ -54,7 +55,7 @@
    .warning, .warningDate{
     position:absolute;
     display: none;
-
+    
     justify-content: center;
     top:0;
     left:0;
@@ -67,20 +68,20 @@
    }
    .warning_content, .warningDate_content{
      position:absolute;
-
+      
       top: 10%;
       left: 50%;
       width:320px;
       height:70px;
-      transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%);	
 
-      padding:20px;
+      padding:20px;  
 
       text-align: center;
 
       background-color: #FFD5B2;
       border-radius:10px;
-
+      
       color: #FE8015;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       border: 2px solid rgba(0, 0, 0, 0.2);
@@ -90,7 +91,7 @@
    }
    .locationMiddle{
      max-height: 400px;
-     overflow-y: auto;
+     overflow-y: auto; 
    }
    .titleBox{
      min-height: 110px;
@@ -179,12 +180,36 @@
      display: flex;
      flex-direction: column;
      justify-content: center;
-     align-items: center;
+     align-items: center; 
    }
    .listTable{ padding: 0; }
    .listTable tr:not(tr:first-child, tr:nth-child(2), tr:last-child){ border-top: solid 1px #DFD4D4; }
    .listTable tr:nth-child(1), .listTable tr:last-child{ height: 20px;}
    a{ color: black; cursor: pointer; text-decoration: none;}
+   <c:if test="${ sessionScope.grant eq 'ADMIN' }">
+     input[type="button"]{
+       border: solid 1px #8C6C55;
+       background-color: #8C6C55;
+       color: white;
+     }
+     .searchBtn{
+       border: solid 1px #8C6C55;
+       color: #8C6C55;
+     }
+     .searchBtn img{
+       filter: opacity(0.5) drop-shadow(0 0 0 #8C6C55);
+     }
+     .searchBtn:hover{
+       background-color: #8C6C55;
+       color: white;
+     }
+     .list { border: #684F36 solid 2.5px; }
+     .list tr:not(.listHead) td:not(td:first-child){
+     border-left: #684F36 solid 1px
+   }.list tr:not(.listHead, tr:nth-child(1), tr:last-child):hover{
+     background-color: #D3C4B1;
+   }
+   </c:if>
 </style>
 </head>
 <body>
@@ -321,8 +346,9 @@
       <%@include file="/WEB-INF/include/paging.jsp" %>
     </div>
     </div>
-    <a class="writeBtn" href="/lost/write">게시글 작성 </a>
-
+    <c:if test="${ sessionScope.grant eq 'USER' }">
+      <a class="writeBtn" href="/lost/write">게시글 작성 </a>
+    </c:if>
   </main>
   <script>
     const cateBtn = document.querySelector('#cateBtn');
@@ -649,4 +675,12 @@
 
   </script>
 </body>
+<style>
+  <c:if test="${ sessionScope.grant eq 'ADMIN' }">
+   .now { background-color: #8C6C55; }
+  .page-link { background-color: #B39977; }
+  .page-link:hover { background-color: #D3C4B1;  color: black;}
+  .page-arrow:hover { background-color: #D3C4B1; }
+   </c:if>
+</style>
 </html>

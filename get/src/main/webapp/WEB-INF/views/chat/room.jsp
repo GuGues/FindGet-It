@@ -11,15 +11,20 @@
 <style>
     #chatting {
         width: 400px;
-        height: 550px;
-        border: 1px solid silver;
-        border-radius: 5%;
-        background: azure;
+        height: 80vh;
+        border: 2px solid #D9D9D9;
+        border-bottom: none;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
         overflow-y: scroll;
         overflow-x: hidden;
+
+        background-color: white;
+        background-image: url('/logo/logo_open_gray.png');
+        background-size: contain; /* 이미지 크기를 요소에 맞게 조정 */
+        background-position: center; /* 이미지가 가운데 정렬되도록 설정 */
+        background-repeat: no-repeat; /* 이미지가 반복되지 않도록 설정 */
     }
-
-
     .time {
         font-size: 10px;
     }
@@ -32,6 +37,8 @@
         border-radius: 10px;
         background: white;
     }
+    .send .chat{background: #FFAE6B;}
+    .receive .chat{background: #D9D9D9;}
     .receive{
         margin: 4px;
         display: flex;
@@ -41,6 +48,42 @@
         margin: 4px;
         display: flex;
         justify-content: right;    }
+     #back{
+       position: fixed;
+       margin: 10px;
+       padding: 5px 15px;
+       border: solid 2px #FFE3CC;
+       border-radius: 5px;
+       background-color: #FFE3CC;
+     }
+     #back:hover{ border: solid 2px #FE8015; }
+     ::-webkit-scrollbar {
+    width: 0; /* 세로 스크롤바의 너비 */
+    height: 0; /* 가로 스크롤바의 높이 */
+    }
+    .chatInput{
+      width: 100%;
+      background-color: white;
+      border: 2px solid #D9D9D9;
+      border-bottom-left-radius: 10px;
+      border-bottom-right-radius: 10px;
+      padding: 5px;
+      background-color: #FFE3CC;
+    }
+    .chatInput input{
+      border: 1px solid #D9D9D9;
+      border-radius: 2px;
+      width: 80%;
+      height: 25px;
+      margin: 10px 0;
+    }
+    .chatInput button{
+      border: 1px solid #D9D9D9;
+      background-color: #FFAE6B;
+      border-radius: 5px;
+      padding: 7px 15px;
+    }
+    .col-md-6{ text-align: center;}
 </style>
 <body>
 <div>
@@ -49,41 +92,39 @@
 <div class="row">
     <div class="col-md-12">
         <div id="chatting">
-            <c:forEach items="${chatList}" var="chat">
-                <c:choose>
-                    <c:when test="${chat.sender eq sessionScope.email}">
-                        <div class="send">
-                            <div>
-                            <span class="time">${chat.send_time}</span>
-                            <span class="chat">${chat.message_content}</span>
-                            </div>
-                        </div>
-                    </c:when>
-                    <c:otherwise>
-                        <div class="receive">
-                            <div>
-                                <span class="chat">${chat.message_content}</span>
-                                <span class="time">${chat.send_time}</span>
-                            </div>
-                        </div>
-                    </c:otherwise>
-                </c:choose>
-            </c:forEach>
+          <button id="back">⬅︎</button>
+          <c:forEach items="${chatList}" var="chat">
+              <c:choose>
+                  <c:when test="${chat.sender eq sessionScope.email}">
+                      <div class="send">
+                          <div>
+                          <span class="time">${chat.send_time}</span>
+                          <span class="chat">${chat.message_content}</span>
+                          </div>
+                      </div>
+                  </c:when>
+                  <c:otherwise>
+                      <div class="receive">
+                          <div>
+                              <span class="chat">${chat.message_content}</span>
+                              <span class="time">${chat.send_time}</span>
+                          </div>
+                      </div>
+                  </c:otherwise>
+              </c:choose>
+          </c:forEach>
         </div>
     </div>
 </div>
 <div class="row">
-    <div class="row">
-        <div class="col-md-6">
-            <form class="form-inline">
-                <div class="form-group">
-                    <input type="text" id="message_content" class="form-control" placeholder="채팅 입력">
-                    <button id="send" class="btn btn-default" onclick="sendMessage(event)">Send</button>
-                </div>
-            </form>
+  <div class="col-md-6">
+    <form class="form-inline">
+        <div class="form-group chatInput">
+            <input type="text" id="message_content" class="form-control" placeholder="채팅 입력">
+            <button id="send" class="btn btn-default" onclick="sendMessage(event)">Send</button>
         </div>
-    </div>
-
+    </form>
+  </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
