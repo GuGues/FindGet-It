@@ -79,31 +79,31 @@
         .modal {
             display: none; /* 기본적으로 숨김 */
             position: fixed; /* 화면에 고정 */
-            z-index: 1000; /* 다른 요소보다 위에 표시 */
+            /*z-index: 1000;*/ /* 다른 요소보다 위에 표시 */
             left: 0;
             top: 0;
             width: 100%; /* 전체 너비 */
-            height: 100%; /* 전체 높이 */
-            overflow: auto; /* 필요 시 스크롤 *!*/
+            height: 100%;
             /*background-color: rgba(0, 0, 0, 0.5); !* 배경 반투명 검정색 *!*/
+            background: none;
+            z-index: 1;
         }
 
         .modal-content {
-            background-color: #FFAE6B; /* 모달 내용 배경색 */
-            /*margin: 5% auto; !* 상하 5% 여백을 두고 가운데 정렬 *!*/
-            margin-top: 15%;
-            margin-bottom: 15%;
-            padding-bottom: 30px;
-            padding-left: 3px;
-            padding-right: 3px;
-            border: 1px solid #888; /* 테두리 */
-            width: 450px; /* 너비 설정 */
-            height: 700px;
-            max-width: 90%; /* 최대 너비 제한 */
-            position: relative; /* 닫기 버튼 위치를 위해 필요 */
-            border-radius: 10px; /* 모서리 반지름 추가로 둥근 모서리 적용 */
-            box-sizing: border-box; /* 박스 크기를 포함하도록 설정 */
-        }
+    background-color: #FFAE6B; /* 모달 내용 배경색 */
+    padding: 20px; /* 패딩 추가 */
+    border: 1px solid #888; /* 테두리 */
+    width: 450px; /* 너비 설정 */
+    height: 700px; /* 높이 설정 */
+    max-width: 90%; /* 최대 너비 제한 */
+    position: fixed; /* 화면에 고정 */
+    right: 20px; /* 화면 오른쪽 20px 거리 */
+    bottom: 20px; /* 화면 아래쪽 20px 거리 */
+    border-radius: 10px; /* 모서리 반지름 추가로 둥근 모서리 적용 */
+    box-sizing: border-box; /* 박스 크기를 포함하도록 설정 */
+    z-index: 3; /* 다른 요소들보다 위에 보이도록 설정 */
+    margin: 0;
+}
         .chatroomHead {
             display: flex;
             height: 20px;
@@ -154,23 +154,25 @@
         <a class="fab-option" href="/mypage">
             <img src="/icon/info.png" alt="Mypage" style="width:30px; height:30px;">
         </a>
-
+        <c:if test="${ not empty sessionScope.idx }">
         <a class="fab-option" href="#" onclick="openIdCheckModal()">
             <img src="/icon/get_talk_black.png" alt="Chat" style="width:30px; height:30px;">
         </a>
+        </c:if>
 
         <a class="fab-option" href="#">
             TOP
         </a>
     </div>
 </div>
-<div id="modal" class="modal">
+  
+  <div class="modal" id="modal">
     <div class="modal-content">
         <h3 class="chatroomHead">${sessionScope.nickname}님의 채팅방</h3>
         <span class="close-button" onclick="closeModal()">&times;</span>
         <iframe id="modal-iframe" src="" frameborder="0"></iframe>
     </div>
-</div>
+  </div>
 <script>
     // FAB 버튼을 클릭하면 확장/축소 메뉴를 토글하는 기능
     const mainFab = document.getElementById("main-fab"); // 메인 FAB 버튼
@@ -200,6 +202,14 @@
         iframe.src = ''; // iframe 내용 제거
         modal.style.display = 'none';
     }
+    
+    //배경 클릭시 채팅창 닫힘
+    const modal = document.querySelector('.modal');
+    modal.addEventListener('click', function(e){
+    	if(e.target.classList!="modal-content"){
+    		closeModal();
+    	}
+    });
 </script>
 
 </body>

@@ -31,7 +31,7 @@
 <h1>습득물 수정</h1>
 
 <!-- 닉네임과 관리번호는 read-only -->
-<form action="/found/update" method="post">
+<form  action="http://192.168.0.214:9090/found/update" method="POST" enctype="multipart/form-data">
   <!-- 관리번호 (foundIdx)는 숨겨진 input or 읽기 전용 -->
   <div class="form-group">
     <label for="foundIdx">관리번호</label>
@@ -77,6 +77,11 @@
     <label for="fItemDetail">물품 상세 정보</label>
     <input type="text" id="fItemDetail" name="fItemDetail" class="form-control"
            value="${item.fItemDetail}" />
+  </div>
+  
+  <div class="form-group image-upload-section">
+      <label>물품 이미지 업로드</label>
+      <p style="color:gray;"><input type="file" class="fileInput" name="uploadFile"></p>
   </div>
 
   <div class="form-group">

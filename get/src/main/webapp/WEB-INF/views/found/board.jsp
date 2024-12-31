@@ -672,11 +672,4 @@
     
   </script>
 </body>
-<style>
-  <c:if test="${ sessionScope.grant eq 'ADMIN' }">
-   .now { background-color: #8C6C55; }
-  .page-link { background-color: #B39977; }
-  .page-link:hover { background-color: #D3C4B1;  color: black;}
-   </c:if>
-</style>
 </html>
