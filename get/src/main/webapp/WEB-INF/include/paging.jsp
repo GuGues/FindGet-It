@@ -48,9 +48,7 @@
     font-weight: bold;
 }
 
-.page-link { background-color: #FFAE6B; }
-.page-link:hover { background-color: #FFD5B2;  color: black;}
-.page-arrow:hover { background-color: #FFD5B2; }
+.page-link:hover { color: black;}
 
 /* 링크에 마우스 오버 시 배경색 변경 */
 /* .page-link:hover, .page-arrow:hover {
@@ -62,7 +60,6 @@
 /*     background-color: #333; */
     color: white;
 }
-.now { background-color: #FE8015; }
 .page-arrow { background-color: #DFDFDF; }
  
 
@@ -74,4 +71,17 @@
 .arrow-next {
     margin-left: 10px;
 }
+
+<c:if test="${ sessionScope.grant eq 'ADMIN' }">
+   .now { background-color: #8C6C55; }
+  .page-link { background-color: #B39977; }
+  .page-link:hover { background-color: #D3C4B1;}
+  .page-arrow:hover { background-color: #D3C4B1; }
+</c:if>
+<c:if test="${ sessionScope.grant ne 'ADMIN' }">
+   .now { background-color: #FE8015; }
+  .page-link { background-color: #FFAE6B; }
+  .page-link:hover { background-color: #FFD5B2;}
+  .page-arrow:hover { background-color: #FFD5B2; }
+</c:if>
 </style>
