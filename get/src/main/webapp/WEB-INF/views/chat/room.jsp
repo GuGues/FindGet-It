@@ -86,13 +86,12 @@
     .col-md-6{ text-align: center;}
 </style>
 <body>
-<div>
-    <button id="back"><</button>
-</div>
 <div class="row">
     <div class="col-md-12">
         <div id="chatting">
           <button id="back">⬅︎</button>
+            <div class="send">&nbsp;</div>
+            <div class="send">&nbsp;</div>
           <c:forEach items="${chatList}" var="chat">
               <c:choose>
                   <c:when test="${chat.sender eq sessionScope.email}">

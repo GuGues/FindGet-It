@@ -152,3 +152,4 @@
   
   <div id="side_com">Ⓒnot_null</div>
 </nav>
+<%@ include file="/WEB-INF/include/fab.jsp" %>
