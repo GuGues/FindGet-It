@@ -4,7 +4,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <div class="pagination">
     <c:if test="${pagingHelper.hasPreviousPageGroup()}">
-        <a href="?page=1" class="page-arrow arrow-first">⇤</a>
+        <a href="?page=1" class="page-arrow arrow-first">⇤</a>&nbsp;
         <a href="?page=${pagingHelper.previousPageGroupStart}" class="page-arrow arrow-prev">←</a>
     </c:if>
 
@@ -20,7 +20,7 @@
     </c:forEach>
 
     <c:if test="${pagingHelper.hasNextPageGroup()}">
-        <a href="?page=${pagingHelper.nextPageGroupStart}" class="page-arrow arrow-next">→</a>
+        <a href="?page=${pagingHelper.nextPageGroupStart}" class="page-arrow arrow-next">→</a>&nbsp;
         <a href="?page=${pagingHelper.totalPages}" class="page-arrow arrow-last">⇥</a>
     </c:if>
 </div>
@@ -50,7 +50,7 @@
 
 .page-link { background-color: #FFAE6B; }
 .page-link:hover { background-color: #FFD5B2;  color: black;}
-.page-arrow:hover { background-color: #EFC03E; }
+.page-arrow:hover { background-color: #FFD5B2; }
 
 /* 링크에 마우스 오버 시 배경색 변경 */
 /* .page-link:hover, .page-arrow:hover {
@@ -63,7 +63,7 @@
     color: white;
 }
 .now { background-color: #FE8015; }
-.page-arrow { background-color: #9B7714; }
+.page-arrow { background-color: #DFDFDF; }
  
 
 /* 좌우 화살표에 여백 추가 */
