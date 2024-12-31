@@ -216,9 +216,11 @@
 	  
 	  //작성 버튼 클릭시
 	  const write = document.querySelector('.write');
-	  write.addEventListener('click', function(){
-		  window.location.href = '/notice/insert';
-	  });
+	  if(write){
+		  write.addEventListener('click', function(){
+			  window.location.href = '/notice/insert';
+		  });
+	  }
   </script>
 </body>
 <style>
@@ -226,9 +228,6 @@
    .contentBox { border: solid 2px #8C6C55; }
    tr td:nth-child(1):not(.tableTitle td, .answer td)  { border-right: 2px solid #B39977;  /* 셀에 경계 추가 */}
    tr:not(.tableTitle tr):hover{ background-color: #D3C4B1 }
-   .now { background-color: #8C6C55; }
-  .page-link { background-color: #B39977; }
-  .page-link:hover { background-color: #D3C4B1;  color: black;}
    </c:if>
 </style>
 </html>

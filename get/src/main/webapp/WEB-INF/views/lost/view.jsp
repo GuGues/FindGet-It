@@ -464,7 +464,6 @@
 
   // JSP에서 전달된 지역 상세 정보를 키워드로 설정
   var keyword = "<c:out value='${item.lLocationDetail}'/>";
-
   // 키워드로 장소를 검색합니다
   searchPlaces();
 
@@ -722,9 +721,6 @@
                 alert(err.message);
               });
     });
-
-
-
   </script>
 </div>
 </body>

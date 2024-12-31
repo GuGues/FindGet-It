@@ -86,7 +86,7 @@
     <span>분실하신 물건 여부를 확인하시고, 아래 기재된 보관장소연락처로 보관번호를 말씀해주시기 바랍니다.</span>
   </div>
 
-  <form action="/found/write" method="post">
+  <form action="http://192.168.0.214:9090/found/insert" method="POST" enctype="multipart/form-data">
 
     <div class="form-group">
       <label for="nickname">작성자 닉네임</label>
@@ -132,7 +132,7 @@
 
     <div class="form-group">
       <label for="lItemDetail">물품 상세 정보</label>
-      <input type="text" id="lItemDetail" name="lItemDetail" class="form-control">
+      <input type="text" id="fItemDetail" name="lItemDetail" class="form-control">
     </div>
 
     <div class="form-group">
@@ -142,13 +142,8 @@
 
     <!-- 이미지 업로드 섹션 -->
     <div class="form-group image-upload-section">
-      <label for="imageUpload">물품 이미지 업로드</label>
-      <input type="file" id="imageUpload" accept="image/*" multiple
-             class="form-control" />
-      <div class="image-preview" id="imagePreview"></div>
-
-      <!-- 업로드된 imageStorage PK를 담을 hidden 필드 컨테이너 -->
-      <div id="uploadedImagesContainer"></div>
+      <label>물품 이미지 업로드</label>
+      <p style="color:gray;"><input type="file" class="fileInput" name="uploadFile"></p>
     </div>
 
 

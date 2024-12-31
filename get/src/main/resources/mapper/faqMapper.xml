@@ -54,4 +54,9 @@
     WHERE CS_IDX = #{ cs_idx } 
   </update>
   
+  <insert id="insertCs">
+    INSERT INTO CS_CENTER(EMAIL, CS_TITLE, CS_CONTENT, CS_STATE)
+      VALUES( #{ email }, #{ cs_title }, #{ cs_content }, 2)
+  </insert>
+  
 </mapper>

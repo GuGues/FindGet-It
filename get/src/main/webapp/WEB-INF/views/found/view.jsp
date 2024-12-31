@@ -1,5 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -268,7 +269,6 @@
     #pagination {margin:10px auto;text-align: center;}
     #pagination a {display:inline-block;margin-right:10px;}
     #pagination .on {font-weight: bold; cursor: default;color:#777;}
-
   </style>
 </head>
 <body>
@@ -310,17 +310,14 @@
   <div class="info-section">
     <!-- 이미지 섹션 -->
     <div class="image-container">
-      <c:choose>
-        <c:when test="${not empty imageList}">
-          <!-- 여러 이미지 중 첫 번째만 -->
-          <img src="http://localhost:8080/images/view/${imageList[0].storageIdx}"
-               alt="이미지" />
-        </c:when>
-        <c:otherwise>
-          <img src="/img/noimg.png" alt="이미지가 없습니다">
-          <div class="no-image">이미지 미등록</div>
-        </c:otherwise>
-      </c:choose>
+      <c:if test="${ not empty filePath }">
+        <img src="<spring:url value='${ severUrl }imgView?filePath=${ filePath }'/>" alt="이미지가 없습니다">
+      </c:if>
+      <c:if test="${ empty filePath }">
+        <img src="/img/noimg.png" alt="이미지가 없습니다">
+      </c:if>
+
+      <div class="no-image"></div>
     </div>
 
     <!-- 상세 정보 섹션 -->

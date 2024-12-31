@@ -1,6 +1,7 @@
 package com.get.admin;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -27,10 +28,10 @@ public interface AdminMapper {
 
 	List<reportVo> getReport(String resiver_idx);
 
-	void postBan(String resiver_idx);
+	void postBan(Map<String, String> map);
 
 	List<reportVo> adminBanPostList(int offset, int recordsPerPage);
 
-	void postBanClear(String resiver_idx);
+	void postBanClear(Map<String, String> map);
 
 }
