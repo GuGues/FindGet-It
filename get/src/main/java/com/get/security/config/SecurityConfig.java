@@ -61,7 +61,7 @@ public class SecurityConfig {
                 .logout((logout) -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/")
-                        .invalidateHttpSession(true)
+                        .invalidateHttpSession(false)
                         .deleteCookies("JSESSIONID"))
                 .sessionManagement((auth) -> auth
                         .maximumSessions(1)
