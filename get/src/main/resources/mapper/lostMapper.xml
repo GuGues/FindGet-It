@@ -126,4 +126,23 @@
 	   </if>
   </select>
   
+  <select id="getAppLostList">
+    SELECT LOST_IDX,
+           MEMBERS.NICKNAME,
+           LOST_TITLE,
+           LOST_CONTENT,
+           TO_CHAR(LOST_DATE, 'YY-MM-DD') LOST_DATE,
+           L_VIEWS,
+           LOCATIONS.SIDO_NAME||' '||LOCATIONS.GUGUN_NAME LOCATION,
+           SUBSTR(ITEMS.ITEM, INSTR(ITEMS.ITEM, '-') + 1) ITEM,
+           REWARD,
+           COLORS.COLOR_NAME,
+           TO_CHAR(L_REG_DATE, 'YY-MM-DD') L_REG_DATE
+      FROM LOST_ITEMS LEFT JOIN MEMBERS USING(EMAIL)
+	                  LEFT JOIN LOCATIONS USING(LOCATION_CODE)
+	                  LEFT JOIN ITEMS USING(ITEM_CODE)
+	                  LEFT JOIN COLORS USING(COLOR_CODE)
+	  WHERE LOST_STATE = 2
+	  ORDER BY LOST_DATE DESC
+  </select>
 </mapper>

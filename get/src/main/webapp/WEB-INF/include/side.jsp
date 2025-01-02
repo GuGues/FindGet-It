@@ -99,7 +99,7 @@
     <c:if test="${!url.contains('/lost')}">
      <li><a href="/lost">분실물</a></li>
     </c:if>
-    <c:if test="${!url.contains('/found')}">
+    <c:if test="${!url.contains('/found') && !url.contains('/police')}">
      <li><a href="/found">습득물</a></li>
     </c:if>
     <c:if test="${!url.contains('/faq') && !url.contains('/cs')}">
@@ -153,6 +153,3 @@
   <div id="side_com">Ⓒnot_null</div>
 </nav>
 <%@include file="/WEB-INF/include/fab.jsp" %>
-<c:if test="${url.contains('/lost/view') || url.contains('/found/view') || url.contains('/search')}">
-<%@include file="/WEB-INF/include/gyufab.jsp" %>
-</c:if>
