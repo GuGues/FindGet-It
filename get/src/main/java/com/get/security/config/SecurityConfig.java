@@ -51,7 +51,7 @@ public class SecurityConfig {
                         .dispatcherTypeMatchers(DispatcherType.FORWARD).permitAll()
                         .requestMatchers("/","/icon/**","/logo/**", "/js/**", "/css/**", "/img/**", "/login", "/favicon.ico", "/webjars", "/h2-console/**","/error").permitAll()
                         .requestMatchers("/sighup","/sighup/**","/auth").permitAll()
-                        .requestMatchers("/user/**").hasAnyRole("USER")
+                        .requestMatchers("/mypage/**").hasAnyRole("USER","ADMIN")
                         .requestMatchers("/chatting/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/loginSuccess").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/**").permitAll()

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.get.alarm.AlarmMapper">
+    <select id="findFoundList">
+        SELECT * FROM LOST_ITEMS
+        WHERE TRUNC(location_code/100)=TRUNC(#{locationCode}/100)  AND TRUNC(ITEM_CODE/100)=TRUNC(#{itemCode}/100);
+    </select>
+    <select id="getAlarmList">
+        SELECT * FROM ALARM
+        WHERE EMAIL = #{email}
+    </select>
+    <delete id="deleteAlarm">
+        DELETE FROM ALARM
+        WHERE ALARM_IDX = #{alarm_idx}
+    </delete>
+    <update id="updateView">
+        UPDATE ALARM
+        SET ALARM_VIEWED=1
+        WHERE ALARM_IDX = #{alarm_idx}
+    </update>
+    <update id="updateOpen">
+        UPDATE ALARM
+        SET ALARM_STATE=1
+        WHERE EMAIL = #{email}
+    </update>
+</mapper>

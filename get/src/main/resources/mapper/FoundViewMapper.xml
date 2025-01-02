@@ -76,19 +76,17 @@
             F_ITEM_DETAIL,
             COLOR_CODE,
             ITEM_STATE
-        ) VALUES (
-                     null,
-                     #{email},
-                     #{foundTitle},
-                     #{foundContent},
-                     TO_DATE(#{foundDate}, 'YYYY-MM-DD'),
-                     #{locationCode},
-                     #{fLocationDetail},
-                     #{itemCode},
-                     #{fItemDetail, jdbcType=VARCHAR},  -- JdbcType 명시
-                     #{colorCode},
-                     #{itemState}
-                 )
+        ) VALUES (null,
+                  #{email},
+                  #{foundTitle},
+                  #{foundContent},
+                  TO_DATE(#{foundDate}, 'YYYY-MM-DD'),
+                  #{locationCode},
+                  #{fLocationDetail},
+                  #{itemCode},
+                  #{fItemDetail, jdbcType=VARCHAR}, -- JdbcType 명시
+                  #{colorCode},
+                  #{itemState})
     </insert>
 
     <!-- (예시) 이메일로 회원정보 조회 -->
