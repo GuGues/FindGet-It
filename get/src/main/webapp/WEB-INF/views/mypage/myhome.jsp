@@ -19,7 +19,7 @@ main {
 /* 전체 페이지 스타일 */
 body {
 	font-family: Arial, sans-serif;
-	background-color: #1e1e2f; /* 어두운 배경 */
+	background-color: white; /* 어두운 배경 */
 	color: #fff;
 	margin: 0;
 	padding: 20px;
@@ -81,14 +81,86 @@ body {
 }
 
 .lostitem-setbox {
+    padding: 20px;
 	border: 1px solid gray;
 }
 
-.character-box {
-	border: 1px solid gray;
+/* 프로필 박스 전체 */
+.profile-box {
+    width: 400px;
+    background-color: #fff;
+    color: #333;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 0 auto; /* 가운데 정렬 */
 }
 
-.modal {
+/* 상단 프로필 영역 */
+.profile-header {
+    display: flex;
+    align-items: center;
+    gap: 20px; /* 이미지와 정보 간격 */
+    margin-bottom: 10px;
+}
+
+/* 프로필 이미지 */
+.profile-header img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%; /* 둥근 이미지 */
+}
+
+/* 프로필 텍스트 */
+.profile-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.profile-info .nickname {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #000;
+}
+
+.profile-info .join-date {
+    font-size: 0.9rem;
+    color: #555;
+}
+
+/* 구분선 */
+hr {
+    border: none;
+    border-top: 1px solid #ddd;
+    margin: 20px 0;
+}
+
+/* 상세 정보 */
+.profile-details ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.profile-details ul li {
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+    color: #555;
+}
+
+/* 링크 스타일 */
+.profile-details ul li a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.profile-details ul li a:hover {
+    text-decoration: underline;
+}
+}.modal {
 	display: none;
 	justify-content: center;
 	top: 0;
@@ -119,20 +191,23 @@ body {
 	<main>
 		<div>
 			<div>
-				<div class="character-box">
-					<ul>
-						<li>
-							<div>
-								<img src="/icon/user.png" alt="profile">
-							</div>
-							<div>
-								<em>${ user.nickname }</em>
-							</div>
-						</li>
-						<li><em>${ user.com_date }</em></li>
-					</ul>
-				</div>
-
+				<div class="profile-box">
+    <div class="profile-header">
+        <img src="/icon/user.png" alt="profile" />
+        <div class="profile-info">
+            <em class="nickname">${ user.nickname }</em>
+            <em class="join-date">가입일 : ${ user.com_date }</em>
+        </div>
+    </div>
+    <hr />
+    <div class="profile-details">
+        <ul>
+            <li><em>회원 등급 : 본인인증 회원</em></li>
+            <li><em>방문 횟수 : ${ user.join_count } 번</em></li>
+            <li><em>내 게시글 : ${ user.write_count } 개</em></li>
+        </ul>
+    </div>
+</div>
 				<div>
 					<div class="lostitem-setbox">
 						<h4>잃어버린 물품 등록</h4>
@@ -141,33 +216,38 @@ body {
 								<h3>지역을 선택해 주세요.</h3>
 								<div class="location_button">
 									<div>
-        <ul style="display: flex; flex-wrap: wrap; gap: 10px;">
-            <!-- Sido 버튼 생성 -->
-            <li><button class="swap-button" data-target="pass_table">전국</button></li>
-            <c:forEach items="${alllocation}" var="allL" varStatus="status">
-                <li>
-                    <button class="swap-button" data-target="gugun_group_${allL.location_code}">${allL.sido_name}</button>
-                </li>
-            </c:forEach>
-        </ul>
-    </div>
-    <hr />
-    <!-- Gugun 버튼 그룹 생성 -->
-    <c:forEach items="${alllcation}" var="allL">
-        <div id="gugun_group_${allL.location_code}" class="gugun-group">
-            <ul style="display: flex; gap: 10px; flex-wrap: wrap;">
-                <li><button class="filter-button active" data-target="pass_table_${allL.loacation_code}_all">전체</button></li>
-                <c:forEach items="${alllocation}" var="gugun">
-                    <c:if test="${gugun.location_code == allL.location_code}">
-                        <li>
-                            <button class="filter-button" data-target="pass_table_${allL.location_code}_${gugun.location_code}">${gugun.gugun_name}</button>
-                        </li>
-                    </c:if>
-                </c:forEach>
-            </ul>
-        </div>
-    </c:forEach>
-</div>
+										<ul style="display: flex; flex-wrap: wrap; gap: 10px;">
+											<!-- Sido 버튼 생성 -->
+											<li><button class="swap-button" data-target="pass_table">전국</button></li>
+											<c:forEach items="${alllocation}" var="allL"
+												varStatus="status">
+												<li>
+													<button class="swap-button"
+														data-target="gugun_group_${allL.location_code}">${allL.sido_name}</button>
+												</li>
+											</c:forEach>
+										</ul>
+									</div>
+									<hr />
+									<!-- Gugun 버튼 그룹 생성 -->
+									<c:forEach items="${alllcation}" var="allL">
+										<div id="gugun_group_${allL.location_code}"
+											class="gugun-group">
+											<ul style="display: flex; gap: 10px; flex-wrap: wrap;">
+												<li><button class="filter-button active"
+														data-target="pass_table_${allL.loacation_code}_all">전체</button></li>
+												<c:forEach items="${alllocation}" var="gugun">
+													<c:if test="${gugun.location_code == allL.location_code}">
+														<li>
+															<button class="filter-button"
+																data-target="pass_table_${allL.location_code}_${gugun.location_code}">${gugun.gugun_name}</button>
+														</li>
+													</c:if>
+												</c:forEach>
+											</ul>
+										</div>
+									</c:forEach>
+								</div>
 
 							</div>
 							<!-- 뱃지 섹션 -->
@@ -176,7 +256,7 @@ body {
 								<!-- 뱃지 리스트 -->
 								<div class="badge-list">
 									<!-- 뱃지 아이템 -->
-									<div class="badge-item">
+									<!-- <div class="badge-item">
 										<img src="badge1.png" alt="Badge 1">
 									</div>
 									<div class="badge-item">
@@ -192,13 +272,16 @@ body {
 										<img src="badge5.png" alt="Badge 5">
 									</div>
 									<div class="badge-item">
-										<img src="badge6.png" alt="Badge 6">
-									</div>
+										<img src="badge6.png" alt="Badge 6"> -->
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
+			</div>
+		</div>
+		</div>
+
 	</main>
 	<script>
 const modal = document.querySelector('.modal');

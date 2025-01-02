@@ -40,9 +40,9 @@ public interface MypageMapper {
 
 	MypageVo getMyFind(String email);
 
-	MypageVo getAllLocation();
+	List<MypageVo> getAllLocation();
 
-	MypageVo getAllItem();
+	List<MypageVo> getAllItem();
 
 	MypageVo getArhieve(String email);
 
