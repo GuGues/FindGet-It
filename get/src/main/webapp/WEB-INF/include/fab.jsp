@@ -35,6 +35,15 @@
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3); /* 그림자 효과 */
             transition: transform 0.3s; /* 0.3초 동안 변환 효과 적용 */
         }
+        <c:if test="${!url.contains('/view') || !url.contains('/search')}">
+        .fab {
+        line-height: 65px;
+        }
+        </c:if>
+
+
+
+
         /* FAB 옵션 버튼들을 담는 컨테이너 */
         .fab-options {
             display: none; /* 처음에는 옵션 메뉴 숨김 */
@@ -118,14 +127,14 @@
             border-radius: 10px; /* 모서리 반지름 추가로 둥근 모서리 적용 */
         }
         <c:if test="${sessionScope.grant eq 'ADMIN'}">
-        .fab{
+          .fab{
             background-color: #B39977; /* 버튼의 배경색 (어두운 회색) */
             color: white; /* 버튼 텍스트 색 (흰색) */
-        }
-        .fab-option{
+          }
+          .fab-option{
             background-color: #D3C4B1; /* 주황색 배경 */
             color: white; /* 텍스트 색은 검정 */
-        }
+          }
         .fab-option:hover {
             background-color: #8C6C55; /* 배경색을 주황색으로 변경 */
             transform: scale(1.1); /* 마우스를 올리면 1.1배 확대 */
@@ -135,20 +144,20 @@
             background-color: #8C6C55; /* 배경색을 주황색으로 변경 */
             transform: scale(1.2); /* 버튼 크기를 1.2배 확대 */
         }
-        </c:if>
+        </c:if> 
         <c:if test="${url.contains('/home')}">
-        .fab{
+          .fab{
             background-color: #373737; /* 버튼의 배경색 (어두운 회색) */
             color: white; /* 버튼 텍스트 색 (흰색) */
-        }
-        .fab-option{
+          }
+          .fab-option{
             background-color: #373737; /* 주황색 배경 */
             color: white; /* 텍스트 색은 검정 */
-        }
+          }
         .fab-option:hover {
             background-color: #FE8015; /* 배경색을 주황색으로 변경 */
             transform: scale(1.1); /* 마우스를 올리면 1.1배 확대 */
-        }
+        } 
         /* FAB 버튼에 마우스를 올렸을 때 */
         .fab:hover {
             background-color: #FE8015; /* 배경색을 주황색으로 변경 */

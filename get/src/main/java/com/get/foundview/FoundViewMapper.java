@@ -34,4 +34,7 @@ public interface FoundViewMapper {
 	String getFilePath(String foundIdx);
 
 	String getFoundFilePath(String foundIdx);
+
+    // ========= (추가) 조회수 증가 =========
+    void updateFoundViews(@Param("foundIdx") String foundIdx);
 }

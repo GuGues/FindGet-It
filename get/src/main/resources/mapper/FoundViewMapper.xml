@@ -122,4 +122,13 @@
        WHERE USING_TABLE_IDX = #{ foundIdx }
     </select>
 
+    <!-- ★ 추가: 조회수 증가 쿼리 ★ -->
+    <update id="updateFoundViews">
+
+        UPDATE FOUND
+        SET F_VIEWS = F_VIEWS + 1
+        WHERE FOUND_IDX = #{foundIdx}
+
+    </update>
+
 </mapper>

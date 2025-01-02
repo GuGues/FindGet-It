@@ -126,4 +126,13 @@
        WHERE USING_TABLE_IDX = #{ lostIdx }
     </select>
 
+    <!-- ★ 추가: 조회수 증가 쿼리 ★ -->
+    <update id="updateLostViews">
+
+        UPDATE LOST_ITEMS
+        SET L_VIEWS = L_VIEWS + 1
+        WHERE LOST_IDX = #{lostIdx}
+
+    </update>
+
 </mapper>
