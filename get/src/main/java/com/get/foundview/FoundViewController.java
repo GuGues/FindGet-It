@@ -2,6 +2,8 @@ package com.get.foundview;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import com.get.alarm.AlarmService;
+import com.get.alarm.AlarmVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -27,7 +29,9 @@ public class FoundViewController {
 
     @Autowired
     private FoundViewMapper foundViewMapper;
-    
+    @Autowired
+    private AlarmService alarmService;
+
     @Value("${server.img.url}")
     private String severUrl;
 
@@ -142,6 +146,7 @@ public class FoundViewController {
         vo.setFoundState(2);
         // DB 등록
         foundViewMapper.insertFoundItem(vo);
+        alarmService.saveFoundAlarm(vo);
         // 목록 페이지로 이동(예: /found)
         return "redirect:/found";
     }
