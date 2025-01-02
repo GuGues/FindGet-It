@@ -160,7 +160,7 @@
     <a class="button" href="/notice">
       <img src="/icon/speaker_gray.png" class="icon default" alt="공지사항">
       <img src="/icon/speaker_orange.png" class="icon hover" alt="공지사항">
-      <p>채팅방 목록</p>
+      <p>공지사항</p>
     </a>
 
     <a class="button" href="/police/found">
