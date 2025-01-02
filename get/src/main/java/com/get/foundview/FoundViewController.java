@@ -1,5 +1,7 @@
 package com.get.foundview;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -10,13 +12,18 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+
+
 import java.security.Principal;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/found")
 public class FoundViewController {
+
 
     @Autowired
     private FoundViewMapper foundViewMapper;
@@ -28,7 +35,8 @@ public class FoundViewController {
      * 습득물 상세 보기
      */
     @GetMapping("/view")
-    public String foundView(@RequestParam("foundIdx") String foundIdx, Model model) {
+    public String foundView(@RequestParam("foundIdx") String foundIdx, Model model, HttpServletRequest request) {
+        HttpSession session = request.getSession();
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = null;
 
@@ -57,6 +65,37 @@ public class FoundViewController {
 
         // ☆ 이 부분이 중요: 현재 로그인 이메일을 model에 추가
         model.addAttribute("loginEmail", email);
+
+
+        // =============== 조회수 증가 로직 추가 ===============
+        // 로그인한 사용자인 경우 && 중복조회 방지
+        if (email != null && !email.equals("anonymousUser")) {
+            // 세션에서 alreadyViewedFound 라는 Set<String> 가져옴
+            @SuppressWarnings("unchecked")
+            Set<String> viewedFoundSet = (Set<String>) session.getAttribute("alreadyViewedFound");
+            if (viewedFoundSet == null) {
+                viewedFoundSet = new HashSet<>();
+            }
+
+            // 만약 현재 foundIdx가 세션에 없다면
+            if (!viewedFoundSet.contains(foundIdx)) {
+                // DB 조회수 + 1
+                foundViewMapper.updateFoundViews(foundIdx);
+                // 세션 Set에 추가
+                viewedFoundSet.add(foundIdx);
+                session.setAttribute("alreadyViewedFound", viewedFoundSet);
+
+                // 최신 조회수 반영 위해 다시 select (선택사항)
+                // FoundItemVO updatedItem = foundViewMapper.selectFoundItemDetail(foundIdx);
+                // model.addAttribute("item", updatedItem);
+            }
+        }
+        // ===============================================
+
+
+
+
+
         return "found/view";
     }
 

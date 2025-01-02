@@ -396,7 +396,7 @@
        <form class="form" method="post">
 
     <input type="hidden" name="resiver_idx" value="${item.lostIdx}">
-    <button type="button" class="banBtn btn">게시글 블라인드</button>
+    <button type="button" class="banBtn btn">블라인드</button>
 </form>
 
 <script>

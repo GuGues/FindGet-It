@@ -1,6 +1,8 @@
 package com.get.lostview;
 
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -12,8 +14,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Principal;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 
 @Controller
@@ -28,7 +32,8 @@ public class LostViewController {
 
 
     @GetMapping("/view")
-    public String lostView(@RequestParam("lostIdx") String lostIdx, Model model) {
+    public String lostView(@RequestParam("lostIdx") String lostIdx, Model model, HttpServletRequest request) {
+        HttpSession session = request.getSession();
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = null;
 
@@ -55,6 +60,32 @@ public class LostViewController {
         model.addAttribute("item", item);
         model.addAttribute("loginEmail", email);
         System.out.println(filePath);
+        // =============== 조회수 증가 로직 추가 ===============
+        // 로그인한 사용자인 경우 && 중복조회 방지
+        if (email != null && !email.equals("anonymousUser")) {
+            @SuppressWarnings("unchecked")
+            Set<String> viewedLostSet = (Set<String>) session.getAttribute("alreadyViewedLost");
+            if (viewedLostSet == null) {
+                viewedLostSet = new HashSet<>();
+            }
+            // 만약 현재 lostIdx가 세션에 없다면
+            if (!viewedLostSet.contains(lostIdx)) {
+                // DB 조회수 + 1
+                lostViewMapper.updateLostViews(lostIdx);
+                // 세션 Set에 추가
+                viewedLostSet.add(lostIdx);
+                session.setAttribute("alreadyViewedLost", viewedLostSet);
+
+                // 최신 조회수 반영 위해 다시 select (선택사항)
+                // LostItemVO updatedItem = lostViewMapper.selectLostItemDetail(lostIdx);
+                // model.addAttribute("item", updatedItem);
+            }
+        }
+
+
+
+
+
         return "lost/view";
         // 예: /WEB-INF/views/lost/view.jsp (View Resolver 설정에 따라 달라질 수 있음)
     }
