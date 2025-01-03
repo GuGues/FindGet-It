@@ -116,6 +116,7 @@
     <c:if test="${url.contains('/admin/user')}">
     <li><h3 class="side-title">회원 관리</h3></li>
      <li><a href="/admin">회원 목록</a></li>
+     <li><a href="/admin/user">신고회원 목록</a></li>
      <li><a href="/admin/ban">차단회원 목록</a></li>
     </c:if>
     <c:if test="${url.contains('/lost') || url.contains('/found') || url.contains('/admin/report')}">

@@ -33,4 +33,12 @@ public interface AdminMapper {
 
 	void postBanClear(String resiver_idx);
 
+	List<membersVo> getReportMembers(int offset, int recordsPerPage);
+
+	int getTotalReportMembersCount();
+
+	List<chatReportVo> getReportUser(String email);
+
+	List<messageVo> getChatting(int chatting_no);
+
 }

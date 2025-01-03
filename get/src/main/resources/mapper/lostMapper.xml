@@ -125,5 +125,4 @@
 	     AND COlOR_CODE = TO_NUMBER(#{color_code})
 	   </if>
   </select>
-  
 </mapper>
