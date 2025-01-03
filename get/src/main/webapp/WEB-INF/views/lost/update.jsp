@@ -30,7 +30,7 @@
 <body>
 <h1>습득물 수정</h1>
 
-<form  action="http://192.168.0.214:9090/lost/update" method="POST" enctype="multipart/form-data">
+<form action="/lost/update" method="post">
   <div class="form-group">
     <label for="lostIdx">관리번호</label>
     <input type="text" id="lostIdx" name="lostIdx" class="form-control readonly"
@@ -73,12 +73,7 @@
     <input type="text" id="lItemDetail" name="lItemDetail" class="form-control"
            value="${item.lItemDetail}" />
   </div>
-  
-  <div class="form-group image-upload-section">
-      <label>물품 이미지 업로드</label>
-      <p style="color:gray;"><input type="file" class="fileInput" name="uploadFile"></p>
-  </div>
-  
+
   <div class="form-group">
     <label for="colorCode">색상</label>
     <select id="colorCode" name="colorCode" class="form-control">

@@ -119,9 +119,8 @@
     <table class="memberThead">
       <colgroup>
         <col style="width: 5%;">
-        <col style="width: 45%;">
+        <col style="width: 55%;">
         <col style="width: 20%;">
-        <col style="width: 10%;">
         <col style="width: 10%;">
         <col style="width: 10%;">
       </colgroup>
@@ -129,7 +128,6 @@
         <td>순번</td>
         <td>제목</td>
         <td>작성자</td>
-        <td>상태</td>
         <td>신고횟수</td>
         <td>작성일</td>
       </tr>
@@ -137,9 +135,8 @@
     <table class="memberTable">
       <colgroup>
         <col style="width: 5%;">
-        <col style="width: 45%;">
+        <col style="width: 55%;">
         <col style="width: 20%;">
-        <col style="width: 10%;">
         <col style="width: 10%;">
         <col style="width: 10%;">
       </colgroup>
@@ -148,14 +145,6 @@
           <td>${ (pagingHelper.nowPage - 1 )* 15 + i.index + 1 }</td>
           <td>${ report.title }</td>
           <td>${ report.email }</td>
-          <td>
-            <c:if test="${ report.post_state eq 3 }">
-              완료
-            </c:if>
-            <c:if test="${ report.post_state eq 4 }">
-              진행
-            </c:if>
-          </td>
           <td>${ report.resiver_idx_cnt }</td>
           <td>${ report.p_reg_date }</td>
         </tr>
@@ -270,14 +259,7 @@
     	        const banBtn = document.querySelector('.banBtn');
     	        banBtn.addEventListener('click', function(){
     	        	const form = document.querySelector('.form');
-    	        	let stateUrl = '';
-    	        	if(map.lost){
-    	        		stateUrl = "lostState="+map.lost.lostState
-    	        	}
-    	        	else if(map.found){
-    	        		stateUrl = "foundState="+map.found.foundState
-    	        	}
-    	        	form.action = "/admin/post/ban/clear?"+stateUrl;
+    	        	form.action = "/admin/post/ban/clear";
     	        	form.submit();
     	        })
     		});
@@ -285,4 +267,9 @@
     });
   </script>
 </body>
+<style>
+  .now { background-color: #8C6C55; }
+  .page-link { background-color: #B39977; }
+  .page-link:hover { background-color: #D3C4B1;  color: black;}
+</style>
 </html>

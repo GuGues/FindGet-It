@@ -65,9 +65,4 @@
         FROM MESSAGE
         WHERE READ_FL = 'N' AND CHATTING_NO=#{param1} AND SENDER != #{param2}
     </select>
-
-    <insert id="report">
-        INSERT INTO CHATTING_REPORT
-        VALUES(null,#{reporter_email},#{receiver_email},#{report_room},#{chat_report_content},SYSDATE)
-    </insert>
 </mapper>

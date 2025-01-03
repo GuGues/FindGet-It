@@ -112,9 +112,8 @@ public class adminController {
 	}
 	
 	@PostMapping("/post/ban")
-	public String adminBanPost(@RequestParam Map<String, String> map) {
-		//System.out.println(map);
-		adminMapper. postBan(map);
+	public String adminBanPost(@RequestParam(name="resiver_idx") String resiver_idx) {
+		adminMapper.postBan(resiver_idx);
 		return "redirect:/admin/post";
 	}
 	
@@ -135,9 +134,8 @@ public class adminController {
 	}
 	
 	@PostMapping("/post/ban/clear")
-	public String adminBanClearPost(@RequestParam Map<String, String> map) {
-		//System.out.println(map);
-		adminMapper.postBanClear(map);
+	public String adminBanClearPost(@RequestParam(name="resiver_idx") String resiver_idx) {
+		adminMapper.postBanClear(resiver_idx);
 		return "redirect:/admin/post/ban";
 	}
 	

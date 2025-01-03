@@ -228,16 +228,15 @@
 <body>
 <div class="big-div">
     <div class="form-box">
-        <img src="/logo/logoopen.png" alt="Logo" style="width: 200px; margin-bottom: 20px;">
+        <img src="/img/banner.png" alt="Logo" style="width: 200px; margin-bottom: 20px;">
         <form action="/sighup/reg" method="post" onsubmit="return handleSubmit();">
             <!-- 아이디 입력란과 중복 확인 버튼을 함께 배치 -->
             <div class="input-group">
                 <div class="form-floating" style="flex: 1;">
-                    <input type="email" id="email" name="email" required placeholder=" ">
-                    <label for="email">이메일</label>
-                    <div id="emailCheckMessage"></div>
+                    <input type="text" id="userid" name="email" required placeholder=" ">
+                    <label for="userid">이메일</label>
                 </div>
-                <button type="button" onclick="checkEmail()">중복 확인</button>
+                <button type="button" onclick="openIdCheckModal()">중복 확인</button>
             </div>
 
             <!-- 비밀번호 입력 -->
@@ -320,7 +319,6 @@
 </div>
 
 <script>
-    let emailCheckBool = false;
     // Daum 우편번호 서비스를 실행하는 함수
     function execDaumPostcode() {
         new daum.Postcode({
@@ -352,35 +350,17 @@
     }
 
     // 모달을 여는 함수
-    function checkEmail() {
-        let email =  document.getElementById("email").value;
-        if(email!=null && email!=""){
-
-       fetch("/join/email-check?email="+email,{
-           method:"GET",
-       }).then(result=>result.text())
-           .then(text=>{
-               if(text=="false"){
-                    document.querySelector("#emailCheckMessage").innerHTML="중복된 이메일이 있습니다."
-                   emailCheckBool = false;
-
-               }
-               else if(text=="true"){
-                    document.querySelector("#emailCheckMessage").innerHTML="사용 가능한 이메일입니다."
-                   emailCheckBool = true;
-
-               }
-               else{
-                   console.log("모르는 에러  입니다.")
-                   emailCheckBool = false;
-
-               }
-           })
+    function openIdCheckModal() {
+        var userid = document.getElementById('userid').value;
+        if (!userid) {
+            alert('아이디를 입력하세요.');
+            return;
         }
-        else{
-            document.querySelector("#emailCheckMessage").innerHTML="이메일을 입력해주세요."
-            emailCheckBool = false;
-        }
+        // 모달 표시
+        var modal = document.getElementById('modal');
+        var iframe = document.getElementById('modal-iframe');
+        iframe.src = '/Join/checkUserId?userid=' + encodeURIComponent(userid);
+        modal.style.display = 'block';
     }
 
     // 모달을 닫는 함수
