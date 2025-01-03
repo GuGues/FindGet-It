@@ -9,9 +9,11 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -48,21 +50,11 @@ public class ChatRoomController {
         List<Chat> chatList = chatService.findAllChat(chatting_no);
         HttpSession session = request.getSession();
         String email = (String) session.getAttribute("email");
+        chatService.updateMessageViewed(chatting_no,email);
         model.addAttribute("chatting_no", chatting_no);
         model.addAttribute("room", room);
         model.addAttribute("chatList", chatList);
         return "chat/room";
-    }
-
-    @PostMapping("/update-view")
-    @ResponseBody
-    public String updateView(@RequestBody HashMap<String, Object> params) {
-        String chatting_no = String.valueOf(params.get("chatting_no"));
-        String email = String.valueOf(params.get("email"));
-        System.out.println("chatting_no = " + chatting_no);
-        System.out.println("email = " + email);
-        chatService.updateMessageViewed(chatting_no,email);
-        return "OK";
     }
 
     /**
@@ -76,9 +68,6 @@ public class ChatRoomController {
         return chatService.createRoom(openerEmail,email);
     }
 
-    @PostMapping("/report")
-    @ResponseBody
-    public void report( @RequestBody ChattingReportVo reportVo, Model model) {
-        chatService.report(reportVo);
-    }
+
+
 }

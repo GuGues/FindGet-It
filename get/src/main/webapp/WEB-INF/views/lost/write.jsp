@@ -9,8 +9,8 @@
   <style>
     /* 기존 스타일 유지 */
     body { font-family: Arial, sans-serif; padding: 20px; }
-    .form-group { margin-bottom: 15px; width: 100%; text-align: left; }
-    .form-group label { display: block; font-weight: bold; margin-bottom: 5px; width: 100%; }
+    .form-group { margin-bottom: 15px; }
+    .form-group label { display: block; font-weight: bold; margin-bottom: 5px; }
     .form-control { width: 100%; padding: 10px; margin-top: 5px; box-sizing: border-box; }
     select, input[type="text"], input[type="date"], textarea {
       border: 1px solid #ccc; border-radius: 4px;
@@ -73,47 +73,11 @@
     @keyframes spin {
       to { transform: rotate(360deg); }
     }
-    /* big-div 비율 유지하면서 크기 줄이기 */
-    .big-div {
-      margin-top: 60px; /* 상단 여백 */
-      background-color: #ffe3cc; /* 배경색 */
-      padding: 5%; /* 내부 여백 */
-      border-radius: 10px; /* 모서리 반지름 */
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* 그림자 효과 */
-      text-align: center; /* 텍스트 중앙 정렬 */
-      width: 70%; /* 너비 설정 */
-      z-index: 1; /* 배경보다 위에 오도록 설정 */
-      margin: 0 auto; /* 화면에서 수평 중앙 정렬 */
-      /*display: flex;*/ /* Flexbox로 자식 요소 배치 */
-      justify-content: center; /* 자식 요소를 수평 중앙 정렬 */
-      position: relative; /* 자식의 절대 위치를 기준으로 함 */
-      height: auto; /* 고정 높이를 제거하여 콘텐츠에 맞게 확장 */
-      overflow: hidden; /* 넘치는 콘텐츠 숨김 */
-      /*transform: scale(0.8); !* 비율 유지하면서 크기 줄이기 *!*/
-      /*transform-origin: top center; !* 크기 축소 중심 설정 *!*/
-    }
-    .titleBox {
-      text-align: left;
-      margin-left: 10%;
-      margin-bottom: 1%;
-
-    }
-    main{
-      margin-left: 20%;
-    }
   </style>
 </head>
 <body>
-<c:choose>
-    <c:when test="${ sessionScope.grant eq 'ADMIN' }">
-      <%@include file="/WEB-INF/include/adminSide.jsp" %>
-    </c:when>
-    <c:when test="${ sessionScope.grant ne 'ADMIN' }">
-      <%@include file="/WEB-INF/include/side.jsp" %>
-    </c:when>
-  </c:choose>
+
 <main>
-<div class="mega-div">
   <div class="titleBox">
     <div class="right" style="font-size: 13px;">
       <a href="/">HOME</a>&nbsp;&gt;&nbsp;<a href="/lost">분실물</a>&nbsp;&gt;&nbsp;<a href="/lost">분실물 작성</a>
@@ -121,8 +85,8 @@
     <h3 class="title">분실물 작성</h3>
     <span>분실하신 물건 여부를 확인하시고, 아래 기재된 보관장소연락처로 보관번호를 말씀해주시기 바랍니다.</span>
   </div>
- <div class="big-div">
-  <form action="http://192.168.0.214:9090/lost/insert" method="POST" enctype="multipart/form-data">
+
+  <form action="/lost/write" method="post">
 
     <div class="form-group">
       <label for="nickname">작성자 닉네임</label>
@@ -172,8 +136,8 @@
     </div>
 
     <div class="form-group image-upload-section">
-      <label>물품 이미지 업로드</label>
-      <p style="color:gray;"><input type="file" class="fileInput" name="uploadFile"></p>
+      <label>물품 이미지 업로드 (추후 구현 예정)</label>
+      <p style="color:gray;">※ 이미지 업로드 기능은 나중에 구현됩니다.</p>
     </div>
 
     <div class="form-group">
@@ -210,8 +174,6 @@
       <button type="reset">취소</button>
     </div>
   </form>
-</div>
-</div>
 </main>
 
 </body>

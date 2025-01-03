@@ -28,6 +28,4 @@ public interface ChatMapper {
     void updateMessageViewed(String chattingNo, String email);
 
     int countChatStack(String chattingNo, String email);
-
-    void report(ChattingReportVo reportVo);
 }
