@@ -21,8 +21,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
-import org.springframework.security.core.session.SessionRegistry;
-import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,7 +34,6 @@ public class SecurityConfig {
     private final AuthenticationConfiguration authenticationConfiguration;
     private final CustomAuthenticationProvider customAuthenticationProvider;
     private final CustomSuccessHandler customSuccessHandler;
-    private final CustomAuthFailureHandler customAuthFailureHandler;
 
     @Bean
     public static BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -60,17 +57,16 @@ public class SecurityConfig {
                         .loginPage("/login")
                         .loginProcessingUrl("/auth")
 //                        .defaultSuccessUrl("/")
-                        .successHandler(customSuccessHandler)
-                        .failureHandler(customAuthFailureHandler))
+                        .successHandler(customSuccessHandler))
                 .logout((logout) -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/")
                         .invalidateHttpSession(true)
-                        .clearAuthentication(true)
                         .deleteCookies("JSESSIONID"))
                 .sessionManagement((auth) -> auth
                         .maximumSessions(1)
-                        .maxSessionsPreventsLogin(false))
+                        .maxSessionsPreventsLogin(false)
+                        )
                 .headers(headersConfigurer ->
                         headersConfigurer
                                 .frameOptions(
@@ -98,4 +94,5 @@ public class SecurityConfig {
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     }
 
+   
 }

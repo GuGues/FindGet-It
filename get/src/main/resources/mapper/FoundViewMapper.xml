@@ -117,11 +117,7 @@
         AND EMAIL = #{email}
         <!-- EMAIL도 조건에 포함시켜야 본인글만 수정됨 -->
     </update>
-    
-    <select id="getFoundFilePath">
-      SELECT FILE_PATH
-       FROM IMAGE_STORAGE
-       WHERE USING_TABLE_IDX = #{ foundIdx }
-    </select>
+
+
 
 </mapper>

@@ -245,11 +245,9 @@
 	  
 	  //작성 버튼 클릭시
 	  const write = document.querySelector('.write');
-	  if(write){
-		  write.addEventListener('click', function(){
-			  window.location.href = '/faq/insert';
-		  });
-	  }
+	  write.addEventListener('click', function(){
+		  window.location.href = '/faq/insert';
+	  });
   </script>
 </body>
 </html>

@@ -2,7 +2,6 @@ package com.get.lostview;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,9 +21,6 @@ public class LostViewController {
 
     @Autowired
     private LostViewMapper lostViewMapper;
-    
-    @Value("${server.img.url}")
-    private String severUrl;
 
 
     @GetMapping("/view")
@@ -40,21 +36,13 @@ public class LostViewController {
                 email = (String) principal;
             }
         }
-        
-        String filePath = lostViewMapper.getFilePath(lostIdx);
-        if( filePath != null) {
-        	filePath = filePath.replace("\\", "/");
-        	filePath = filePath.split("Desktop/")[1];
-        	
-        	model.addAttribute("filePath", filePath);
-            model.addAttribute("severUrl", severUrl);
-        }
+
 
         LostItemVO item = lostViewMapper.selectLostItemDetail(lostIdx);
 
         model.addAttribute("item", item);
         model.addAttribute("loginEmail", email);
-        System.out.println(filePath);
+
         return "lost/view";
         // 예: /WEB-INF/views/lost/view.jsp (View Resolver 설정에 따라 달라질 수 있음)
     }

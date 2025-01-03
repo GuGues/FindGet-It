@@ -29,9 +29,4 @@ public interface FoundViewMapper {
 
     // ======= (새로 추가) 습득물 수정 =======
     void updateFoundItem(FoundItemVO vo);
-
-    //이미지 경로 조회
-	String getFilePath(String foundIdx);
-
-	String getFoundFilePath(String foundIdx);
 }
