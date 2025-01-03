@@ -14,9 +14,13 @@ public interface AlarmMapper {
 
     List<lostVo> findFoundList(FoundItemVO vo);
 
-    void saveAlarm(List<AlarmVo> alarmList);
+    void saveAlarm(AlarmVo alarm);
 
     List<AlarmVo> getAlarmList(String email);
 
     int deleteAlarm(String alarmIdx);
+
+    int getChatAlarmCount(String email);
+
+    void deleteMessageAlarm(String email);
 }

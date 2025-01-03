@@ -114,7 +114,7 @@ public class adminController {
 	@PostMapping("/post/ban")
 	public String adminBanPost(@RequestParam Map<String, String> map) {
 		//System.out.println(map);
-		adminMapper.postBan(map);
+		adminMapper. postBan(map);
 		return "redirect:/admin/post";
 	}
 	

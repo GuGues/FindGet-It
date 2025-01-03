@@ -76,6 +76,9 @@ public class ChatRoomController {
         return chatService.createRoom(openerEmail,email);
     }
 
-
-
+    @PostMapping("/report")
+    @ResponseBody
+    public void report( @RequestBody ChattingReportVo reportVo, Model model) {
+        chatService.report(reportVo);
+    }
 }

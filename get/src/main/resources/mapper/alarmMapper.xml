@@ -9,7 +9,7 @@
     </select>
     <select id="getAlarmList">
         SELECT * FROM ALARM
-        WHERE EMAIL = #{email}
+        WHERE EMAIL = #{email} AND ALARM_CONTENT!='MESSAGE'
     </select>
     <delete id="deleteAlarm">
         DELETE FROM ALARM
@@ -25,4 +25,19 @@
         SET ALARM_STATE=1
         WHERE EMAIL = #{email}
     </update>
+    <insert id="saveAlarm">
+        INSERT INTO ALARM
+        VALUES(null,#{email},#{alarm_content},#{alarm_content},2,null,2)
+    </insert>
+
+    <select id="getChatAlarmCount">
+        SELECT COUNT(*)
+        FROM ALARM
+        WHERE ALARM_CONTENT='MESSAGE' AND EMAIL=#{email}
+    </select>
+
+    <delete id="deleteMessageAlarm">
+        DELETE FROM ALARM
+        WHERE EMAIL=#{email} AND ALARM_CONTENT='MESSAGE'
+    </delete>
 </mapper>
