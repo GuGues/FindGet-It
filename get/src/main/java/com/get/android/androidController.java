@@ -21,7 +21,7 @@ public class androidController {
 
     @GetMapping("/app/lostList")
     public ResponseEntity<List<lostCustomVo>> appLostList(@RequestParam(value = "page", defaultValue = "1") int page){
-    	int recordsPerPage = 7;  // 페이지당 보여줄 게시글 수
+    	int recordsPerPage = 5;  // 페이지당 보여줄 게시글 수
         int arg0 = (page - 1) * recordsPerPage;  // 오프셋 계산
         
 		//분실물 전체 리스트
