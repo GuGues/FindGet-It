@@ -84,15 +84,57 @@
       padding: 7px 15px;
     }
     .col-md-6{ text-align: center;}
+    .hidden{
+        display: none;
+    }
+    .report-btn{
+        position: fixed;
+        margin: 10px;
+        padding: 5px 15px;
+        border: solid 2px #FFE3CC;
+        border-radius: 5px;
+        background-color: #FFE3CC;
+    }
+    #startReport{
+        position: fixed;
+        left: 100px;
+        margin: 10px;
+        padding: 5px 15px;
+        border: solid 2px #FFE3CC;
+        border-radius: 5px;
+        background-color: #FFE3CC;
+    }
+    #submitReport{
+        left: 100px;
+    }
+    #closeReport{
+        left: 200px;
+    }
+    #reportMessage{
+        position: fixed;
+        left: 100px;
+        margin: 10px;
+        padding: 5px 15px;
+        border: solid 2px #FFE3CC;
+        border-radius: 5px;
+        background-color: #FFE3CC;
+    }
 </style>
 <body>
 <div class="row">
     <div class="col-md-12">
         <div id="chatting">
+            <div>
           <button id="back">⬅︎</button>
+                <button id="startReport" onclick="clickReport()">신고 하기</button>
+                <button class="report-btn hidden" id="submitReport" onclick="submitReport()">신고</button>
+                <button class="report-btn hidden" id="closeReport" onclick="closeReport()">신고 취소</button>
+                <div id = "reportMessage" class="hidden">신고 되었습니다.</div>
+            </div>
           <c:forEach items="${chatList}" var="chat" varStatus="i">
             <c:if test="${ i.index==0 }">
               <div>&nbsp;</div><div>&nbsp;</div>
+
             </c:if>
               <c:choose>
                   <c:when test="${chat.sender eq sessionScope.email}">
@@ -189,8 +231,12 @@ const stompClient = new StompJs.Client({
             })
         });
         document.querySelector("#message_content").value = "";
-
-
+        let other = "";
+        if('${sessionScope.email}'=='${room.open_member}') other = '${room.participant}';
+        else other='${room.open_member}'
+        fetch("/alarm/message/"+other,{
+            method:"GET"
+        });
     }
 
     function showGreeting(chat) {
@@ -214,7 +260,8 @@ const stompClient = new StompJs.Client({
             $("#chatting").append('<div class="send"><div><span class="time">'+ chat.send_time+'</span><span class="chat">' + chat.message_content+'</span></div></div>')
         }
         else{
-            $("#chatting").append('<div class="receive"><div><span class="chat">' + chat.message_content+'</span><span class="time">'+ chat.send_time+'</span></div></div>')
+            $("#chatting").append('<div class="receive"><div><span class="chat">' + chat.message_content+'</span><span class="time">'+ chat.send_time+'</span></div>' +
+                '<input type="checkbox" value="'+chat.message_content+'" class="report hidden" name="report_message"></div>')
         }
 
         document.querySelector('#chatting').scrollTo(0,  document.querySelector('#chatting').scrollHeight);
@@ -225,6 +272,65 @@ document.getElementById("back").addEventListener('click',function (){
     stompClient.unsubscribe("message");
     window.location.href = "/chatting/roomList";
 })
+function report(){
+    document.querySelectorAll(".receive").forEach(function (item){
+        let checkbox = document.createElement("input")
+        checkbox.setAttribute("type",'checkbox');
+        checkbox.setAttribute("value",item.childNodes[1].childNodes[1].innerHTML)
+        checkbox.setAttribute("name","report_message")
+        checkbox.setAttribute("class","report hidden")
+        item.childNodes[1].appendChild(checkbox);
+    })
+}
+report()
+
+function clickReport(){
+    document.querySelectorAll(".report-btn").forEach(function (item){
+        item.classList.remove("hidden");
+    })
+    document.querySelectorAll(".report").forEach(function (item){
+        item.classList.remove("hidden");
+    })
+    document.querySelector("#startReport").classList.add("hidden");
+}
+function closeReport(){
+    document.querySelectorAll(".report-btn").forEach(function (item){
+        item.classList.add("hidden");
+    })
+    document.querySelectorAll(".report").forEach(function (item){
+        item.classList.add("hidden");
+    })
+    document.querySelector("#startReport").classList.remove("hidden");
+}
+function submitReport(){
+    let reportContent = ""
+    let other = "";
+    if('${sessionScope.email}'=='${room.open_member}') other = '${room.participant}';
+    else other='${room.open_member}'
+    document.querySelectorAll(".report").forEach(function (item){
+        if(item.checked){
+            reportContent+=item.getAttribute("value")+", ";
+        }
+    })
+    fetch("/chatting/report",{
+        method:"POST",
+        headers:{
+            'Content-Type':'application/json'
+        },
+        body:JSON.stringify({
+            reporter_email:'${sessionScope.email}',
+            receiver_email:other,
+            chat_report_content:reportContent,
+            report_room:'${chatting_no}'
+        })
+    })
+    closeReport()
+    document.querySelector("#reportMessage").classList.remove("hidden");
+    setTimeout(function (){
+        document.querySelector("#reportMessage").classList.add("hidden");
+    },3000);
+
+}
 </script>
 </body>
 </html>

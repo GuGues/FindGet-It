@@ -146,7 +146,6 @@ public class FoundViewController {
         vo.setFoundState(2);
         // DB 등록
         foundViewMapper.insertFoundItem(vo);
-        alarmService.saveFoundAlarm(vo);
         // 목록 페이지로 이동(예: /found)
         return "redirect:/found";
     }

@@ -144,7 +144,7 @@
             background-color: #8C6C55; /* 배경색을 주황색으로 변경 */
             transform: scale(1.2); /* 버튼 크기를 1.2배 확대 */
         }
-        </c:if> 
+        </c:if>
         <c:if test="${url.contains('/home')}">
           .fab{
             background-color: #373737; /* 버튼의 배경색 (어두운 회색) */
@@ -157,7 +157,7 @@
         .fab-option:hover {
             background-color: #FE8015; /* 배경색을 주황색으로 변경 */
             transform: scale(1.1); /* 마우스를 올리면 1.1배 확대 */
-        } 
+        }
         /* FAB 버튼에 마우스를 올렸을 때 */
         .fab:hover {
             background-color: #FE8015; /* 배경색을 주황색으로 변경 */
@@ -252,6 +252,10 @@
         top: 240px;
         right: 1px;
         }
+        .fab-alarm-chat{
+        top: 120px;
+        right: 1px;
+        }
     </style>
 </head>
 <body>
@@ -297,6 +301,7 @@
                     <img src="/icon/get_talk_orange.png" alt="Chat" style="width:30px; height:30px;">
                 </c:if>
             </a>
+            <div class="fab-alarm fab-alarm-chat hidden"></div>
         </c:if>
 
         <a class="fab-option" href="">
@@ -321,6 +326,7 @@
 </div>
 <div id = "alarm">
 <div class="modal-content">
+<h3>알람창</h3>
         <span class="close-button" onclick="closeAlarm()">&times;</span>
         <div id="alarm-content"></div>
     </div>
@@ -348,6 +354,9 @@
         var iframe = document.getElementById('modal-iframe');
         iframe.src = '/chatting/roomList';
         modal.style.display = 'block';
+        document.querySelector(".fab-alarm-chat").classList.add("hidden")
+        fetch("/alarm/delete-message/"+'${sessionScope.email}',{
+        method:"GET"});
     }
     function openAlarm() {
         // 모달 표시
@@ -377,7 +386,7 @@
 // 알람 받아오기
     function getAlarm(){
         document.querySelector("#alarm-content").replaceChildren();
-
+    if('${sessionScope.email}'!=''){
     fetch("/alarm/get-info",{
     method:"GET"})
     .then(response=>response.json())
@@ -406,6 +415,7 @@
         })
     })
     }
+    }
     getAlarm();
     function getAlarmOpened(){
         fetch("/alarm/open/"+'${sessionScope.email}',{
@@ -427,7 +437,6 @@
     }
     //알람 조회시 viewed update기능
     function viewedAlarm(idx,a){
-        console.log(this)
         fetch("/alarm/viewed/"+idx,{
         method:"GET"
     }).then(response=>response.text())
@@ -438,6 +447,21 @@
         }
     })
     }
+    //채팅 알람 가져오는 기능
+    function getChatAlarm(){
+        if('${sessionScope.email}'!=''){
+        fetch("/alarm/get-chat/"+'${sessionScope.email}',{
+        method:"GET"
+    }).then(result=>result.text())
+       .then(count=>{
+        if(count>0){
+            document.querySelector(".fab-alarm").classList.remove("hidden")
+            document.querySelector(".fab-alarm-chat").classList.remove("hidden")
+        }
+       })
+       }
+    }
+    getChatAlarm();
 </script>
 
 </body>
