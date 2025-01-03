@@ -25,7 +25,6 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         //로그인을 시도한 정보를 받아온다
         String memberId = authentication.getName();
         String password = (String)authentication.getCredentials();
-       System.out.println("memberId = "+memberId+"\n password="+password);
 
        //DB에서 로그인 정보와 일치하는 사용자 정보를 찾아 DTO에 담아 비교
         UserDetails userDetails = userDetailsService.loadUserByUsername(memberId);
@@ -46,7 +45,6 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     @Override
     public boolean supports(Class<?> authentication) {
         //provider의 동작 여부를 결정한다. false가 리턴되면 authenticate 메서드는 호출되지 않는다
-        return authentication.equals(UsernamePasswordAuthenticationToken.class);
+        return true;
     }
-
 }

@@ -29,7 +29,6 @@ public class AccountService implements UserDetailsService {
         if(account != null){
             List<GrantedAuthority> authorities = new ArrayList();
             authorities.add(new SimpleGrantedAuthority( "ROLE_"+account.getUser_grant()));
-            System.out.println(account);
             return new User(account.getEmail(), account.getPassword(), authorities);
         }
         return null;
@@ -48,4 +47,9 @@ public class AccountService implements UserDetailsService {
         return true;
     }
 
+    @Transactional
+    public void upJoinCount(String email) {
+        userMapper.upJoinCount(email);
+    }
+    
 }

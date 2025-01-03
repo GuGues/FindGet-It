@@ -34,4 +34,21 @@ public interface MypageMapper {
 
 	void deleteFound(List<String> found_idx);
 
+<<<<<<< HEAD
+=======
+	List<MypageVo> getHistoryList(MypageVo user);
+
+	List<MypageVo> getPostCount(MypageVo user);
+
+	MypageVo getMyFind(String email);
+
+	List<MypageVo> getAllLocation();
+
+	List<MypageVo> getAllItem();
+
+	MypageVo getArhieve(String email);
+
+	MypageVo getCountWrite(String email);
+
+>>>>>>> bfb626cb563aece66bb8fc83021b64bd065ba086
 }

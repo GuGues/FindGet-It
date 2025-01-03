@@ -20,6 +20,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,15 +28,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import static org.springframework.security.config.Customizer.withDefaults;
 @EnableWebSecurity
 @Configuration
+@RequiredArgsConstructor
 public class SecurityConfig {
 
     private final AuthenticationConfiguration authenticationConfiguration;
     private final CustomAuthenticationProvider customAuthenticationProvider;
-
-    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, CustomAuthenticationProvider customAuthenticationProvider) {
-        this.authenticationConfiguration = authenticationConfiguration;
-        this.customAuthenticationProvider = customAuthenticationProvider;
-    }
+    private final CustomSuccessHandler customSuccessHandler;
 
     @Bean
     public static BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -51,26 +49,29 @@ public class SecurityConfig {
                         .requestMatchers("/","/icon/**","/logo/**", "/js/**", "/css/**", "/img/**", "/login", "/favicon.ico", "/webjars", "/h2-console/**","/error").permitAll()
                         .requestMatchers("/sighup","/sighup/**","/auth").permitAll()
                         .requestMatchers("/user/**").hasAnyRole("USER")
-                        .requestMatchers("/chat/**").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers("/Mypage/**").hasAnyRole("USER","ADMIN")
+                        .requestMatchers("/chatting/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/loginSuccess").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/**").permitAll()
                 )
                 .formLogin(formLogin -> formLogin
                         .loginPage("/login")
                         .loginProcessingUrl("/auth")
-                        .defaultSuccessUrl("/"))
+//                        .defaultSuccessUrl("/")
+                        .successHandler(customSuccessHandler))
                 .logout((logout) -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/")
-                        // 로그아웃 핸들러 추가 (세션 무효화 처리)
-                        .addLogoutHandler((request, response, authentication) -> {
-                            HttpSession session = request.getSession();
-                            session.invalidate();
-                        })
-                        // 로그아웃 성공 핸들러 추가 (리다이렉션 처리)
-                        .logoutSuccessHandler((request, response, authentication) ->
-                                response.sendRedirect("/"))
-                        .deleteCookies("JSESSIONID", "access_token"));
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID"))
+                .sessionManagement((auth) -> auth
+                        .maximumSessions(1)
+                        .maxSessionsPreventsLogin(false)
+                        )
+                .headers(headersConfigurer ->
+                        headersConfigurer
+                                .frameOptions(
+                                        HeadersConfigurer.FrameOptionsConfig::sameOrigin
+                                ));
 
         return http.build();
     }
@@ -78,6 +79,8 @@ public class SecurityConfig {
     /**
      * 맞춤 구성한 CustomAuthenticationProvider 구현 연결
      */
+
+
     @Bean
     public AuthenticationManager authenticationManager() throws Exception {
         ProviderManager providerManager = (ProviderManager) authenticationConfiguration.getAuthenticationManager();
@@ -91,4 +94,5 @@ public class SecurityConfig {
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     }
 
+   
 }

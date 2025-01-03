@@ -36,13 +36,22 @@ public class MypageVo {
 	private int    postnumber;
 	private String com_date;
 	private String user_grant;
+<<<<<<< HEAD
 	
+=======
+	private String join_count;
+
+>>>>>>> bfb626cb563aece66bb8fc83021b64bd065ba086
 	//LOCATIONS TABLE
 	private String sido_name;
 	private String gugun_name;
 	//ITEM TABLE
 	private String item;
+<<<<<<< HEAD
 	
+=======
+
+>>>>>>> bfb626cb563aece66bb8fc83021b64bd065ba086
 	//STORAGE TABLE
 	private String storage_idx;
 	private String file_path;
@@ -51,7 +60,11 @@ public class MypageVo {
 	private String using_table_idx;
 	private String store_date;
 	private int    storage_state;
+<<<<<<< HEAD
 	
+=======
+
+>>>>>>> bfb626cb563aece66bb8fc83021b64bd065ba086
 	//FOUND TABLE
 	private String found_idx;
 	private String found_title;
@@ -63,13 +76,31 @@ public class MypageVo {
 	private String f_location_detail;
 	private String f_item_detail;
 	private int    found_state;
+<<<<<<< HEAD
 	
+=======
+
+>>>>>>> bfb626cb563aece66bb8fc83021b64bd065ba086
 	//CS TABLE
 	private String cs_idx;
 	private String cs_title;
 	private String cs_content;
 	private String cs_reg_date;
 	private int    cs_state;
+
+
+	//BADGE TABLE
+	private String badge_idx;
+	private String badge_url;
+	private String badge_name;
 	
+	//USER_ARHIEVE TABLE
+	private String arhieve_idx;
+	private int write_count;
+	private int comment_count;
 	
+	//MY_FIND TABLE
+	private String set_date;
+	
+	private Integer count;
 }
