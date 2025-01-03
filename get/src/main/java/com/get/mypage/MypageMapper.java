@@ -46,4 +46,6 @@ public interface MypageMapper {
 
 	MypageVo getArhieve(String email);
 
+	MypageVo getCountWrite(String email);
+
 }

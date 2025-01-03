@@ -65,7 +65,7 @@ public class SecurityConfig {
                         .deleteCookies("JSESSIONID"))
                 .sessionManagement((auth) -> auth
                         .maximumSessions(1)
-                        .maxSessionsPreventsLogin(true)
+                        .maxSessionsPreventsLogin(false)
                         )
                 .headers(headersConfigurer ->
                         headersConfigurer

@@ -23,4 +23,11 @@
  ,'USER'
                                   )
     </insert>
+    
+    <update id="upJoinCount" parameterType="String">
+    UPDATE MEMBERS
+    SET JOIN_COUNT = JOIN_COUNT + 1
+    WHERE EMAIL = #{email}
+</update>
+    
 </mapper>

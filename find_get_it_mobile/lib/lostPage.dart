@@ -61,7 +61,8 @@ class Lost {
 
 // API 호출 함수
 Future<List<Lost>> fetchItems() async {
-  final response = await http.get(Uri.parse('http://192.168.100.23:9090/app/lostList'));
+  //final response = await http.get(Uri.parse('http://192.168.100.23:9090/app/lostList'));  //보경
+  final response = await http.get(Uri.parse('http://192.168.100.18:9090/app/lostList'));    //규황
 
   if (response.statusCode == 200) {
     // 서버에서 받은 JSON 데이터를 파싱해서 List<Lost>로 변환
