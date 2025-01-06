@@ -91,7 +91,6 @@
     }
 </style>
 <body>
-
 <div id="headImage">
     <img src="/img/loginHeader.png" alt="img">
 </div>
@@ -107,6 +106,7 @@
                 <input type="password" name="password" placeholder="비밀번호"/>
                 </div>
                 <button type="submit" id="submit">로그인</button>
+                    <div id = "errorMessage" style="font-size: 13px; color: tomato">${errorMessage}</div>
             </div>
         </form>
         <button class="loginBtn" id="find" onclick="document.location.href='/'">아이디/비밀번호 찾기</button>

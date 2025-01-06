@@ -341,6 +341,7 @@
       <c:if test="${sessionScope.grant eq 'ADMIN'}">
         <form class="form" method="post" style="display:inline-block;">
           <input type="hidden" name="resiver_idx" value="${item.foundIdx}" />
+          <input type="hidden" name="foundState" value="${item.foundState}">
           <button type="button" class="banBtn">블라인드</button>
         </form>
       </c:if>

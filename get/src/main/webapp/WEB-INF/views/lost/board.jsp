@@ -363,6 +363,7 @@
     	close.addEventListener('click', function(){
     		modal.style.display = 'none';
     	});
+
     	//대분류출력
     	fetch('/getBigCate',{
     		method: 'GET',
