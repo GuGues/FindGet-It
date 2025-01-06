@@ -396,7 +396,7 @@
        <form class="form" method="post">
 
     <input type="hidden" name="resiver_idx" value="${item.lostIdx}">
-    <input type="hidden" name="lostState" value="${item.lostState}" />
+    <input type="hidden" name="lostState" value="${item.lostState}">
     <button type="button" class="banBtn btn">블라인드</button>
 </form>
 
