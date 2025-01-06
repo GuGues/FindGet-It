@@ -230,7 +230,7 @@ body {
 </style>
 </head>
 <body>
-	<%@include file="/WEB-INF/include/adminSide.jsp"%>
+	<%@include file="/WEB-INF/include/side.jsp"%>
 	<main>
 		<div>
 			<div>

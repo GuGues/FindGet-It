@@ -10,7 +10,4 @@ public interface UserMapper {
     void save(Account newUser);
 
     Account findUserByEmail(String email);
-    
-    void upJoinCount(String email);
-   
 }

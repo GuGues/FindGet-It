@@ -5,7 +5,7 @@
 <mapper namespace="com.get.faq.FaqMapper">
   
   <select id="getFaqList">
-    SELECT FAQ_IDX, FAQ_QUESTION, FAQ_ANSWER, TO_CHAR(FAQ_REG_DATE,'YY-DD-MM') FAQ_REG_DATE
+    SELECT FAQ_IDX, FAQ_QUESTION, FAQ_ANSWER, TO_CHAR(FAQ_REG_DATE,'YY-MM-DD') FAQ_REG_DATE
       FROM FAQ
   </select>
   

@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<link rel="stylesheet" href="/css/common.css" />
 <!DOCTYPE html>
 <style>
   #side_menu {
@@ -107,8 +108,8 @@
     <c:if test="${!url.contains('/notice')}">
      <li><a href="/notice">공지사항</a></li>
     </c:if>
-    <c:if test="${!url.contains('/admin/state')}">
-     <li><a href="/admin/state">데이터 통계</a></li>
+    <c:if test="${!url.contains('/dashboard')}">
+     <li><a href="/dashboard">데이터 통계</a></li>
     </c:if>
   </ul>
   
@@ -126,6 +127,9 @@
      <li><a href="/admin/post">신고 게시글 목록</a></li>
      <li><a href="/admin/post/ban">차단 게시글 목록</a></li>
     </c:if>
+     <c:if test="${url.contains('/dashboard')}">
+     <li><h3 class="side-title">데이터 관리</h3></li>
+    </c:if>
     <c:if test="${url.contains('/faq') || url.contains('/cs')}">
      <li><h3 class="side-title">FAQ</h3></li>
      <li><a href="/faq">자주 묻는 질문</a></li>
@@ -135,11 +139,16 @@
      <li><h3 class="side-title">공지사항</h3></li>
      <li><a href="/notice">공지사항</a></li>
     </c:if>
-    <c:if test="${url.contains('/admin/state')}">
-     <li><h3 class="side-title">데이터 통계</h3></li>
-     <li><a href="/admin/state">데이터 통계</a></li>
+    <c:if test="${url.contains('/search')}">
+    <li><h3>검색 페이지</h3></li>
+     <li><a href="/">홈으로</a></li>
+     <li><a href="/cs/write">1:1 문의</a></li>
+     <li><a href="/police/found">경찰 습득물</a></li>
+     <li><a href="https://www.handphone.or.kr/" target="blank">핸드폰찾기 콜센터</a></li>
+     <li><a href="https://www.lost112.go.kr/html.do?html=/member/login&sub=U&title=%ED%9A%8C%EC%9B%90%EB%A7%88%EB%8B%B9&ptitle=%EB%A1%9C%EA%B7%B8%EC%9D%B8&MENU_NO=MENU5400" target="blank">경찰청 분실물 신고</a></li>
     </c:if>
   </ul>
   
   <div id="side_com">Ⓒnot_null</div>
 </nav>
+<%@ include file="/WEB-INF/include/fab.jsp" %>

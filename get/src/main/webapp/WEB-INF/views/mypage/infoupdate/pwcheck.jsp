@@ -39,61 +39,51 @@ a:hover {
 	<main>
 		<div>
 			<div>
-
+			
 				<div class="top">
 					<a href="/">Home</a>><a href="#">Mypage</a>
 				</div>
 				<h2>나의 정보수정</h2>
 				<hr>
 				<div>
-					<input type="hidden" name="_csrf" value="${_csrf.token}" />
+				  <input type="hidden" name="_csrf" value="${_csrf.token}" />
+				    <div>
+					  <label class="form-label">비밀번호 확인</label> 
+					  <input type="password" id="password" name="password" class="form-control">
+					  </div>
+					</div>
 					<div>
-						<label class="form-label">비밀번호 확인</label> <input type="password"
-							id="password" name="password" class="form-control">
+					<button id="checkPw">비밀번호 확인</button>
+					</div>
 					</div>
 				</div>
-				<div>
-					<button id="checkPw">비밀번호 확인</button>
-				</div>
-			</div>
-		</div>
 
 		<script>
-		document.addEventListener('DOMContentLoaded', function () {
-		    document.getElementById('checkPw').addEventListener('click', function () {
-		        const pwcheck = document.getElementById('password').value;
-		        if (!pwcheck || pwcheck.trim() === "") {
-		            alert("비밀번호를 입력하세요.");
-		        } else {
-		            const csrfToken = document.querySelector('input[name="_csrf"]').value;
-
-		            fetch('/Mypage/InfoUpdate/PwCheck', {
-		                method: 'GET',
-		                headers: {
-		                    'Content-Type': 'application/json',
-		                    'X-CSRF-TOKEN': csrfToken
-		                },
-		                body: JSON.stringify({ checkPw: pwcheck })
-		            })
-		            .then(response => response.json())
-		            .then(result => {
-		                console.log(result);
-		                if (result) {
-		                    console.log("비밀번호 일치");
-		                    window.location.href = "/Mypage/InfoUpdate/Update";
-		                } else {
-		                    console.log("비밀번호가 틀렸습니다.");
-		                    alert("비밀번호가 틀렸습니다.");
-		                    window.location.reload();
-		                }
-		            })
-		            .catch(error => {
-		                console.error(error);
-		                alert("오류가 발생했습니다.");
-		            });
-		        }
-		    });
-		});
+    ${document}.on('click', '#checkPw', function(){
+    	const pwcheck = $( '#password').val();
+    	if(!pwcheck || pwcheck.trim() === ""){
+    		alert("비밀번호를 입력하세요.");
+    	}else{
+    		$.ajax({
+    			type: 'GET'
+    			url: '/Mypage/Infoupdate/Pwcheck}',
+    			data: {'pwcheck': pwcheck},
+    			datatype: "text"
+    		}).done(function(result){
+    			consle.log(result);
+    			if(result){
+    			consle.log("비밀번호 일치");
+    		    window.location.href="/Mypage/Infoupdate/Update";
+    		}else if(!result){
+    			consle.log("비밀번호가 틀렸습니다.");
+    			alert("비밀번호가 틀렸습니다.");
+    		    window.location.reload();
+    		}
+    		}).fail(function(error){
+    			alert(JSON.stringify(error));
+    		})
+    	}
+    });
 </script>
 	</main>
 	<%@include file="/WEB-INF/include/pagefab.jsp"%>
