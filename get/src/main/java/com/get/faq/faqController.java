@@ -92,6 +92,20 @@ public class faqController {
 		return mv;
 	}
 	
+	@GetMapping("/cs/insert")
+	public String csInsertForm() {
+		return "faq/cs_insert";
+	}
+	
+	@PostMapping("/cs/insert")
+	public ModelAndView csInsert(@RequestParam Map<String, Object> map) {
+		//email=user1@example.com, cs_title=asdf, cs_content=safsd
+		faqMapper.insertCs(map);
+		ModelAndView mv = new ModelAndView();
+		mv.setViewName("redirect:/faq");
+		return mv;
+	}
+	
 	@GetMapping("/cs/question")
 	public ResponseEntity<csVo> csQuestion(@RequestParam(name="cs_idx") String cs_idx){
 		System.out.println(cs_idx);

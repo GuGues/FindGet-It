@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface NoticeMapper {
 
-	List<noticeVo> getNoticeList(int offset, int recordsPerPage);
+	List<noticeVo> getNoticeList(int arg0, int arg1);
 
 	noticeVo getNotice(String notice_idx);
 
@@ -19,6 +19,8 @@ public interface NoticeMapper {
 	void updateNotice(Map<String, String> map);
 
 	void insertNotice(Map<String, String> map);
+
+	void deleteNotice(String notice_idx);
 
 
 }

@@ -20,4 +20,14 @@ public interface ChatMapper {
     List<Chat> findAllChat(String chattingNo);
 
     ChatRoom findOpenedRoom(String openerEmail, String email);
+
+    List<ChatRoom> findRoomListByUserIdxLastest(String userid);
+
+    Chat findChatLastest(String chattingNo);
+
+    void updateMessageViewed(String chattingNo, String email);
+
+    int countChatStack(String chattingNo, String email);
+
+    void report(ChattingReportVo reportVo);
 }

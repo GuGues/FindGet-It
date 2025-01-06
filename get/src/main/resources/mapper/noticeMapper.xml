@@ -38,4 +38,9 @@
      VALUES(#{ notice_title }, #{ notice_content })
   </insert>
   
+  <delete id="deleteNotice">
+    DELETE NOTICE
+     WHERE NOTICE_IDX = #{ notice_idx }
+  </delete>
+  
 </mapper>

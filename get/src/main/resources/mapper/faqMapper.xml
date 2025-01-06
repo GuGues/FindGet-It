@@ -5,7 +5,7 @@
 <mapper namespace="com.get.faq.FaqMapper">
   
   <select id="getFaqList">
-    SELECT FAQ_IDX, FAQ_QUESTION, FAQ_ANSWER, TO_CHAR(FAQ_REG_DATE,'YY-DD-MM') FAQ_REG_DATE
+    SELECT FAQ_IDX, FAQ_QUESTION, FAQ_ANSWER, TO_CHAR(FAQ_REG_DATE,'YY-MM-DD') FAQ_REG_DATE
       FROM FAQ
   </select>
   
@@ -32,7 +32,7 @@
     SELECT CS_IDX, EMAIL, CS_TITLE, TO_CHAR(CS_REG_DATE,'YY-MM-DD') CS_REG_DATE, CS_STATE
      FROM CS_CENTER
      ORDER BY CS_STATE DESC, CS_IDX DESC
-     OFFSET #{arg0} ROWS FETCH NEXT #{arg1} ROWS ONLY
+     OFFSET #{param1} ROWS FETCH NEXT #{param2} ROWS ONLY
   </select>
   
   <select id="getCsQuestion">
@@ -53,5 +53,10 @@
       CS_STATE = 1
     WHERE CS_IDX = #{ cs_idx } 
   </update>
+  
+  <insert id="insertCs">
+    INSERT INTO CS_CENTER(EMAIL, CS_TITLE, CS_CONTENT, CS_STATE)
+      VALUES( #{ email }, #{ cs_title }, #{ cs_content }, 2)
+  </insert>
   
 </mapper>

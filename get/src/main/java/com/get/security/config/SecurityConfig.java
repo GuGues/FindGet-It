@@ -20,6 +20,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,6 +36,7 @@ public class SecurityConfig {
     private final AuthenticationConfiguration authenticationConfiguration;
     private final CustomAuthenticationProvider customAuthenticationProvider;
     private final CustomSuccessHandler customSuccessHandler;
+    private final CustomAuthFailureHandler customAuthFailureHandler;
 
     @Bean
     public static BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -47,7 +51,7 @@ public class SecurityConfig {
                         .dispatcherTypeMatchers(DispatcherType.FORWARD).permitAll()
                         .requestMatchers("/","/icon/**","/logo/**", "/js/**", "/css/**", "/img/**", "/login", "/favicon.ico", "/webjars", "/h2-console/**","/error").permitAll()
                         .requestMatchers("/sighup","/sighup/**","/auth").permitAll()
-                        .requestMatchers("/user/**").hasAnyRole("USER")
+                        .requestMatchers("/mypage/**").hasAnyRole("USER","ADMIN")
                         .requestMatchers("/chatting/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/loginSuccess").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/**").permitAll()
@@ -56,23 +60,22 @@ public class SecurityConfig {
                         .loginPage("/login")
                         .loginProcessingUrl("/auth")
 //                        .defaultSuccessUrl("/")
-                        .successHandler(customSuccessHandler))
+                        .successHandler(customSuccessHandler)
+                        .failureHandler(customAuthFailureHandler))
                 .logout((logout) -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/")
-                        // 로그아웃 핸들러 추가 (세션 무효화 처리)
-                        .addLogoutHandler((request, response, authentication) -> {
-                            HttpSession session = request.getSession();
-                            session.invalidate();
-                        })
-                        // 로그아웃 성공 핸들러 추가 (리다이렉션 처리)
-                        .logoutSuccessHandler((request, response, authentication) ->
-                                response.sendRedirect("/"))
-                        .deleteCookies("JSESSIONID", "access_token"))
+                        .invalidateHttpSession(true)
+                        .clearAuthentication(true)
+                        .deleteCookies("JSESSIONID"))
                 .sessionManagement((auth) -> auth
                         .maximumSessions(1)
-                        .maxSessionsPreventsLogin(true)
-                        );
+                        .maxSessionsPreventsLogin(false))
+                .headers(headersConfigurer ->
+                        headersConfigurer
+                                .frameOptions(
+                                        HeadersConfigurer.FrameOptionsConfig::sameOrigin
+                                ));
 
         return http.build();
     }

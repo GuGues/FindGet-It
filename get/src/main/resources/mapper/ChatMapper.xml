@@ -8,7 +8,7 @@
     <select id="findByRoomId">
         SELECT *
         FROM CHATTING_ROOM
-        WHERE CHATTING_NO = #{roomId}
+        WHERE CHATTING_NO = #{chatting_no}
     </select>
     <insert id="saveChat">
         INSERT INTO MESSAGE
@@ -40,11 +40,34 @@
     <select id="findAllChat">
         SELECT *
         FROM MESSAGE
-        WHERE CHATTING_NO=#{chatting_no}
+        WHERE CHATTING_NO = #{chatting_no}
+        ORDER BY SEND_TIME ASC
     </select>
     <select id="findOpenedRoom">
         SELECT *
         FROM CHATTING_ROOM
         WHERE (OPEN_MEMBER=#{email} AND PARTICIPANT=#{openerEmail}) OR (OPEN_MEMBER=#{openerEmail} AND PARTICIPANT=#{email})
     </select>
+    <select id="findChatLastest">
+        SELECT *
+        FROM MESSAGE
+        WHERE CHATTING_NO=#{chatting_no}
+        ORDER BY SEND_TIME DESC
+        OFFSET 0 ROWS FETCH NEXT 1 ROWS ONLY
+    </select>
+    <update id="updateMessageViewed">
+        UPDATE MESSAGE
+        SET   READ_FL = 'Y'
+        WHERE CHATTING_NO=#{param1} AND SENDER != #{param2}
+    </update>
+    <select id="countChatStack">
+        SELECT COUNT(*)
+        FROM MESSAGE
+        WHERE READ_FL = 'N' AND CHATTING_NO=#{param1} AND SENDER != #{param2}
+    </select>
+
+    <insert id="report">
+        INSERT INTO CHATTING_REPORT
+        VALUES(null,#{reporter_email},#{receiver_email},#{report_room},#{chat_report_content},SYSDATE)
+    </insert>
 </mapper>

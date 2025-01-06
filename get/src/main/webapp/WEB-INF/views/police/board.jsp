@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -176,10 +177,89 @@
    .listTable tr:not(tr:first-child, tr:nth-child(2), tr:last-child){ border-top: solid 1px #DFD4D4; }
    .listTable tr:nth-child(1), .listTable tr:last-child{ height: 20px;}
    a{ color: black; cursor: pointer; text-decoration: none;}
+
+
+  <c:if test="${ sessionScope.grant eq 'ADMIN' }">
+   #8C6C55;
+
+  #684F36;
+  .list tr:not(.listHead) td:not(td:first-child){
+    border-left: #8C6C55 solid 1px
+  }
+  .list tr:not(.listHead, tr:nth-child(1), tr:last-child):hover{
+    background-color: rgba(140, 108, 85, 0.24);
+  }
+  .list{
+    display: block;
+    text-align: center;
+    width: 95%;
+    border: #8C6C55 solid 2.5px;
+    padding: 20px;
+    border-radius: 10px;
+  }
+  .searchBtn{
+    border: solid 1px #8C6C55;
+    border-radius: 5px;
+    padding: 5px 15px;
+    color: #8C6C55;
+  }
+  .searchBtn:hover{
+    background-color: rgba(140, 108, 85, 0.25);
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+  }
+  input[type="button"]{
+    border: solid 1px #8C6C55;
+    border-radius: 5px;
+    padding: 3px 15px;
+    background-color: #8C6C55;
+    color: white;
+  }
+  input[type="button"]:hover{
+    border: solid 1px #8C6C55;
+    border-radius: 5px;
+    padding: 3px 15px;
+    background-color: white;
+    color: black;
+    transition: background-color 0.3s ease
+  }
+  .warning_content, .warningDate_content{
+    position:absolute;
+
+    top: 10%;
+    left: 50%;
+    width:320px;
+    height:70px;
+    transform: translate(-50%, -50%);
+
+    padding:20px;
+
+    text-align: center;
+
+    background-color: rgba(140, 108, 85, 0.15);
+    border-radius:10px;
+
+    color: #8C6C55;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border: 2px solid rgba(0, 0, 0, 0.2);
+  }
+  </c:if>
+
+
+
 </style>
+
+
 </head>
 <body>
-  <%@include file="/WEB-INF/include/side.jsp" %>
+  <c:choose>
+    <c:when test="${ sessionScope.grant eq 'ADMIN' }">
+      <%@include file="/WEB-INF/include/adminSide.jsp" %>
+    </c:when>
+    <c:when test="${ sessionScope.grant ne 'ADMIN' || !sessionScope.grant }">
+      <%@include file="/WEB-INF/include/side.jsp" %>
+    </c:when>
+  </c:choose>
   <main>
     <div class="titleBox">
       <div class="right" style="font-size: 13px;">

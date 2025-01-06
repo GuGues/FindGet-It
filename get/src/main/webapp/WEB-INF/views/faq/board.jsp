@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,7 +10,6 @@
 <link rel="icon" type="image/png" href="/img/favicon.ico" />
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="/css/common.css">
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 </head>
 <style>
   main{
@@ -25,14 +26,11 @@
    .right{ width: 100%; padding: 0 20px; text-align:right; margin: 0;}
    a{ color: black; cursor: pointer; text-decoration: none;}
    .hidden+.answer{ display: none; }
-   .open{ background-color: #D3C4B1 }
    .open+.answer{ display: run-in; }
    .contentBox{ width: 100%; }
-   input[type="button"]{ background-color: #B39977; border: none; border-radius: 5px; padding: 5px; color: white;}
    .tableTitle{ height: 80px; }
    .contentBox {
     display: block;
-	border: solid 2px #8C6C55;
 	border-radius: 10px;
 	width: 100%;
    }
@@ -49,12 +47,10 @@
     padding: 8px;
   }
   td:not(.tableTitle td, .answer td)  { border-bottom: 1px solid #ddd;  /* 셀에 경계 추가 */}
-  tr td:nth-child(1):not(.tableTitle td, .answer td)  { border-right: 2px solid #B39977;  /* 셀에 경계 추가 */}
   tr td:nth-child(1):not(.tableTitle td) { width: 10%; }
   tr td:nth-child(2):not(.tableTitle td) { width: 70%; }
   tr td:nth-child(3):not(.tableTitle td) { width: 20%; }
   .answer{ min-height: 100px; display: table; border: 15px white solid; border-radius: 5px; border-collapse: separate;}
-  .answer td{ background-color: #F3E6D5; }
   .modal{
     display:none;
     
@@ -90,10 +86,36 @@
    .btn{ background-color: #B39977; color: white;}
    .btn:hover{ background-color: #8C6C55;}
    input[type="text"]{ width: 70%; }
-   tr:not(.tableTitle tr):hover{ background-color: #D3C4B1 }
+   
+   <c:if test="${ sessionScope.grant eq 'ADMIN' }">
+     input[type="button"]{ background-color: #B39977; border: none; border-radius: 5px; padding: 5px; color: white;}
+     .contentBox{ border: solid 2px #8C6C55; }
+     tr td:nth-child(1):not(.tableTitle td, .answer td)  { border-right: 2px solid #B39977;  /* 셀에 경계 추가 */}
+     hr{ color: #8C6C55; border-width: 3px }
+     tr:not(.tableTitle tr):hover{ background-color: #D3C4B1 }
+     .open{ background-color: #D3C4B1 }
+     .answer td{ background-color: #F3E6D5; }
+   </c:if>
+   
+   <c:if test="${ sessionScope.grant ne 'ADMIN' }">
+     .contentBox{ border: solid 2px #FE8015; }
+     tr td:nth-child(1):not(.tableTitle td, .answer td)  { border-right: 2px solid #FE8015;  /* 셀에 경계 추가 */}
+     hr{ color: #FE8015; border-width: 3px }
+     tr:not(.tableTitle tr):hover{ background-color: #FFD5B2 }
+     .open{ background-color: #FFD5B2 }
+     .answer td{ background-color: #FFF0E3; }
+   </c:if>
+   
 </style>
 <body>
-<%@include file="/WEB-INF/include/adminSide.jsp" %>
+  <c:choose>
+    <c:when test="${ sessionScope.grant eq 'ADMIN' }">
+      <%@include file="/WEB-INF/include/adminSide.jsp" %>
+    </c:when>
+    <c:when test="${ sessionScope.grant ne 'ADMIN' }">
+      <%@include file="/WEB-INF/include/side.jsp" %>
+    </c:when>
+  </c:choose>
   <main>
     <div class="titleBox">
       <div class="right" style="font-size: 13px;">
@@ -101,11 +123,18 @@
       </div>
       <h3 class="title">FAQ</h3>
     </div>
-    <hr style="color: #8C6C55; border-width: 3px;">
-    <div><h4 style="padding-left: 20px; margin-bottom: 20px;">자주묻는질문 관리</h4></div>
-    <div class="right" style="padding-right: 5%; margin-bottom: 5px; margin-top: -30px;">
-      <input type="button" value="작성" class="write" style="padding: 5px 15px;">
+    <hr>
+    <div>
+      <h4 style="padding-left: 20px; margin-bottom: 20px;">
+      <c:if test="${ sessionScope.grant eq 'ADMIN' }">자주묻는질문 관리</c:if>
+      <c:if test="${ sessionScope.grant ne 'ADMIN' }">자주묻는질문 목록</c:if>
+      </h4>
     </div>
+    <c:if test="${ sessionScope.grant eq 'ADMIN' }">
+      <div class="right" style="padding-right: 5%; margin-bottom: 5px; margin-top: -30px;">
+        <input type="button" value="작성" class="write" style="padding: 5px 15px;">
+      </div>
+    </c:if>
     <div style="text-align: center;">
     <table style="width: 100%;">
       <colgroup>
@@ -127,8 +156,10 @@
           <td>${ i.index + 1 }</td>
           <td class="faq_question">${ faq.faq_question }</td>
           <td>${ faq.faq_reg_date }&nbsp;&nbsp;&nbsp;&nbsp;
+          <c:if test="${ sessionScope.grant == 'ADMIN' }">
             <input type="button" value="수정" class="${ faq.faq_idx } upBtn">
             <input type="button" value="삭제" class="${ faq.faq_idx } delBtn">
+          </c:if>
           </td>
         </tr>
         <tr class="answer ${ faq.faq_idx }">
@@ -141,7 +172,7 @@
     </div>
     <div class="modal">
       <div class="modal_content">
-        <form method="POST" class="submit">
+        <form method="POST" action="/faq/update" class="submit">
         <h3>자주묻는질문 수정</h3>
         <div class="content">
           <input type="hidden" name="faq_idx" class="idx">
@@ -214,9 +245,11 @@
 	  
 	  //작성 버튼 클릭시
 	  const write = document.querySelector('.write');
-	  write.addEventListener('click', function(){
-		  window.location.href = '/faq/insert';
-	  });
+	  if(write){
+		  write.addEventListener('click', function(){
+			  window.location.href = '/faq/insert';
+		  });
+	  }
   </script>
 </body>
 </html>

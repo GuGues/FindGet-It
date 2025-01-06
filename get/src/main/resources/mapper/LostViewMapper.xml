@@ -5,32 +5,38 @@
 
 <mapper namespace="com.get.lostview.LostViewMapper">
 
+    <!-- 분실물 상세 조회 -->
     <select id="selectLostItemDetail">
         SELECT
-            L.LOST_IDX AS lostIdx,
-            L.EMAIL AS email,
-            L.LOST_TITLE AS lostTitle,
-            L.LOST_CONTENT AS lostContent,
-            TO_CHAR(L.LOST_DATE, 'YYYY-MM-DD') AS lostDate,
+            L.LOST_IDX                          AS lostIdx,
+            L.EMAIL                             AS email,
+            L.LOST_TITLE                        AS lostTitle,
+            L.LOST_CONTENT                      AS lostContent,
+            TO_CHAR(L.LOST_DATE, 'YYYY-MM-DD')  AS lostDate,
             TO_CHAR(L.L_REG_DATE, 'YYYY-MM-DD') AS lRegDate,
-            L.L_VIEWS AS lViews,
-            L.LOCATION_CODE AS locationCode,
-            L.L_LOCATION_DETAIL AS lLocationDetail,
-            L.ITEM_CODE AS itemCode,
-            L.L_ITEM_DETAIL AS lItemDetail,
-            L.REWARD AS reward,
-            L.COLOR_CODE AS colorCode,
-            L.LOST_STATE AS lostState,
-            I.ITEM AS itemName,
-            C.COLOR_NAME AS colorName
+            L.L_VIEWS                           AS lViews,
+            L.LOCATION_CODE                     AS locationCode,
+            L.L_LOCATION_DETAIL                 AS lLocationDetail,
+            L.ITEM_CODE                         AS itemCode,
+            L.L_ITEM_DETAIL                     AS lItemDetail,
+            L.REWARD                            AS reward,
+            L.COLOR_CODE                        AS colorCode,
+            L.LOST_STATE                        AS lostState,
+            I.ITEM                              AS itemName,
+            C.COLOR_NAME                        AS colorName,
+            LOC.SIDO_NAME                       AS sidoName,
+            LOC.GUGUN_NAME                      AS gugunName,
+            M.NICKNAME                          AS nickname
         FROM LOST_ITEMS L
                  LEFT JOIN ITEMS I ON L.ITEM_CODE = I.ITEM_CODE
                  LEFT JOIN COLORS C ON L.COLOR_CODE = C.COLOR_CODE
+                 LEFT JOIN LOCATIONS LOC ON L.LOCATION_CODE = LOC.LOCATION_CODE
+                 LEFT JOIN MEMBERS M ON L.EMAIL = M.EMAIL
         WHERE L.LOST_IDX = #{lostIdx}
     </select>
 
     <!-- 지역 목록 조회 -->
-    <select id="selectLocations" >
+    <select id="selectLocations" resultType="java.util.Map">
         SELECT
             LOCATION_CODE AS locationCode,
             SIDO_NAME AS sidoName,
@@ -40,7 +46,7 @@
     </select>
 
     <!-- 물품 목록 조회 -->
-    <select id="selectItems">
+    <select id="selectItems" resultType="java.util.Map">
         SELECT
             ITEM_CODE AS itemCode,
             ITEM AS itemName
@@ -49,7 +55,7 @@
     </select>
 
     <!-- 색상 목록 조회 -->
-    <select id="selectColors">
+    <select id="selectColors" resultType="java.util.Map">
         SELECT
             COLOR_CODE AS colorCode,
             COLOR_NAME AS colorName
@@ -57,9 +63,8 @@
         ORDER BY COLOR_NAME
     </select>
 
-
     <!-- 분실물 등록 -->
-    <insert id="insertLostItem">
+    <insert id="insertLostItem" parameterType="com.get.lostview.LostItemVO">
         INSERT INTO LOST_ITEMS (
             LOST_IDX,
             EMAIL,
@@ -74,7 +79,7 @@
             COLOR_CODE,
             LOST_STATE
         ) VALUES (
-                     'LI_' || TO_CHAR(SEQ_LOST_IDX.NEXTVAL, 'FM0000000000'),
+                     null,
                      #{email},
                      #{lostTitle},
                      #{lostContent},
@@ -88,5 +93,46 @@
                      #{lostState}
                  )
     </insert>
+
+    <!-- (예시) 이메일로 회원정보 조회 -->
+    <select id="selectMemberByEmail" >
+        SELECT
+            EMAIL,
+            NICKNAME
+        FROM MEMBERS
+        WHERE EMAIL = #{email}
+    </select>
+
+    <!-- ======= (새로 추가) 습득물 수정 ======= -->
+    <update id="updateLostItem">
+        UPDATE LOST_ITEMS
+        SET
+        LOST_TITLE       = #{lostTitle},
+        LOST_CONTENT     = #{lostContent},
+        LOST_DATE        = TO_DATE(#{lostDate}, 'YYYY-MM-DD'),
+        LOCATION_CODE     = #{locationCode},
+        L_LOCATION_DETAIL = #{lLocationDetail},
+        ITEM_CODE         = #{itemCode},
+        L_ITEM_DETAIL     = #{lItemDetail, jdbcType=VARCHAR},
+        COLOR_CODE        = #{colorCode}
+        WHERE LOST_IDX = #{lostIdx}
+        AND EMAIL = #{email}
+        <!-- EMAIL도 조건에 포함시켜야 본인글만 수정됨 -->
+    </update>
+    
+    <select id="getFilePath">
+      SELECT FILE_PATH
+       FROM IMAGE_STORAGE
+       WHERE USING_TABLE_IDX = #{ lostIdx }
+    </select>
+
+    <!-- ★ 추가: 조회수 증가 쿼리 ★ -->
+    <update id="updateLostViews">
+
+        UPDATE LOST_ITEMS
+        SET L_VIEWS = L_VIEWS + 1
+        WHERE LOST_IDX = #{lostIdx}
+
+    </update>
 
 </mapper>
