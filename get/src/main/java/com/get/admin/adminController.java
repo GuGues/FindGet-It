@@ -74,7 +74,7 @@ public class adminController {
 		return "redirect:/admin";
 	}
 	
-	@RequestMapping("/user")
+	@GetMapping("/user")
 	public ModelAndView reportUserList(@RequestParam(value = "page", defaultValue = "1") int page) {
 		
 		int recordsPerPage = 15;  // 페이지당 보여줄 게시글 수
@@ -144,8 +144,9 @@ public class adminController {
 	}
 	
 	@PostMapping("/post/ban")
-	public String adminBanPost(@RequestParam(name="resiver_idx") String resiver_idx) {
-		adminMapper.postBan(resiver_idx);
+	public String adminBanPost(@RequestParam Map<String, String> map) {
+		//System.out.println(map);
+		adminMapper.postBan(map);
 		return "redirect:/admin/post";
 	}
 	
@@ -166,8 +167,9 @@ public class adminController {
 	}
 	
 	@PostMapping("/post/ban/clear")
-	public String adminBanClearPost(@RequestParam(name="resiver_idx") String resiver_idx) {
-		adminMapper.postBanClear(resiver_idx);
+	public String adminBanClearPost(@RequestParam Map<String, String> map) {
+		//System.out.println(map);
+		adminMapper.postBanClear(map);
 		return "redirect:/admin/post/ban";
 	}
 	

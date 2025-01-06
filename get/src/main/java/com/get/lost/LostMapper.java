@@ -32,4 +32,5 @@ public interface LostMapper {
 
 	List<lostVo> getAppLostList();
 
+
 }

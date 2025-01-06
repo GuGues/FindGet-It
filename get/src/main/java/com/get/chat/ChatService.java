@@ -135,4 +135,10 @@ public class ChatService {
     public void updateMessageViewed(String chattingNo, String email) {
         chatMapper.updateMessageViewed(chattingNo,email);
     }
+
+    public void report(ChattingReportVo reportVo) {
+        System.out.println("reportVo = " + reportVo);
+        chatMapper.report(reportVo);
+
+    }
 }

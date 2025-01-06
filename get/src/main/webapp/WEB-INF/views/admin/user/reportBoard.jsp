@@ -130,7 +130,22 @@
   .reports tr td:nth-of-type(2) { width: 50%; }
   .reports tr td:nth-of-type(3) { width: 20%; }
   .reports tr td:nth-of-type(4) { width: 20%; }
-
+  .chatLog{ 
+    background-color: white;
+    border: 2px solid #8C6C55;
+    border-radius: 5px;
+    padding: 3px;
+    margin-left: 20px;
+  }
+  #chatting_content{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    overflow-y: scroll;
+  }
+  ::-webkit-scrollbar {
+  display: none; /* Webkit */
+}
 </style>
 </head>
 <body>
@@ -306,8 +321,8 @@
     function reportChatting(chatList){
     	let html='<td class="chatting">';
     	 chatList = chatList.split(',')
-		    for(let j = 0; j<chatList.length; j++){
-		   		html += chatList[j]+'<br>';
+		    for(let j = 0; j<chatList.length-1; j++){
+		   		html += '<span class="chatLog">'+chatList[j]+'</span><br>';
 		    }
     	 html+='</td>'
     	document.querySelector("#chatting_content").innerHTML=html;

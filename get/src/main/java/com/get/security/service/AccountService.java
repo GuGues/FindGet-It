@@ -47,9 +47,4 @@ public class AccountService implements UserDetailsService {
         return true;
     }
 
-    @Transactional
-    public void upJoinCount(String email) {
-        userMapper.upJoinCount(email);
-    }
-    
 }
