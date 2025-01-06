@@ -16,6 +16,7 @@
             background-color: #ffe6cb;
 
         }
+        main{ margin-left: 20%; }
         h1 {
             color: #8C6C55;
             text-align: center;
@@ -89,6 +90,7 @@
 </head>
 <%@include file="/WEB-INF/include/adminSide.jsp" %>
 <body>
+<main>
 <!-- 습득물 통계 -->
 <div class="section">
     <div class="stats">
@@ -144,7 +146,7 @@
         </div>
     </div>
 </div>
-
+</main>
 <script>
     // JSON 데이터 디버깅용: 콘솔에서 확인 가능
     console.log("습득물 지역 데이터: ", [

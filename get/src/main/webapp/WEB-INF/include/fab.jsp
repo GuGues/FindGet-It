@@ -283,15 +283,17 @@
                 </c:if>
             </a>
         </sec:authorize>
-
-        <a class="fab-option" href="/mypage">
-            <c:if test="${url.contains('/home') || sessionScope.grant eq 'ADMIN'}">
+        
+        <c:if test="${ sessionScope.grant ne 'ADMIN' }">
+        <a class="fab-option" href="/Mypage">
+            <c:if test="${url.contains('/home')}">
                 <img src="/icon/info_white.png" alt="Mypage" style="width:28px; height:25px;">
             </c:if>
-            <c:if test="${!url.contains('/home') && sessionScope.grant ne 'ADMIN'}">
+            <c:if test="${!url.contains('/home')}">
                 <img src="/icon/info_orange.png" alt="Mypage" style="width:30px; height:30px;">
             </c:if>
         </a>
+        </c:if>
         <c:if test="${ not empty sessionScope.idx }">
             <a class="fab-option" href="#" onclick="openIdCheckModal()">
                 <c:if test="${url.contains('/home') || sessionScope.grant eq 'ADMIN'}">

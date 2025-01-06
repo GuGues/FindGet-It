@@ -86,4 +86,5 @@ public class MypageVo {
 	//MY_FIND TABLE
 	private String set_date;
 	
+	private Integer count;
 }

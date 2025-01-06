@@ -6,7 +6,7 @@
 <mapper namespace="com.get.mypage.MypageMapper">
 
 <select id="getEmail">
-SELECT *
+SELECT EMAIL, NICKNAME, PASSWORD, USERNAME, BIRTH, PHONE, MEM_IDX, ADDRESS1, ADDRESS2, POSTNUMBER, TO_CHAR(COM_DATE, 'YYYY-MM-DD')AS COM_DATE, USER_GRANT, JOIN_COUNT    
 FROM   MEMBERS
 WHERE  EMAIL = #{email}
 </select>
@@ -77,12 +77,6 @@ WHERE  EMAIL = #{email}
         WHERE LOST_IDX = #{lost_idx}
     </select>
     
-     <select id="getArhieve">
-        SELECT *
-        FROM  USER_ARHIEVE
-        WHERE MEM_IDX = #{mem_idx}
-    </select>
-    
     
 <select id="getLocations">
         SELECT *
@@ -114,4 +108,22 @@ FROM   LOCATIONS
         WHERE EMAIL = #{email}
     </select>
     
+<select id="getCountWrite">
+SELECT SUM(A + B)AS COUNT
+FROM (
+    SELECT EMAIL, COUNT(*) AS A, 0 AS B
+    FROM FOUND
+    GROUP BY EMAIL
+    UNION ALL
+    SELECT EMAIL, 0 AS A, COUNT(*) AS B
+    FROM LOST_ITEMS
+    GROUP BY EMAIL
+) T
+GROUP BY EMAIL
+HAVING EMAIL = #{email}
+</select>    
+
+
+
+
 </mapper>

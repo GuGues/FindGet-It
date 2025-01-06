@@ -100,8 +100,8 @@
      width: 100%;
    }
    .modal .reports td:nth-child(1) { flex: 0 0 10%; }
-   .modal .reports td:nth-child(2) { flex: 0 0 45%; }
-   .modal .reports td:nth-child(3) { flex: 0 0 25%; }
+   .modal .reports td:nth-child(2) { flex: 0 0 35%; }
+   .modal .reports td:nth-child(3) { flex: 0 0 35%; }
    .modal .reports td:nth-child(4) { flex: 0 0 20%; }
 </style>
 </head>
@@ -179,15 +179,15 @@
           <table style="width: 100%;">
             <colgroup>
               <col style="width: 10%;">
-              <col style="width: 45%;">
-              <col style="width: 25%;">
+              <col style="width: 35%;">
+              <col style="width: 35%;">
               <col style="width: 20%;">
             </colgroup>
             <tr>
               <td>순번</td>
               <td>신고내용</td>
               <td>신고자</td>
-              <td>신고시간</td>
+              <td>신고일자</td>
             </tr>
           </table>
           <table class="reports">
@@ -246,7 +246,7 @@
     				reportHTML += '<tr class="report">'
     			        + '<td>'+(i+1)+'</td>'
     			        + '<td>'+report[i].r_content+'</td>'
-    			        + '<td>'+report[i].reporter_idx+'</td>'
+    			        + '<td>'+report[i].email+'</td>'
     			        + '<td>'+report[i].r_reg_date+'</td>'
     			      +'</tr>';
     			  reports.innerHTML = reportHTML;

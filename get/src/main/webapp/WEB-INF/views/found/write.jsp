@@ -101,6 +101,7 @@
     main{
       margin-left: 20%;
     }
+    a{ color: black; }
   </style>
 </head>
 <body>

@@ -239,7 +239,7 @@
     #pagination {margin:10px auto;text-align: center;}
     #pagination a {display:inline-block;margin-right:10px;}
     #pagination .on {font-weight: bold; cursor: default;color:#777;}
-
+    a{ color: black; }
   </style>
 </head>
 <body>
@@ -257,9 +257,8 @@
   <div class="top-label">
     <h5>
       <a href="/">home</a> >
-      <a href="/">습득물</a>>
-      <a href="/">습득물 검색</a>>
-      <a href="/">습득물 상세보기</a>
+      <a href="/found">습득물</a>>
+      <a href="#">습득물 상세보기</a>
     </h5>
   </div>
 

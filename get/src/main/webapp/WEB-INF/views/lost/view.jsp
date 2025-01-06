@@ -188,7 +188,7 @@
       z-index: 1000;
     }
 
-    .modal-content {
+    .modal-content1 {
       background: white;
       padding: 20px;
       border-radius: 8px;
@@ -196,6 +196,12 @@
       width: 90%;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
       text-align: left;
+    }
+    .modal-content1 textarea{
+     width: 100%;
+     height: 100px;
+     overflow-y: scroll;
+     resize: none;
     }
     <c:if test="${ sessionScope.grant eq 'ADMIN' }">
     .detail-header {
@@ -295,6 +301,7 @@
     #pagination {margin:10px auto;text-align: center;}
     #pagination a {display:inline-block;margin-right:10px;}
     #pagination .on {font-weight: bold; cursor: default;color:#777;}
+    a{ color: black; }
   </style>
 </head>
 <body>
@@ -310,9 +317,8 @@
   <div class="top-label">
     <h5>
       <a href="/">home</a> >
-      <a href="/">분실물</a> >
-      <a href="/">분실물 검색</a> >
-      <a href="/">분실물 상세보기</a>
+      <a href="/lost">분실물</a> >
+      <a href="#">분실물 상세보기</a>
     </h5>
   </div>
 
@@ -666,7 +672,7 @@
 
   <!-- 신고 모달 영역 -->
   <div id="reportModalOverlay" class="modal-overlay">
-    <div class="modal-content">
+    <div class="modal-content1">
       <h3>신고 작성</h3>
       <form id="reportForm">
         <input type="hidden" name="reporterIdx" value="${loginMemIdx}" />
@@ -734,4 +740,3 @@
 </div>
 </body>
 </html>
-
