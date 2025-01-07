@@ -5,6 +5,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Login</title>
+    <link rel="icon" type="image/png" href="/img/favicon.ico" />
 </head>
 <style>
 

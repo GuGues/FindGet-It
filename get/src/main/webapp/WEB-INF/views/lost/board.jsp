@@ -344,7 +344,7 @@
     </c:if>
     </table>
     <div class="pagingDiv">
-      <%@include file="/WEB-INF/include/paging.jsp" %>
+      <%@include file="/WEB-INF/include/searchPaging.jsp" %>
     </div>
     </div>
     <c:if test="${ sessionScope.grant eq 'USER' }">

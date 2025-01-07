@@ -9,6 +9,7 @@
 <link rel="icon" type="image/png" href="/img/favicon.ico" />
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="/css/common.css">
+<link rel="icon" type="image/png" href="/img/favicon.ico" />
 <style>
   main{
     margin-left: 20%;
