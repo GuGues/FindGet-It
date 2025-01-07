@@ -340,7 +340,7 @@
     </c:if>
     </table>
     <div class="pagingDiv">
-      <%@include file="/WEB-INF/include/paging.jsp" %>
+      <%@include file="/WEB-INF/include/searchPaging.jsp" %>
     </div>
     </div>
     <c:if test="${ sessionScope.grant eq 'USER' }">
@@ -671,12 +671,4 @@
 
   </script>
 </body>
-<style>
-  <c:if test="${ sessionScope.grant eq 'ADMIN' }">
-   .now { background-color: #8C6C55; }
-  .page-link { background-color: #B39977; }
-  .page-link:hover { background-color: #D3C4B1;  color: black;}
-  .page-arrow:hover { background-color: #D3C4B1; }
-   </c:if>
-</style>
 </html>
