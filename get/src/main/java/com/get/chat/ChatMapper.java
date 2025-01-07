@@ -30,4 +30,6 @@ public interface ChatMapper {
     int countChatStack(String chattingNo, String email);
 
     void report(ChattingReportVo reportVo);
+
+    List<Chat> findAllChatReverse(String chattingNo);
 }

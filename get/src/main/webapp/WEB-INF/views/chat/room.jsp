@@ -202,6 +202,15 @@ const stompClient = new StompJs.Client({
             updateView();
             showGreeting(JSON.parse(greeting.body));
         },{id:"message"});
+
+        stompClient.publish({
+                    destination: "/app/roomList/" + '${sessionScope.email}',
+                    body: JSON.stringify({
+                        'message_content': $("#message_content").val(),
+                        'chatting_no': ${chatting_no},
+                        'sender': '<c:out value="${sessionScope.email}"/>',
+                    })
+                });
     };
 
     stompClient.onWebSocketError = (error) => {
