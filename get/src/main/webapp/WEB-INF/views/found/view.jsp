@@ -5,8 +5,9 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>분실물 상세 페이지</title>
+  <title>습득물 상세 페이지</title>
   <link rel="stylesheet" href="/css/common.css" />
+  <link rel="icon" type="image/png" href="/img/favicon.ico" />
   <style>
     body {
       font-family: Arial, sans-serif;

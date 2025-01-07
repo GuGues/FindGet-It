@@ -15,9 +15,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.get.lost.LostMapper;
+import com.get.lost.lostCustomVo;
 import com.get.lost.lostVo;
 
 @RestController
@@ -31,8 +33,13 @@ public class androidController {
     private ChatService chatService;
 
     @GetMapping("/app/lostList")
-    public ResponseEntity<List<lostVo>> appLostList(){
-        List<lostVo> lostList = lostMapper.getAppLostList();
+    public ResponseEntity<List<lostCustomVo>> appLostList(@RequestParam(value = "page", defaultValue = "1") int page){
+    	int recordsPerPage = 5;  // 페이지당 보여줄 게시글 수
+        int arg0 = (page - 1) * recordsPerPage;  // 오프셋 계산
+        
+		//분실물 전체 리스트
+		List<lostCustomVo> lostList = lostMapper.getLostList(arg0, recordsPerPage);
+		
         return ResponseEntity.ok(lostList);
     }
     @GetMapping("/app/chatting-roomList/{email}")

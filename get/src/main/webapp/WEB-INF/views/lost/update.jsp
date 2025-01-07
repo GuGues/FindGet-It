@@ -5,6 +5,7 @@
 <head>
   <meta charset="UTF-8">
   <title>습득물 수정</title>
+  <link rel="icon" type="image/png" href="/img/favicon.ico" />
   <style>
     /* 기존 스타일 유지 */
     body { font-family: Arial, sans-serif; padding: 20px; }

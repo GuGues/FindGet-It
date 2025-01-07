@@ -7,6 +7,7 @@
     <meta charset="UTF-8">
     <title>대시보드</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="icon" type="image/png" href="/img/favicon.ico" />
     <style>
         body {
             font-family: Arial, sans-serif;
