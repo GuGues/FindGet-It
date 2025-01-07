@@ -38,8 +38,6 @@ public interface MypageMapper {
 
 	List<MypageVo> getPostCount(MypageVo user);
 
-	MypageVo getMyFind(String email);
-
 	List<MypageVo> getAllLocation();
 
 	List<MypageVo> getAllItem();
@@ -47,5 +45,11 @@ public interface MypageMapper {
 	MypageVo getArhieve(String email);
 
 	MypageVo getCountWrite(String email);
+
+	MypageVo getMyFind(MypageVo user);
+
+	List<MypageVo> getNotFind(String email);
+
+	MypageVo updateMyFind(int locationCode, int itemCode, String mem_idx);
 
 }
