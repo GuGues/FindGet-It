@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'chatting_room.dart';
 import 'chatting.dart';
+import 'foundPage.dart';
 import 'lostPage.dart';
 import 'searchResultPage.dart';
 import 'login_page.dart';
@@ -32,7 +33,7 @@ class MyApp extends StatelessWidget {
         '/main': (context) => const HomePage(),
         '/lost': (context) => const LostPage(),
         // 습득물, FAQ, CS, Police, GetTalk 등은 필요 시 구현
-        // '/found': (context) => const FoundPage(),
+         '/found': (context) => const FoundPage(),
          '/faq': (context) => const FaqPage(),
         // '/cs': (context) => const CsPage(),
          '/notice': (context) => const NoticePage(),

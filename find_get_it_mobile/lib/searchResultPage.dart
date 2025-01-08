@@ -420,7 +420,6 @@ class _SearchResultPageState extends State<SearchResultPage>
       ],
     );
   }
-
   /* ================== (D) 공통 페이징영역 위젯 ================== */
   Widget _pagingControl({
     required int currentPage,
