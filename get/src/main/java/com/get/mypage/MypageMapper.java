@@ -1,6 +1,7 @@
 package com.get.mypage;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -50,6 +51,8 @@ public interface MypageMapper {
 
 	List<MypageVo> getNotFind(String email);
 
-	MypageVo updateMyFind(int locationCode, int itemCode, String mem_idx);
+
+	int updateMyFind(Map<String, Object> requestData);
+
 
 }

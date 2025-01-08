@@ -2,9 +2,13 @@ package com.get.mypage;
 
 
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -12,21 +16,18 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.servlet.ModelAndView;
 
 
 @Controller
-@RequestMapping("/")
 public class MypageController {
 
     @Autowired
     private MypageMapper mypageMapper;
 
 
-    @GetMapping("Mypage")
+    @GetMapping("/Mypage")
     public ModelAndView mypage() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();        
         String email = null;//인증된 사용자 이메일을 가져옴
@@ -75,27 +76,21 @@ public class MypageController {
 		mv.setViewName("mypage/myhome");
 		return mv;
 	}
-
-    @PostMapping("UpdateMyFind")
-    @ResponseBody
-    public String updateMyFind(@RequestParam("location_code") int location_code,
-                               @RequestParam("item_code") int item_code,
-                               @RequestParam("mem_idx") String mem_idx) {
-        
-    	
-    	
-    	try {
-            // update 실행 (서비스 없이 직접 Mapper 호출)
-            MypageVo result = mypageMapper.updateMyFind(location_code, item_code, mem_idx);
-
-            if (result != null) {
-                return "success";
+    
+    @PostMapping("/UpdateMyFind")
+    public ResponseEntity<Map<String, String>> updateMyFind(@RequestBody Map<String, Object> requestData) {
+        try {
+            int result = mypageMapper.updateMyFind(requestData);
+            if (result > 0) {
+                Map<String, String> response = new HashMap<>();
+                response.put("status", "success");
+                return ResponseEntity.ok(response);
             } else {
-                return "error"; // 업데이트가 실패한 경우
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("status", "error"));
             }
         } catch (Exception e) {
             e.printStackTrace();
-            return "error";
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("status", "error"));
         }
     }
 }

@@ -48,6 +48,23 @@ public class AccountService implements UserDetailsService {
     }
 
     @Transactional
+    public boolean verifyPassword(String email, String inputPassword) {
+        
+        Account account = new Account();
+        account.setEmail(email);
+        account = userMapper.findUser(account);
+
+        if (account == null) {
+            throw new IllegalArgumentException("해당 사용자를 찾을 수 없습니다.");
+        }
+
+        
+        return encoder.matches(inputPassword, account.getPassword());
+    }
+
+    
+    
+    @Transactional
     public void upJoinCount(String email) {
         userMapper.upJoinCount(email);
     }

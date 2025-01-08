@@ -262,6 +262,7 @@ a {
 	margin: 50px auto 0;
 	text-align: center;
 	max-width: 800px;
+	border-radius: 5px;
 }
 
 .notfind table td, table th {
@@ -347,7 +348,7 @@ table {
 										<c:forEach items="${alllocation }" var="alocation">
 											<c:choose>
 												<c:when test="${ alocation.sido_name !=null &&  alocation.gugun_name == null }">
-													<option value="${alocation.location_code}" }>
+													<option value="${alocation.location_code}" >
 													${ alocation.sido_name }</option>
 												</c:when>
 											</c:choose>
@@ -368,7 +369,7 @@ table {
 									</c:choose>
 									<select>
 										<c:forEach items="${ allitem }" var="aitem">
-											<option value="${aitem.item_code}"}>
+											<option value="${aitem.item_code}">
 											${ aitem.item }</option>
 										</c:forEach>
 									</select>
@@ -466,43 +467,50 @@ table {
 	</main>
 	
 	<script>
-	 document.addEventListener("DOMContentLoaded", function() {
-         document.querySelector(".upBtn").addEventListener("click", function() {
-             var locationCode = document.querySelector(".locationBtn select").value;
-             var itemCode = document.querySelector(".itemBtn select").value;
-             var mem_idx = "${user.mem_idx}"; // JSP에서 전달
+	document.addEventListener("DOMContentLoaded", function() {
+	    document.querySelector(".upBtn").addEventListener("click", function() {
+	        const locationCode = document.querySelector(".locationBtn select").value;
+	        const itemCode = document.querySelector(".itemBtn select").value;
+	        const memIdx = "${user.mem_idx}";
 
-             console.log("locationCode:", locationCode);
-             console.log("itemCode:", itemCode);
-             console.log("mem_idx:", mem_idx);
+	        const jsonData = {
+	            location_code: locationCode,
+	            item_code: itemCode,
+	            mem_idx: memIdx
+	        };
 
-             var formData = new FormData();
-             formData.append("location_code", locationCode);
-             formData.append("item_code", itemCode);
-             formData.append("mem_idx", mem_idx);
+	        fetch("UpdateMyFind", {
+	            method: "POST",
+	            headers: {
+	                "Content-Type": "application/json"
+	            },
+	            body: JSON.stringify(jsonData)
+	        })
+	        .then(response => response.json())
+	        .then(response => {
+	            if (response.status === "success") {
+	                alert("업데이트 완료");
 
-             // fetch를 사용하여 AJAX 요청 보내기
-             fetch("/updateMyFind", {
-                 method: "POST",
-                 body: formData
-             })
-             .then(response => response.text())
-             .then(response => {
-                 if (response === "success") {
-                     alert("정보가 업데이트되었습니다.");
-                 } else if (response === "error") {
-                     alert("업데이트에 실패했습니다.");
-                 } else {
-                     alert("권한이 없습니다.");
-                 }
-             })
-             .catch(error => {
-                 alert("서버 오류가 발생했습니다.");
-                 console.error("Error:", error);
-             });
-         });
-     });
-	
+	                // 선택된 옵션의 텍스트를 가져와서 <h6>에 반영
+	                const selectedLocationText = document.querySelector(".locationBtn select option:checked").textContent;
+	                const selectedItemText = document.querySelector(".itemBtn select option:checked").textContent;
+
+	                document.querySelector(".locationBtn h6").textContent = selectedLocationText;
+	                document.querySelector(".itemBtn h6").textContent = selectedItemText;
+	            } else if (response.status === "unauthorized") {
+	                alert("권한이 없습니다.");
+	            } else if (response.status === "error") {
+	                alert("업데이트 실패");
+	            } else {
+	                alert("서버 연결이 불안정합니다.");
+	            }
+	        })
+	        .catch(error => {
+	            alert("서버 오류가 발생했습니다.");
+	            console.error("Error:", error);
+	        });
+	    });
+	});
 	
 	document.addEventListener("DOMContentLoaded", () => {
 		const badgeList = document.querySelector(".badge-list");
@@ -516,7 +524,7 @@ table {
 		} else {
 			loadMoreButton.style.display = "block";
 		}
-		
+
 		loadMoreButton.addEventListener("click", () => {
 			if(!expanded){
 				badgeList.style.maxHeight = "none";
@@ -528,7 +536,6 @@ table {
 			expanded = !expanded;
 		});
 	});
-	
 </script>
 </body>
 </html>

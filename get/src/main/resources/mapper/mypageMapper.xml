@@ -145,4 +145,5 @@ FROM (
     WHERE MEM_IDX = #{mem_idx}
 </update>
 
+
 </mapper>
