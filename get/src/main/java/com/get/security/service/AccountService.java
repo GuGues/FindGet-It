@@ -46,7 +46,6 @@ public class AccountService implements UserDetailsService {
         userMapper.save(reg);
         return true;
     }
-
     @Transactional
     public boolean verifyPassword(String email, String inputPassword) {
         
@@ -69,4 +68,5 @@ public class AccountService implements UserDetailsService {
         userMapper.upJoinCount(email);
     }
     
+
 }
