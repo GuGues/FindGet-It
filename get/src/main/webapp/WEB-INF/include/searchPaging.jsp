@@ -25,7 +25,9 @@
         <a href="?page=${pagingHelper.totalPages}&lost_title=${search.lost_title}&item_code=${search.item_code}&location_code=${search.location_code}&start_date=${search.start_date}&end_date=${search.end_date}&color_code=${search.color_code}" class="page-arrow arrow-last">⇥</a>
     </c:if>
 </div>
-
+<script>
+  console.log(${pagingHelper});
+</script>
 <style>
 /* 페이지네이션 스타일 설정 */
 .pagination {
