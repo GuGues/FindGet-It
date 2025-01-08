@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.get.chat.ChatMapper">
+
+    <select id="findByRoomId">
+        SELECT *
+        FROM CHATTING_ROOM
+        WHERE CHATTING_NO = #{chatting_no}
+    </select>
+    <insert id="saveChat">
+        INSERT INTO MESSAGE
+        VALUES (null,
+                #{message_content},
+                'N',
+                SYSDATE,
+                #{sender},
+                #{chatting_no})
+    </insert>
+
+    <select id="findAllRooms">
+        SELECT *
+        FROM CHATTING_ROOM
+    </select>
+
+    <insert id="createRoom">
+        INSERT INTO CHATTING_ROOM
+        VALUES ( null
+               , SYSDATE
+               , #{openerEmail}
+               , #{email})
+    </insert>
+    <select id="findRoomListByEmail">
+        SELECT *
+        FROM CHATTING_ROOM
+        WHERE OPEN_MEMBER=#{email} OR PARTICIPANT=#{email}
+    </select>
+    <select id="findAllChat">
+        SELECT *
+        FROM MESSAGE
+        WHERE CHATTING_NO = #{chatting_no}
+        ORDER BY SEND_TIME ASC
+    </select>
+    <select id="findOpenedRoom">
+        SELECT *
+        FROM CHATTING_ROOM
+        WHERE (OPEN_MEMBER=#{param1} AND PARTICIPANT=#{param2}) OR (OPEN_MEMBER=#{param2} AND PARTICIPANT=#{param1})
+    </select>
+    <select id="findChatLastest">
+        SELECT *
+        FROM MESSAGE
+        WHERE CHATTING_NO=#{chatting_no}
+        ORDER BY SEND_TIME DESC
+        OFFSET 0 ROWS FETCH NEXT 1 ROWS ONLY
+    </select>
+    <update id="updateMessageViewed">
+        UPDATE MESSAGE
+        SET   READ_FL = 'Y'
+        WHERE CHATTING_NO=#{param1} AND SENDER != #{param2}
+    </update>
+    <select id="countChatStack">
+        SELECT COUNT(*)
+        FROM MESSAGE
+        WHERE READ_FL = 'N' AND CHATTING_NO=#{param1} AND SENDER != #{param2}
+    </select>
+
+    <insert id="report">
+        INSERT INTO CHATTING_REPORT
+        VALUES(null,#{reporter_email},#{receiver_email},#{report_room},#{chat_report_content},SYSDATE)
+    </insert>
+    <select id="findAllChatReverse">
+        SELECT *
+        FROM MESSAGE
+        WHERE CHATTING_NO = #{chatting_no}
+        ORDER BY SEND_TIME DESC
+    </select>
+</mapper>
