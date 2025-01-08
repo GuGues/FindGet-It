@@ -177,9 +177,54 @@ public class LostViewController {
         return "lost/update";
     }
 
-    /**
-     * 습득물 수정 처리
-     */
+
+    // 찾음 버튼
+    @PostMapping("/complete")
+    @Transactional
+    public String markAsFound(@RequestParam("lostIdx") String lostIdx, @RequestParam("email") String email, HttpServletRequest request) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String loginEmail = null;
+
+        if (authentication != null && authentication.isAuthenticated()) {
+            Object principal = authentication.getPrincipal();
+            if (principal instanceof UserDetails) {
+                loginEmail = ((UserDetails) principal).getUsername();
+            } else if (principal instanceof String) {
+                loginEmail = (String) principal;
+            }
+        }
+
+        if (loginEmail != null && loginEmail.equals(email)) {
+            lostViewMapper.updateLostState(lostIdx, 1); // 상태를 1로 변경
+        }
+        return "redirect:/lost/view?lostIdx=" + lostIdx;
+    }
+
+    // 찾음 취소
+    @PostMapping("/cancel")
+    @Transactional
+    public String cancelFound(@RequestParam("lostIdx") String lostIdx, @RequestParam("email") String email) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String loginEmail = null;
+
+        if (authentication != null && authentication.isAuthenticated()) {
+            Object principal = authentication.getPrincipal();
+            if (principal instanceof UserDetails) {
+                loginEmail = ((UserDetails) principal).getUsername();
+            } else if (principal instanceof String) {
+                loginEmail = (String) principal;
+            }
+        }
+
+        if (loginEmail != null && loginEmail.equals(email)) {
+            lostViewMapper.updateLostState(lostIdx, 2); // 상태를 "찾는 중(2)"으로 변경
+        }
+        return "redirect:/lost/view?lostIdx=" + lostIdx;
+    }
+
+
+
+
     @PostMapping("/update")
     @Transactional
     public String lostUpdateSubmit(LostItemVO vo, Principal principal) {

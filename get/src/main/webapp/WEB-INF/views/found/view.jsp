@@ -309,9 +309,15 @@
         <span class="label">지역:</span>
         <c:out value="${item.sidoName}" /> <c:out value="${item.gugunName}" />
       </div>
-      <div class="info">
-        <span class="label">물품상태:</span>
-        <c:out value="${item.itemState}" />
+      <div class="found-state-message">
+        <c:choose>
+          <c:when test="${item.foundState == 2}">
+            보관중이며 주인을 찾고 있는 물건입니다.
+          </c:when>
+          <c:when test="${item.foundState == 1}">
+            주인의 품으로 돌아간 물건입니다.
+          </c:when>
+        </c:choose>
       </div>
     </div>
   </div>
@@ -331,26 +337,48 @@
     <!-- 버튼영역: 목록/수정/블라인드/신고 모두 한 줄 -->
     <div class="btn-container2">
       <!-- 목록 버튼 -->
-      <button onclick="location.href='/found'">목록</button>
+      <button onclick="history.back()">목록</button>
 
-      <!-- 작성자인 경우: 수정 버튼 -->
-      <c:if test="${loginEmail eq item.email}">
+      <c:choose>
+        <c:when test="${loginEmail eq item.email}">
+        <!-- 작성자인 경우 수정 버튼 -->
         <button onclick="location.href='/found/update?foundIdx=${item.foundIdx}'">수정</button>
-      </c:if>
 
-      <!-- 관리자(ADMIN)인 경우: 블라인드 버튼 -->
-      <c:if test="${sessionScope.grant eq 'ADMIN'}">
-        <form class="form" method="post" style="display:inline-block;">
-          <input type="hidden" name="resiver_idx" value="${item.foundIdx}" />
-          <input type="hidden" name="foundState" value="${item.foundState}">
-          <button type="button" class="banBtn">블라인드</button>
+        <!-- 찾음/취소 버튼 -->
+        <form action="<c:out value='${item.foundState == 1 ? "/found/cancel" : "/found/complete"}' />"
+              method="post" style="display: inline;">
+            <input type="hidden" name="foundIdx" value="${item.foundIdx}" />
+            <input type="hidden" name="email" value="${item.email}" />
+            <button type="submit">
+                <c:choose>
+                    <c:when test="${item.foundState == 1}">
+                        잘못 눌렀어요!
+                    </c:when>
+                    <c:otherwise>
+                        주인을 찾아줬어요!
+                    </c:otherwise>
+                </c:choose>
+            </button>
         </form>
-      </c:if>
+    </c:when>
 
-      <!-- 작성자가 아니고, 관리자도 아닌 경우: 신고 버튼 -->
-      <c:if test="${loginEmail ne item.email && sessionScope.grant ne 'ADMIN'}">
-        <button type="button" onclick="openReportModal()">신고하기</button>
-      </c:if>
+
+        <c:when test="${ sessionScope.grant eq 'ADMIN'}" >
+       <form class="form" method="post">
+
+    <input type="hidden" name="resiver_idx" value="${item.foundIdx}">
+    <input type="hidden" name="foundState" value="${item.foundState}">
+    <button type="button" class="banBtn btn">블라인드</button>
+</form>
+
+
+
+        </c:when>
+        <c:otherwise>
+          <!-- 작성자가 아니면 신고하기 버튼 -->
+          <button type="button" onclick="openReportModal()">신고하기</button>
+        </c:otherwise>
+      </c:choose>
     </div>
   </div>
 

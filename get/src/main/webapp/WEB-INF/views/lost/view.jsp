@@ -120,6 +120,11 @@
       text-align: center;
       margin: 20px 0;
     }
+    .btn-container2 > * {
+      display: inline-block; /* 버튼이나 폼을 인라인 블록으로 */
+      margin: 0 5px;
+      vertical-align: middle;
+    }
 
     .btn-container2 button {
       background-color: #FF914B;
@@ -375,6 +380,18 @@
         <span class="label">사례금:</span>
         <c:out value="${item.reward}"/>
       </div>
+            <!-- 상태 -->
+      <div class="lost-state-message">
+        <c:choose>
+          <c:when test="${item.lostState == 2}">
+            주인이 아직 애타게 찾고 있는 물건입니다.
+          </c:when>
+          <c:when test="${item.lostState == 1}">
+            주인의 품으로 돌아간 물건입니다.
+          </c:when>
+        </c:choose>
+      </div>
+
     </div>
   </div>
 
@@ -391,14 +408,33 @@
       <c:out value="${item.lostContent}"/>
     </div>
     <div class="btn-container2">
-      <button onclick="location.href='/lost'">목록</button>
+      <button onclick="history.back()">목록</button>
 
       <!-- 작성자인지 비교 (loginEmail eq item.email) -->
       <c:choose>
         <c:when test="${loginEmail eq item.email}">
-          <!-- 작성자인 경우 수정 버튼 -->
-          <button onclick="location.href='/lost/update?lostIdx=${item.lostIdx}'">수정</button>
-        </c:when>
+        <!-- 작성자인 경우 수정 버튼 -->
+        <button onclick="location.href='/lost/update?lostIdx=${item.lostIdx}'">수정</button>
+
+        <!-- 찾음/취소 버튼 -->
+        <form action="<c:out value='${item.lostState == 1 ? "/lost/cancel" : "/lost/complete"}' />"
+              method="post" style="display: inline;">
+            <input type="hidden" name="lostIdx" value="${item.lostIdx}" />
+            <input type="hidden" name="email" value="${item.email}" />
+            <button type="submit">
+                <c:choose>
+                    <c:when test="${item.lostState == 1}">
+                        잘못 눌렀어요!
+                    </c:when>
+                    <c:otherwise>
+                        물건을 찾았어요!
+                    </c:otherwise>
+                </c:choose>
+            </button>
+        </form>
+    </c:when>
+
+
         <c:when test="${ sessionScope.grant eq 'ADMIN'}" >
        <form class="form" method="post">
 
@@ -407,25 +443,7 @@
     <button type="button" class="banBtn btn">블라인드</button>
 </form>
 
-<script>
-    // 버튼 요소를 가져옵니다.
-    const banBtn = document.querySelector('.banBtn');
-    if (banBtn) {
-        banBtn.addEventListener('click', function () {
-            // 폼 태그를 가져옵니다.
-            const form = document.querySelector('.form');
-            if (form) {
-                // 폼의 액션 설정 및 제출
-                form.action = "/admin/post/ban";
-                form.submit();
-            } else {
-                console.error('폼 태그가 존재하지 않습니다.');
-            }
-        });
-    } else {
-        console.error('banBtn 버튼이 존재하지 않습니다.');
-    }
-</script>
+
 
         </c:when>
         <c:otherwise>
@@ -729,6 +747,18 @@
                 alert(err.message);
               });
     });
+      // 블라인드.
+    const banBtn = document.querySelector('.banBtn');
+    if (banBtn) {
+        banBtn.addEventListener('click', function () {
+            const form = document.querySelector('.form');
+            if (form) {
+                form.action = "/admin/post/ban";
+                form.submit();
+            }
+        });
+    }
+
       //-----------chat open-----------
   function openChat() {
         // 모달 표시

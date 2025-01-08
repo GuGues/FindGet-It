@@ -131,4 +131,15 @@
 
     </update>
 
+    <!-- ★ 완료 버튼(찾음) ★ -->
+    <update id="updateFoundState">
+        UPDATE FOUND
+        SET FOUND_STATE = #{foundState}
+        WHERE FOUND_IDX = #{foundIdx}
+    </update>
+
+
+
+
+
 </mapper>
