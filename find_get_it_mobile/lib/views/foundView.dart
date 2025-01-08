@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import '../models/found_item.dart';
-import '../helpers/common_widgets.dart';
+import '../../models/found_item.dart';
 
 class FoundDetailPage extends StatelessWidget {
   final FoundItem item;
@@ -65,4 +64,20 @@ class FoundDetailPage extends StatelessWidget {
       ),
     );
   }
+}
+Widget _buildInfoRow(String label, String value) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 4.0),
+    child: Row(
+      children: [
+        Text(
+          "$label: ",
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+        Expanded(
+          child: Text(value),
+        ),
+      ],
+    ),
+  );
 }

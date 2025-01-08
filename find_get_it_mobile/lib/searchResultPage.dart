@@ -3,60 +3,27 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import 'appConfig.dart';
+import 'views/lostView.dart';
+import 'views/foundView.dart';
+import 'views/policeView.dart';
+import 'models/lost_item.dart';
+import 'models/found_item.dart';
+import 'models/police_item.dart';
 
-/* ================== (1) VO 클래스들 ================== */
-
-/// 분실물 VO
-class LostItem {
-  final String lostTitle;
-  final String lostContent;
-  // 필요 시, 더 많은 필드...
-  LostItem({
-    required this.lostTitle,
-    required this.lostContent,
-  });
-
-  factory LostItem.fromJson(Map<String, dynamic> json) {
-    return LostItem(
-      lostTitle: json['lostTitle'] ?? '',
-      lostContent: json['lostContent'] ?? '',
-    );
-  }
+/* ================== 헬퍼 함수 ================== */
+String parseString(dynamic value, {String defaultValue = ''}) {
+  if (value is String) return value;
+  if (value is int) return value.toString(); // int를 문자열로 변환
+  if (value != null) return value.toString();
+  return defaultValue;
 }
 
-/// 습득물 VO
-class FoundItem {
-  final String foundTitle;
-  final String foundContent;
-  FoundItem({
-    required this.foundTitle,
-    required this.foundContent,
-  });
-  factory FoundItem.fromJson(Map<String, dynamic> json) {
-    return FoundItem(
-      foundTitle: json['foundTitle'] ?? '',
-      foundContent: json['foundContent'] ?? '',
-    );
-  }
+int parseInt(dynamic value, {int defaultValue = 0}) {
+  if (value is int) return value;
+  if (value is String) return int.tryParse(value) ?? defaultValue;
+  return defaultValue;
 }
-
-/// 경찰 습득물 VO
-class PoliceItem {
-  final String fdPrdtNm; // 물품명
-  final String fdSbjt;   // 상세내용
-  PoliceItem({
-    required this.fdPrdtNm,
-    required this.fdSbjt,
-  });
-  factory PoliceItem.fromJson(Map<String, dynamic> json) {
-    return PoliceItem(
-      fdPrdtNm: json['fdPrdtNm'] ?? '',
-      fdSbjt: json['fdSbjt'] ?? '',
-    );
-  }
-}
-
-/* ================== (2) 페이징 결과 공용 구조 ================== */
+/* ================== (1) 페이징 결과 공용 구조 ================== */
 class PagedResult<T> {
   final List<T> items;
   final int currentPage;
@@ -71,7 +38,7 @@ class PagedResult<T> {
   });
 }
 
-/* ================== (3) 검색 결과 페이지 본문 ================== */
+/* ================== (2) 검색 결과 페이지 ================== */
 class SearchResultPage extends StatefulWidget {
   const SearchResultPage({Key? key}) : super(key: key);
 
@@ -107,7 +74,7 @@ class _SearchResultPageState extends State<SearchResultPage>
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final args = ModalRoute.of(context)?.settings.arguments;
       if (args is String) {
-        _keyword = args;  // 검색어
+        _keyword = args; // 검색어
         _loadData();
       } else {
         setState(() {
@@ -126,12 +93,11 @@ class _SearchResultPageState extends State<SearchResultPage>
 
     try {
       final url = Uri.parse(
-          appConfig.url+'/appSearch/result'
+          '${appConfig.url}/appSearch/result'
               '?keyword=$_keyword'
               '&lostPage=$_lostPage'
               '&foundPage=$_foundPage'
-              '&policePage=$_policePage'
-      );
+              '&policePage=$_policePage');
 
       final resp = await http.get(url);
       if (resp.statusCode == 200) {
@@ -143,9 +109,9 @@ class _SearchResultPageState extends State<SearchResultPage>
         final lostItems = lostItemsJson.map((e) => LostItem.fromJson(e)).toList();
         _lostData = PagedResult<LostItem>(
           items: lostItems,
-          currentPage: lostJson['currentPage'],
-          totalPages: lostJson['totalPages'],
-          totalRecords: lostJson['totalRecords'],
+          currentPage: lostJson['currentPage'] as int,
+          totalPages: lostJson['totalPages'] as int,
+          totalRecords: lostJson['totalRecords'] as int,
         );
 
         // ----- 습득물 -----
@@ -154,9 +120,9 @@ class _SearchResultPageState extends State<SearchResultPage>
         final foundItems = foundItemsJson.map((e) => FoundItem.fromJson(e)).toList();
         _foundData = PagedResult<FoundItem>(
           items: foundItems,
-          currentPage: foundJson['currentPage'],
-          totalPages: foundJson['totalPages'],
-          totalRecords: foundJson['totalRecords'],
+          currentPage: foundJson['currentPage'] as int,
+          totalPages: foundJson['totalPages'] as int,
+          totalRecords: foundJson['totalRecords'] as int,
         );
 
         // ----- 경찰 습득물 -----
@@ -165,9 +131,9 @@ class _SearchResultPageState extends State<SearchResultPage>
         final policeItems = policeItemsJson.map((e) => PoliceItem.fromJson(e)).toList();
         _policeData = PagedResult<PoliceItem>(
           items: policeItems,
-          currentPage: policeJson['currentPage'],
-          totalPages: policeJson['totalPages'],
-          totalRecords: policeJson['totalRecords'],
+          currentPage: policeJson['currentPage'] as int,
+          totalPages: policeJson['totalPages'] as int,
+          totalRecords: policeJson['totalRecords'] as int,
         );
 
         setState(() {
@@ -194,6 +160,7 @@ class _SearchResultPageState extends State<SearchResultPage>
       await _loadData();
     }
   }
+
   Future<void> _lostNext() async {
     if (_lostData != null && _lostPage < _lostData!.totalPages) {
       _lostPage++;
@@ -207,6 +174,7 @@ class _SearchResultPageState extends State<SearchResultPage>
       await _loadData();
     }
   }
+
   Future<void> _foundNext() async {
     if (_foundData != null && _foundPage < _foundData!.totalPages) {
       _foundPage++;
@@ -220,6 +188,7 @@ class _SearchResultPageState extends State<SearchResultPage>
       await _loadData();
     }
   }
+
   Future<void> _policeNext() async {
     if (_policeData != null && _policePage < _policeData!.totalPages) {
       _policePage++;
@@ -231,13 +200,14 @@ class _SearchResultPageState extends State<SearchResultPage>
   Widget build(BuildContext context) {
     final appBarTitle = "'$_keyword' 검색결과";
 
-    // 로딩중
+    // 로딩 중
     if (_isLoading) {
       return Scaffold(
         appBar: AppBar(title: Text(appBarTitle), backgroundColor: Colors.orange),
         body: const Center(child: CircularProgressIndicator()),
       );
     }
+
     // 에러
     if (_errorMsg.isNotEmpty) {
       return Scaffold(
@@ -263,11 +233,8 @@ class _SearchResultPageState extends State<SearchResultPage>
       body: TabBarView(
         controller: _tabController,
         children: [
-          // (1) 분실물 탭
           _buildLostTab(),
-          // (2) 습득물 탭
           _buildFoundTab(),
-          // (3) 경찰 습득물 탭
           _buildPoliceTab(),
         ],
       ),
@@ -288,25 +255,15 @@ class _SearchResultPageState extends State<SearchResultPage>
               final item = _lostData!.items[index];
               return Card(
                 margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                elevation: 2,
                 child: ListTile(
-                  title: Text(
-                    item.lostTitle,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                  title: Text(item.lostTitle),
                   subtitle: Text(item.lostContent),
-                  trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                  trailing: const Icon(Icons.arrow_forward_ios),
                   onTap: () {
-                    // 상세 페이지 이동
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (_) => LostDetailPage(item: item),
+                        builder: (_) => LostDetailPage(item: item, serverUrl: appConfig.url),
                       ),
                     );
                   },
@@ -339,22 +296,15 @@ class _SearchResultPageState extends State<SearchResultPage>
               final item = _foundData!.items[index];
               return Card(
                 margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                elevation: 2,
                 child: ListTile(
-                  title: Text(
-                    item.foundTitle,
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
+                  title: Text(item.foundTitle),
                   subtitle: Text(item.foundContent),
-                  trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                  trailing: const Icon(Icons.arrow_forward_ios),
                   onTap: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (_) => FoundDetailPage(item: item),
+                        builder: (_) => FoundDetailPage(item: item, serverUrl: appConfig.url),
                       ),
                     );
                   },
@@ -387,22 +337,15 @@ class _SearchResultPageState extends State<SearchResultPage>
               final item = _policeData!.items[index];
               return Card(
                 margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                elevation: 2,
                 child: ListTile(
-                  title: Text(
-                    item.fdPrdtNm,
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
+                  title: Text(item.fdPrdtNm),
                   subtitle: Text(item.fdSbjt),
-                  trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                  trailing: const Icon(Icons.arrow_forward_ios),
                   onTap: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (_) => PoliceDetailPage(item: item),
+                        builder: (_) => PoliceDetailPage(item: item, serverUrl: appConfig.url),
                       ),
                     );
                   },
@@ -421,7 +364,7 @@ class _SearchResultPageState extends State<SearchResultPage>
     );
   }
 
-  /* ================== (D) 공통 페이징영역 위젯 ================== */
+  /* ================== (D) 공통 페이징 영역 위젯 ================== */
   Widget _pagingControl({
     required int currentPage,
     required int totalPages,
@@ -429,7 +372,6 @@ class _SearchResultPageState extends State<SearchResultPage>
     required VoidCallback onNext,
   }) {
     return Container(
-      color: Colors.grey[200],
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -451,84 +393,3 @@ class _SearchResultPageState extends State<SearchResultPage>
   }
 }
 
-/* ================== (4) 상세 페이지들 예시 ================== */
-
-/// 분실물 상세 페이지
-class LostDetailPage extends StatelessWidget {
-  final LostItem item;
-  const LostDetailPage({Key? key, required this.item}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("분실물 상세"),
-        backgroundColor: Colors.orange,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Text("제목: ${item.lostTitle}", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 12),
-            Text("내용:\n${item.lostContent}"),
-            // 필요 시 더 많은 필드/디자인 추가
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-/// 습득물 상세 페이지
-class FoundDetailPage extends StatelessWidget {
-  final FoundItem item;
-  const FoundDetailPage({Key? key, required this.item}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("습득물 상세"),
-        backgroundColor: Colors.orange,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Text("제목: ${item.foundTitle}", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 12),
-            Text("내용:\n${item.foundContent}"),
-            // 필요 시 더 많은 필드/디자인 추가
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-/// 경찰 습득물 상세 페이지
-class PoliceDetailPage extends StatelessWidget {
-  final PoliceItem item;
-  const PoliceDetailPage({Key? key, required this.item}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("경찰 습득물 상세"),
-        backgroundColor: Colors.orange,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Text("물품명: ${item.fdPrdtNm}", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 12),
-            Text("상세내용:\n${item.fdSbjt}"),
-          ],
-        ),
-      ),
-    );
-  }
-}
