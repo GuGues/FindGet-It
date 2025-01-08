@@ -70,4 +70,10 @@
         INSERT INTO CHATTING_REPORT
         VALUES(null,#{reporter_email},#{receiver_email},#{report_room},#{chat_report_content},SYSDATE)
     </insert>
+    <select id="findAllChatReverse">
+        SELECT *
+        FROM MESSAGE
+        WHERE CHATTING_NO = #{chatting_no}
+        ORDER BY SEND_TIME DESC
+    </select>
 </mapper>

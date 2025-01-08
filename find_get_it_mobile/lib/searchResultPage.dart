@@ -4,213 +4,58 @@ import 'package:http/http.dart' as http;
 
 import 'appConfig.dart';
 
-/* ================== (1) 헬퍼 함수 ================== */
-String parseString(dynamic value, {String defaultValue = ''}) {
-  if (value is String) return value;
-  if (value != null) return value.toString();
-  return defaultValue;
-}
+/* ================== (1) VO 클래스들 ================== */
 
-int parseInt(dynamic value, {int defaultValue = 0}) {
-  if (value is int) return value;
-  if (value is String) return int.tryParse(value) ?? defaultValue;
-  return defaultValue;
-}
-
-/* ================== (2) VO 클래스들 ================== */
 /// 분실물 VO
 class LostItem {
-  final String lostIdx;
-  final String email;
   final String lostTitle;
   final String lostContent;
-  final String lostDate;
-  final String lRegDate;
-  final int lViews;
-  final String locationCode;
-  final String lLocationDetail;
-  final String itemCode;
-  final String lItemDetail;
-  final int reward;
-  final String colorCode;
-  final int lostState;
-  final String itemName;
-  final String colorName;
-  final String sidoName;
-  final String gugunName;
-  final String nickname;
-  final String? filePath; // 이미지 경로 (nullable)
-
+  // 필요 시, 더 많은 필드...
   LostItem({
-    required this.lostIdx,
-    required this.email,
     required this.lostTitle,
     required this.lostContent,
-    required this.lostDate,
-    required this.lRegDate,
-    required this.lViews,
-    required this.locationCode,
-    required this.lLocationDetail,
-    required this.itemCode,
-    required this.lItemDetail,
-    required this.reward,
-    required this.colorCode,
-    required this.lostState,
-    required this.itemName,
-    required this.colorName,
-    required this.sidoName,
-    required this.gugunName,
-    required this.nickname,
-    this.filePath,
   });
 
   factory LostItem.fromJson(Map<String, dynamic> json) {
     return LostItem(
-      lostIdx: parseString(json['lostIdx']),
-      email: parseString(json['email']),
-      lostTitle: parseString(json['lostTitle']),
-      lostContent: parseString(json['lostContent']),
-      lostDate: parseString(json['lostDate']),
-      lRegDate: parseString(json['lRegDate']),
-      lViews: parseInt(json['lViews']),
-      locationCode: parseString(json['locationCode']),
-      lLocationDetail: parseString(json['lLocationDetail']),
-      itemCode: parseString(json['itemCode']),
-      lItemDetail: parseString(json['lItemDetail']),
-      reward: parseInt(json['reward']),
-      colorCode: parseString(json['colorCode']),
-      lostState: parseInt(json['lostState']),
-      itemName: parseString(json['itemName']),
-      colorName: parseString(json['colorName']),
-      sidoName: parseString(json['sidoName']),
-      gugunName: parseString(json['gugunName']),
-      nickname: parseString(json['nickname']),
-      filePath: json['filePath'] != null ? parseString(json['filePath']) : null,
+      lostTitle: json['lostTitle'] ?? '',
+      lostContent: json['lostContent'] ?? '',
     );
   }
 }
 
 /// 습득물 VO
 class FoundItem {
-  final String foundIdx;
-  final String email;
   final String foundTitle;
   final String foundContent;
-  final String foundDate;
-  final String fRegDate;
-  final int fViews;
-  final String itemState;
-  final String locationCode;
-  final String fLocationDetail;
-  final String itemCode;
-  final String fItemDetail;
-  final String colorCode;
-  final int foundState;
-  final String itemName;
-  final String colorName;
-  final String sidoName;
-  final String gugunName;
-  final String nickname;
-  final String? filePath; // 이미지 경로 (nullable)
-
   FoundItem({
-    required this.foundIdx,
-    required this.email,
     required this.foundTitle,
     required this.foundContent,
-    required this.foundDate,
-    required this.fRegDate,
-    required this.fViews,
-    required this.itemState,
-    required this.locationCode,
-    required this.fLocationDetail,
-    required this.itemCode,
-    required this.fItemDetail,
-    required this.colorCode,
-    required this.foundState,
-    required this.itemName,
-    required this.colorName,
-    required this.sidoName,
-    required this.gugunName,
-    required this.nickname,
-    this.filePath,
   });
-
   factory FoundItem.fromJson(Map<String, dynamic> json) {
     return FoundItem(
-      foundIdx: parseString(json['foundIdx']),
-      email: parseString(json['email']),
-      foundTitle: parseString(json['foundTitle']),
-      foundContent: parseString(json['foundContent']),
-      foundDate: parseString(json['foundDate']),
-      fRegDate: parseString(json['fRegDate']),
-      fViews: parseInt(json['fViews']),
-      itemState: parseString(json['itemState']),
-      locationCode: parseString(json['locationCode']),
-      fLocationDetail: parseString(json['fLocationDetail']),
-      itemCode: parseString(json['itemCode']),
-      fItemDetail: parseString(json['fItemDetail']),
-      colorCode: parseString(json['colorCode']),
-      foundState: parseInt(json['foundState']),
-      itemName: parseString(json['itemName']),
-      colorName: parseString(json['colorName']),
-      sidoName: parseString(json['sidoName']),
-      gugunName: parseString(json['gugunName']),
-      nickname: parseString(json['nickname']),
-      filePath: json['filePath'] != null ? parseString(json['filePath']) : null,
+      foundTitle: json['foundTitle'] ?? '',
+      foundContent: json['foundContent'] ?? '',
     );
   }
 }
 
 /// 경찰 습득물 VO
 class PoliceItem {
-  final String atcId;
-  final String depplace;
-  final String fdfilepathimg;
-  final String fdPrdtNm;
-  final String fdSbjt;
-  final String fdsn;
-  final String fdymd;
-  final String prdtclnm;
-  final String rnum;
-  final String reg_date;
-  final String clrnm;
-  final String tel; // 전화번호 추가
-
+  final String fdPrdtNm; // 물품명
+  final String fdSbjt;   // 상세내용
   PoliceItem({
-    required this.atcId,
-    required this.depplace,
-    required this.fdfilepathimg,
     required this.fdPrdtNm,
     required this.fdSbjt,
-    required this.fdsn,
-    required this.fdymd,
-    required this.prdtclnm,
-    required this.rnum,
-    required this.reg_date,
-    required this.clrnm,
-    required this.tel, // 전화번호 추가
   });
-
   factory PoliceItem.fromJson(Map<String, dynamic> json) {
     return PoliceItem(
-      atcId: parseString(json['atcId']),
-      depplace: parseString(json['depplace']),
-      fdfilepathimg: parseString(json['fdfilepathimg']),
-      fdPrdtNm: parseString(json['fdPrdtNm']),
-      fdSbjt: parseString(json['fdSbjt']),
-      fdsn: parseString(json['fdsn']),
-      fdymd: parseString(json['fdymd']),
-      prdtclnm: parseString(json['prdtclnm']),
-      rnum: parseString(json['rnum']),
-      reg_date: parseString(json['reg_date']),
-      clrnm: parseString(json['clrnm']),
-      tel: parseString(json['tel']), // 전화번호 추가
+      fdPrdtNm: json['fdPrdtNm'] ?? '',
+      fdSbjt: json['fdSbjt'] ?? '',
     );
   }
 }
-/* ================== (3) 검색 결과 페이지 ================== */
-// 위에 언급한 `SearchResultPage`와 관련 메서드, 페이징 UI는 변경 없이 유지됩니다.
+
 /* ================== (2) 페이징 결과 공용 구조 ================== */
 class PagedResult<T> {
   final List<T> items;
@@ -273,13 +118,6 @@ class _SearchResultPageState extends State<SearchResultPage>
   }
 
   /// API 호출해서 분실물/습득물/경찰 습득물 각각 페이지 데이터 로드
-  // Helper 함수 정의
-  int parseInt(dynamic value, {int defaultValue = 0}) {
-    if (value is int) return value;
-    if (value is String) return int.tryParse(value) ?? defaultValue;
-    return defaultValue;
-  }
-
   Future<void> _loadData() async {
     setState(() {
       _isLoading = true;
@@ -305,9 +143,9 @@ class _SearchResultPageState extends State<SearchResultPage>
         final lostItems = lostItemsJson.map((e) => LostItem.fromJson(e)).toList();
         _lostData = PagedResult<LostItem>(
           items: lostItems,
-          currentPage: parseInt(lostJson['currentPage']),
-          totalPages: parseInt(lostJson['totalPages']),
-          totalRecords: parseInt(lostJson['totalRecords']),
+          currentPage: lostJson['currentPage'],
+          totalPages: lostJson['totalPages'],
+          totalRecords: lostJson['totalRecords'],
         );
 
         // ----- 습득물 -----
@@ -316,9 +154,9 @@ class _SearchResultPageState extends State<SearchResultPage>
         final foundItems = foundItemsJson.map((e) => FoundItem.fromJson(e)).toList();
         _foundData = PagedResult<FoundItem>(
           items: foundItems,
-          currentPage: parseInt(foundJson['currentPage']),
-          totalPages: parseInt(foundJson['totalPages']),
-          totalRecords: parseInt(foundJson['totalRecords']),
+          currentPage: foundJson['currentPage'],
+          totalPages: foundJson['totalPages'],
+          totalRecords: foundJson['totalRecords'],
         );
 
         // ----- 경찰 습득물 -----
@@ -327,9 +165,9 @@ class _SearchResultPageState extends State<SearchResultPage>
         final policeItems = policeItemsJson.map((e) => PoliceItem.fromJson(e)).toList();
         _policeData = PagedResult<PoliceItem>(
           items: policeItems,
-          currentPage: parseInt(policeJson['currentPage']),
-          totalPages: parseInt(policeJson['totalPages']),
-          totalRecords: parseInt(policeJson['totalRecords']),
+          currentPage: policeJson['currentPage'],
+          totalPages: policeJson['totalPages'],
+          totalRecords: policeJson['totalRecords'],
         );
 
         setState(() {
@@ -536,7 +374,6 @@ class _SearchResultPageState extends State<SearchResultPage>
   }
 
   /* ================== (C) 경찰 습득물 탭 ================== */
-// 경찰 습득물 탭
   Widget _buildPoliceTab() {
     if (_policeData == null) {
       return const Center(child: Text("데이터 없음"));
@@ -556,10 +393,10 @@ class _SearchResultPageState extends State<SearchResultPage>
                 elevation: 2,
                 child: ListTile(
                   title: Text(
-                    item.fdPrdtNm, // 변경됨
+                    item.fdPrdtNm,
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  subtitle: Text(item.fdSbjt), // 변경됨
+                  subtitle: Text(item.fdSbjt),
                   trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                   onTap: () {
                     Navigator.push(
@@ -618,320 +455,52 @@ class _SearchResultPageState extends State<SearchResultPage>
 /// 분실물 상세 페이지
 class LostDetailPage extends StatelessWidget {
   final LostItem item;
-  final String severUrl = appConfig.url; // 서버 URL을 적절히 설정하세요
-
   const LostDetailPage({Key? key, required this.item}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // 사용자 정보 및 권한을 가져오는 로직이 필요합니다.
-    // 예시로 isAuthor, isAdmin 변수를 사용합니다.
-    final bool isAuthor = true; // 실제 로직으로 대체
-    final bool isAdmin = false; // 실제 로직으로 대체
-
     return Scaffold(
       appBar: AppBar(
-        title: const Text("분실물 상세"),
+        title: Text("분실물 상세"),
         backgroundColor: Colors.orange,
       ),
-      body: SingleChildScrollView(
+      body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 상세 헤더
-            Text(
-              "제목: ${item.lostTitle}",
-              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              "작성자: ${item.nickname}",
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-            ),
-            const SizedBox(height: 16),
-
-            // 이미지 섹션
-            if (item.filePath != null && item.filePath!.isNotEmpty)
-              Image.network(
-                '${severUrl}imgView?filePath=${item.filePath}',
-                height: 200,
-                width: double.infinity,
-                fit: BoxFit.cover,
-              )
-            else
-              Image.asset(
-                'assets/images/noimg.png',
-                height: 200,
-                width: double.infinity,
-                fit: BoxFit.cover,
-              ),
-            const SizedBox(height: 16),
-
-            // 정보 섹션
-            _buildInfoRow("분실일", item.lostDate),
-            _buildInfoRow("물품분류", item.itemName),
-            _buildInfoRow("물품세부분류", item.lItemDetail),
-            _buildInfoRow("물품색상", item.colorName),
-            _buildInfoRow("지역", "${item.sidoName} ${item.gugunName} ${item.lLocationDetail}"),
-            _buildInfoRow("사례금", "${item.reward}원"),
-            _buildInfoRow("조회수", "${item.lViews}회"),
-            const SizedBox(height: 16),
-
-            // 본문 내용
-            const Text(
-              "내용:",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              item.lostContent,
-              style: const TextStyle(fontSize: 16),
-            ),
-            const SizedBox(height: 24),
-
-            // 버튼 섹션
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    // 1:1 채팅 보내기 로직
-                  },
-                  child: const Text("1대1 채팅 보내기"),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    // 처리현황 보기 로직
-                  },
-                  child: const Text("분실물 처리현황"),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    // 지도에 분실 위치 보기 로직
-                  },
-                  child: const Text("지도에 분실위치 보기"),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-
-            // 목록 및 수정 버튼
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Text("목록"),
-                ),
-                if (isAuthor)
-                  ElevatedButton(
-                    onPressed: () {
-                      // 수정 페이지로 이동
-                      /*
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => LostUpdatePage(lostIdx: item.lostIdx),
-                        ),
-                      );
-                      */
-                    },
-                    child: const Text("수정"),
-                  ),
-                if (isAdmin)
-                  ElevatedButton(
-                    onPressed: () {
-                      // 블라인드 처리 로직
-                    },
-                    child: const Text("블라인드"),
-                    style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                  ),
-              ],
-            ),
+            Text("제목: ${item.lostTitle}", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 12),
+            Text("내용:\n${item.lostContent}"),
+            // 필요 시 더 많은 필드/디자인 추가
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildInfoRow(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
-      child: Row(
-        children: [
-          Text(
-            "$label: ",
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          ),
-          Expanded(
-            child: Text(value),
-          ),
-        ],
       ),
     );
   }
 }
 
-
-
-
 /// 습득물 상세 페이지
 class FoundDetailPage extends StatelessWidget {
   final FoundItem item;
-  final String severUrl = appConfig.url; // 서버 URL을 적절히 설정하세요
-
   const FoundDetailPage({Key? key, required this.item}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // 사용자 정보 및 권한을 가져오는 로직이 필요합니다.
-    // 예시로 isAuthor, isAdmin 변수를 사용합니다.
-    final bool isAuthor = true; // 실제 로직으로 대체
-    final bool isAdmin = false; // 실제 로직으로 대체
-
     return Scaffold(
       appBar: AppBar(
-        title: const Text("습득물 상세"),
+        title: Text("습득물 상세"),
         backgroundColor: Colors.orange,
       ),
-      body: SingleChildScrollView(
+      body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 상세 헤더
-            Text(
-              "제목: ${item.foundTitle}",
-              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              "작성자: ${item.nickname}",
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-            ),
-            const SizedBox(height: 16),
-
-            // 이미지 섹션
-            if (item.filePath != null && item.filePath!.isNotEmpty)
-              Image.network(
-                '${severUrl}imgView?filePath=${item.filePath}',
-                height: 200,
-                width: double.infinity,
-                fit: BoxFit.cover,
-              )
-            else
-              Image.asset(
-                'assets/images/noimg.png',
-                height: 200,
-                width: double.infinity,
-                fit: BoxFit.cover,
-              ),
-            const SizedBox(height: 16),
-
-            // 정보 섹션
-            _buildInfoRow("습득일", item.foundDate),
-            _buildInfoRow("물품분류", item.itemName),
-            _buildInfoRow("물품세부분류", item.fItemDetail),
-            _buildInfoRow("물품색상", item.colorName),
-            _buildInfoRow("지역", "${item.sidoName} ${item.gugunName} ${item.fLocationDetail}"),
-            _buildInfoRow("조회수", "${item.fViews}회"),
-            const SizedBox(height: 16),
-
-            // 본문 내용
-            const Text(
-              "내용:",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              item.foundContent,
-              style: const TextStyle(fontSize: 16),
-            ),
-            const SizedBox(height: 24),
-
-            // 버튼 섹션
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    // 1:1 채팅 보내기 로직
-                  },
-                  child: const Text("1대1 채팅 보내기"),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    // 처리현황 보기 로직
-                  },
-                  child: const Text("습득물 처리현황"),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    // 지도에 습득 위치 보기 로직
-                  },
-                  child: const Text("지도에 습득위치 보기"),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-
-            // 목록 및 수정 버튼
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Text("목록"),
-                ),
-                if (isAuthor)
-                  ElevatedButton(
-                    onPressed: () {
-                      // 수정 페이지로 이동
-                      /*
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => LostUpdatePage(lostIdx: item.lostIdx),
-                        ),
-                      );
-                      */
-                    },
-                    child: const Text("수정"),
-                  ),
-                if (isAdmin)
-                  ElevatedButton(
-                    onPressed: () {
-                      // 블라인드 처리 로직
-                    },
-                    child: const Text("블라인드"),
-                    style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                  ),
-              ],
-            ),
+            Text("제목: ${item.foundTitle}", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 12),
+            Text("내용:\n${item.foundContent}"),
+            // 필요 시 더 많은 필드/디자인 추가
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildInfoRow(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
-      child: Row(
-        children: [
-          Text(
-            "$label: ",
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          ),
-          Expanded(
-            child: Text(value),
-          ),
-        ],
       ),
     );
   }
@@ -940,92 +509,24 @@ class FoundDetailPage extends StatelessWidget {
 /// 경찰 습득물 상세 페이지
 class PoliceDetailPage extends StatelessWidget {
   final PoliceItem item;
-  final String severUrl = appConfig.url;
   const PoliceDetailPage({Key? key, required this.item}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("경찰 습득물 상세"),
+        title: Text("경찰 습득물 상세"),
         backgroundColor: Colors.orange,
       ),
-      body: SingleChildScrollView(
+      body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 제목 및 소속 기관
-            Text(
-              "물품명: ${item.fdPrdtNm}",
-              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              "소속 기관: ${item.depplace}",
-              style: const TextStyle(fontSize: 16),
-            ),
-            const SizedBox(height: 16),
-
-            // 이미지 섹션
-            if (item.fdfilepathimg.isNotEmpty)
-              Image.network(
-                '${severUrl}imgView?filePath=${item.fdfilepathimg}',
-                height: 200,
-                width: double.infinity,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return Image.asset(
-                    'assets/images/noimg.png',
-                    height: 200,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                  );
-                },
-              )
-            else
-              Image.asset(
-                'assets/images/noimg.png',
-                height: 200,
-                width: double.infinity,
-                fit: BoxFit.cover,
-              ),
-            const SizedBox(height: 16),
-
-            // 상세 정보
-            _buildInfoRow("접수일", item.fdymd),
-            _buildInfoRow("물품분류", item.prdtclnm),
-            _buildInfoRow("물품색상", item.clrnm),
-            _buildInfoRow("접수자", item.atcId),
-            _buildInfoRow("등록일", item.reg_date),
-            const SizedBox(height: 16),
-
-            // 본문 내용
-            const Text(
-              "상세내용:",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            Text(item.fdSbjt, style: const TextStyle(fontSize: 16)),
+            Text("물품명: ${item.fdPrdtNm}", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 12),
+            Text("상세내용:\n${item.fdSbjt}"),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildInfoRow(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
-      child: Row(
-        children: [
-          Text(
-            "$label: ",
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          ),
-          Expanded(
-            child: Text(value),
-          ),
-        ],
       ),
     );
   }

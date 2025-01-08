@@ -125,6 +125,32 @@ class color {
   }
 }
 
+// Fetch items based on page number and filters
+Future<List<Lost>> fetchItems(int page) async {
+  final response =
+      await http.get(Uri.parse('${appConfig.url}/app/lostList?page=$page'));
+
+  if (response.statusCode == 200) {
+    List<dynamic> data = json.decode(utf8.decode(response.bodyBytes));
+    return data.map((json) => Lost.fromJson(json)).toList();
+  } else {
+    throw Exception('Failed to load items');
+  }
+}
+
+Future<List<Lost>> searchFetchItems(int page, Map<String, dynamic> map) async {
+  print(map);
+  final response = await http
+      .get(Uri.parse('${appConfig.url}/app/getLostSearch?page=$page&map=$map'));
+  if (response.statusCode == 200) {
+    List<dynamic> data = json.decode(utf8.decode(response.bodyBytes));
+    print(data);
+    return data.map((json) => Lost.fromJson(json)).toList();
+  } else {
+    throw Exception('Failed to load items');
+  }
+}
+
 class LostPage extends StatefulWidget {
   const LostPage({super.key});
 
@@ -555,7 +581,6 @@ class _LostPageState extends State<LostPage> {
                                 final colorList = jsonResponse
                                     .map((item) => color.fromJson(item))
                                     .toList();
-
                                 // 모달 바텀 시트 호출
                                 showModalBottomSheet(
                                   context: context,
@@ -592,7 +617,7 @@ class _LostPageState extends State<LostPage> {
                                 backgroundColor: Colors.orangeAccent,
                                 padding: EdgeInsets.symmetric(
                                     vertical: 12, horizontal: 20),
-                                textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                                textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.
                               ),
                             ),
                           ],
@@ -711,7 +736,7 @@ class _LostPageState extends State<LostPage> {
                         title: Text(item.lostTitle),
                         subtitle: Text(item.location),
                         onTap: () {
-
+                          print('Item tapped: ${item.lostIdx}');
                         },
                       ),
                     );
@@ -764,4 +789,3 @@ class _LostPageState extends State<LostPage> {
       ),
     );
   }
-}
