@@ -40,4 +40,6 @@ public interface LostViewMapper {
 
 
     void updateLostState(String lostIdx, int lostState);
+
+
 }

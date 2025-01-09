@@ -76,17 +76,19 @@
             F_ITEM_DETAIL,
             COLOR_CODE,
             ITEM_STATE
-        ) VALUES (null,
-                  #{email},
-                  #{foundTitle},
-                  #{foundContent},
-                  TO_DATE(#{foundDate}, 'YYYY-MM-DD'),
-                  #{locationCode},
-                  #{fLocationDetail},
-                  #{itemCode},
-                  #{fItemDetail, jdbcType=VARCHAR}, -- JdbcType 명시
-                  #{colorCode},
-                  #{itemState})
+        ) VALUES (
+                     null,
+                     #{email},
+                     #{foundTitle},
+                     #{foundContent},
+                     TO_DATE(#{foundDate}, 'YYYY-MM-DD'),
+                     #{locationCode},
+                     #{fLocationDetail},
+                     #{itemCode},
+                     #{fItemDetail, jdbcType=VARCHAR},  -- JdbcType 명시
+                     #{colorCode},
+                     #{itemState}
+                 )
     </insert>
 
     <!-- (예시) 이메일로 회원정보 조회 -->
@@ -115,21 +117,8 @@
         AND EMAIL = #{email}
         <!-- EMAIL도 조건에 포함시켜야 본인글만 수정됨 -->
     </update>
-    
-    <select id="getFoundFilePath">
-      SELECT FILE_PATH
-       FROM IMAGE_STORAGE
-       WHERE USING_TABLE_IDX = #{ foundIdx }
-    </select>
 
-    <!-- ★ 추가: 조회수 증가 쿼리 ★ -->
-    <update id="updateFoundViews">
 
-        UPDATE FOUND
-        SET F_VIEWS = F_VIEWS + 1
-        WHERE FOUND_IDX = #{foundIdx}
-
-    </update>
 
     <!-- ★ 완료 버튼(찾음) ★ -->
     <update id="updateFoundState">

@@ -74,7 +74,6 @@ public class searchController {
 		ModelAndView mv = new ModelAndView();
 		mv.addObject("lostList",searchLost);
 		mv.addObject("pagingHelper",pagingHelper);
-		mv.addObject("search",map);
 		mv.setViewName("lost/board");
 		
 		return mv;
@@ -95,7 +94,6 @@ public class searchController {
 		ModelAndView mv = new ModelAndView();
 		mv.addObject("foundList",searchFound);
 		mv.addObject("pagingHelper",pagingHelper);
-		mv.addObject("search",map);
 		mv.setViewName("found/board");
 		
 		return mv;

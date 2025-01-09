@@ -1,6 +1,7 @@
 package com.get.mypage;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -47,5 +48,13 @@ public interface MypageMapper {
 	MypageVo getArhieve(String email);
 
 	MypageVo getCountWrite(String email);
+
+	MypageVo getMyFind(MypageVo user);
+
+	List<MypageVo> getNotFind(String email);
+
+
+	int updateMyFind(Map<String, Object> requestData);
+
 
 }
