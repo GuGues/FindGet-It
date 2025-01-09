@@ -37,4 +37,6 @@ public interface FoundViewMapper {
 
     // ========= (추가) 조회수 증가 =========
     void updateFoundViews(@Param("foundIdx") String foundIdx);
+
+    void updateFoundState(String foundIdx, int foundState);
 }

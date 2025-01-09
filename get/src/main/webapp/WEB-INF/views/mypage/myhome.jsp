@@ -22,7 +22,7 @@ body {
 	background-color: white; /* 어두운 배경 */
 	color: #fff;
 	margin: 0;
-	padding: 10px;
+	padding: 20px;
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -31,33 +31,30 @@ body {
 
 /* 뱃지 섹션 스타일 */
 .badge-container {
-	overflow: hidden;
-	margin-top: 50px;
+    overflow:hidden;
+    margin-top: 50px;
 	background-color: white; /* 섹션 배경 */
 	border-radius: 10px; /* 모서리를 둥글게 */
 	padding: 20px;
-	max-width: 380px;
+	max-width: 600px;
 	text-align: center;
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.badge-container hr {
-	color: black;
 }
 
 /* 제목 스타일 */
 .badge-container h2 {
 	margin-bottom: 20px;
 	font-size: 24px;
-	color: #FE8015;
+	color: #ffdd57; /* 눈에 띄는 노란색 */
 }
 
+/* 뱃지 리스트 스타일 */
 .badge-list {
 	display: flex;
-	flex-wrap: wrap;
+	flex-wrap: wrap; /* 여러 줄로 자동 정렬 */
 	justify-content: center;
-	gap: 20px;
-	max-height: 240px;
+	gap: 20px; /* 뱃지 간격 */
+	max-height: 240px; /*2줄만 보이게*/
 	overflow: hidden;
 	transition: max-height 0.3s ease-in-out;
 }
@@ -66,61 +63,48 @@ body {
 .badge-item {
 	width: 100px;
 	height: 100px;
-	background-color: #444;
+	background-color: #444; /* 뱃지 배경 */
 	border-radius: 8px;
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	overflow: hidden;
-	border: 2px solid white;
-	transition: transform 0.3s, border-color 0.3s;
+	overflow: hidden; /* 이미지가 영역을 벗어나지 않도록 */
+	border: 2px solid white; /* 뱃지 테두리 */
+	transition: transform 0.3s, border-color 0.3s; /* 호버 효과 애니메이션 */
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 /* 뱃지 이미지 스타일 */
 .badge-item img {
-	width: 90%;
+	width: 90%; /* 이미지를 뱃지 안에 맞게 크기 조정 */
 	height: auto;
 }
 
 /* 뱃지 호버 효과 */
 .badge-item:hover {
-	transform: scale(1.1);
-	border-color: #ffdd57;
+	transform: scale(1.1); /* 뱃지를 확대 */
+	border-color: #ffdd57; /* 테두리 색상 변경 */
 }
-
 .load-more {
-	display: block;
-	background-color: #FE8015;
-	border: none;
-	color: white;
-	position: relative;
-	top: 20px;
-	right: 20px;
-	font-size: 16px;
-	border-bottom-left-radius: 5px;
-	border-bottom-right-radius: 5px;
-	transition: background-color 0.3s;
-	width: 400px;
+    display: block;
+    margin-top: 20px;
+    background-color: #ffdd57;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: e-resize;
+    transition: background-color 0.3s;
 }
-
 .load-more:hidden {
-	display: none;
+    display: none;
 }
-
 .load-more:hover {
-	background-color: #f4c842;
+    background-color: #f4c842;
 }
-
-.box1 {
-	display: flex;
-	gap: 50px;
-}
-
 .lostitem-setbox {
-	text-align: center;
 	width: 400px;
-	height: 375px;
 	background-color: #fff;
 	color: #333;
 	border: 1px solid #ddd;
@@ -132,7 +116,7 @@ body {
 
 /* 프로필 박스 전체 */
 .profile-box {
-	width: 700px;
+	width: 400px;
 	background-color: #fff;
 	color: #333;
 	border: 1px solid #ddd;
@@ -143,7 +127,6 @@ body {
 }
 /* 상단 프로필 영역 */
 .profile-header {
-	padding-left: 40px;
 	display: flex;
 	align-items: center;
 	gap: 20px; /* 이미지와 정보 간격 */
@@ -176,10 +159,6 @@ body {
 }
 
 /* 상세 정보 */
-.profile-details {
-	padding-left: 40px;
-}
-
 .profile-details ul {
 	list-style: none;
 	padding: 0;
@@ -203,192 +182,110 @@ body {
 	text-decoration: underline;
 }
 
-#topm {
-	color: #FE8015;
-	text-align: right;
-	margin-bottom: 40px;
+
+/* 모달 전체 배경 */
+.modal {
+    position: fixed; /* 화면에 고정 */
+    top: 0;
+    left: 0;
+    width: 50%;
+    height: 50%;
+    transform: translate(50%, 50%);
+    background-color: rgba(0, 0, 0, 0.5); /* 반투명 배경 */
+    display: flex; /* Flexbox 사용 */
+    justify-content: center; /* 가로 중앙 정렬 */
+    align-items: center; /* 세로 중앙 정렬 */
+    z-index: 1000; /* 다른 요소 위에 표시 */
 }
 
-a {
-	color: black;
-	text-decoration: none;
+/* 모달 내용 */
+.modal-content {
+    height: 100%;
+    width: 100%; /* 모달의 너비 */
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px; /* 모서리를 둥글게 */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+    text-align: center;
 }
 
-.btnbox1 {
-	display: flex;
-	flex-direction: row;
+.modal-content button {
+	display: block;
+	width: 50%;
+	margin: 10px 0;
+	padding: 10px;
+	background-color: #007bff;
+	color: white;
+	border: none;
+	cursor: pointer;
 }
 
-.btnbox1 h5 {
-	padding-bottom: 20px;
+.modal-content button:hover {
+	background-color: #0056b3;
 }
 
-.upBtn {
-    margin-top: 20px; /* 버튼과 다른 요소 간격 */
-    background-color: #FE8015;
-    border: none;
-    color: white;
-    font-size: 16px;
-    border-radius: 5px;
-    transition: background-color 0.3s;
-    padding: 10px 20px;
-    display: block; /* 가운데 정렬을 위해 block으로 변경 */
-    margin: 0 auto; /* 가운데 정렬 */
+.modal-content #closeModalBtn {
+	background-color: #6c757d;
 }
-
-.ver-line {
-	width: 0.5px;
-	height: 150px;
-	background-color: black;
-	margin: 0 auto;
-}
-
-.locationBtn {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	width: 45%;
-}
-
-.itemBtn {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	width: 45%;
-}
-
-
-.notfind {
-	margin: 50px auto 0;
-	text-align: center;
-	max-width: 800px;
-	border-radius: 5px;
-}
-
-.notfind table td, table th {
-	border: solid 1px #ccc;
-	border-collapse: collapse;
-}
-
-.notfind th {
-	background-color: #FE8015;
-}
-.notfind tr:hover {
-	background-color: #FFD5B2;
-}
-table {
-    width: 100%;
-}
-
-.upbox {
-    
-}
-
 </style>
 </head>
 <body>
 	<%@include file="/WEB-INF/include/side.jsp"%>
 	<main>
 		<div>
-			<div id="topm">
-				<a href="/">Home</a> &nbsp;&nbsp;>&nbsp;&nbsp; <a href="#">Mypage</a>
-			</div>
 			<div>
 				<div class="profile-box">
 					<div class="profile-header">
 						<img src="/icon/user.png" alt="profile" />
 						<div class="profile-info">
-							<em class="nickname">${ user.nickname }</em> 
-							<em class="join-date">가입일 : ${ user.com_date }</em>
+							<em class="nickname">${ user.nickname }</em> <em
+								class="join-date">가입일 : ${ user.com_date }</em>
 						</div>
 					</div>
 					<hr />
-
 					<div class="profile-details">
 						<ul>
 							<c:choose>
 								<c:when test="${user.user_grant == 'ADMIN'}">
-									<li><em>회원 등급 &nbsp;&nbsp;:&nbsp;&nbsp; 관 리 자</em></li>
+									<li><em>회원 등급 : 관리자</em></li>
 								</c:when>
 								<c:when test="${user.user_grant == 'USER'}">
-									<li><em>회원 등급 &nbsp;&nbsp;:&nbsp;&nbsp; 본인인증 회원</em></li>
+									<li><em>회원 등급 : 본인인증 회원</em></li>
 								</c:when>
 								<c:when test="${user.user_grant == 'BAN'}">
-									<li><em>회원 등급 &nbsp;&nbsp;:&nbsp;&nbsp; 블라인드 회원</em></li>
+									<li><em>회원 등급 : 블라인드 회원</em></li>
 								</c:when>
 							</c:choose>
 
-							<li><em>방문 횟수 &nbsp;&nbsp;:&nbsp;&nbsp; ${ user.join_count }
-									번</em></li>
-							<li><em>내 게시글 &nbsp;&nbsp;:&nbsp;&nbsp; ${ count.count }
-									개</em></li>
+							<li><em>방문 횟수 : ${ user.join_count } 번</em></li>
+							<li><em>내 게시글 : ${ count.count } 개</em></li>
 						</ul>
 					</div>
 				</div>
 				<div>
-					<div class="box1">
-						<div class="lostitem-setbox">
-							<h4 style="padding-bottom: 10px;">나의 분실물 정보 받기</h4>
-								<h6>설정날짜 : ${ myfind.set_date }</h6>
-							<hr>
-							<div class="btnbox1">
-								<div class="locationBtn">
-									<h5>지역</h5>
-									<c:choose>
-										<c:when
-											test="${ userlocation.location_code != null && userlocation.location_code != 0 }">
-											<h6>${ userlocation.sido_name }</h6>
-										</c:when>
-										<c:when
-											test="${ userlocation.location_code == null || userlocation.location_code == 0 }">
-											<h6>선택없음</h6>
-										</c:when>
-									</c:choose>
-									<select>
-										<c:forEach items="${alllocation }" var="alocation">
-											<c:choose>
-												<c:when test="${ alocation.sido_name !=null &&  alocation.gugun_name == null }">
-													<option value="${alocation.location_code}" >
-													${ alocation.sido_name }</option>
-												</c:when>
-											</c:choose>
-										</c:forEach>
-									</select>
-								</div>
-								<div class="ver-line"></div>
-								<div class="itemBtn">
-									<h5>물품</h5>
-									<c:choose>
-										<c:when test="${ useritem.item_code != null && useritem.item_code != 0 }">
-											<h6>${useritem.item }</h6>
-										</c:when>
-										<c:when
-											test="${ useritem.item_code == null || useritem.item_code == 0 }">
-											<h6>선택없음</h6>
-										</c:when>
-									</c:choose>
-									<select>
-										<c:forEach items="${ allitem }" var="aitem">
-											<option value="${aitem.item_code}">
-											${ aitem.item }</option>
-										</c:forEach>
-									</select>
-								</div>
+					<div class="lostitem-setbox">
+						<h4>잃어버린 물품 등록</h4>
+						<!-- 모달 -->
+						<div class="modal" id="selectionModal" style="display: none;">
+							<div class="modal-content">
+								<h4>항목 선택</h4>
+								<button id="selectRegionBtn">지역 선택</button>
+								<button id="selectItemBtn">물품 선택</button>
+								<div id="selectionOutput"></div>
+								<button id="saveSelectionBtn">저장</button>
+								<button id="closeModalBtn">닫기</button>
 							</div>
-						
-								<hr>
-									<button class="upBtn">업데이트</button>
-							
 						</div>
-						<section class="bedgebox">
-							<!-- 뱃지 섹션 -->
-							<div class="badge-container">
-								<h2>내가 모은 뱃지</h2>
-								<hr />
-								<!-- 뱃지 리스트 -->
-								<div class="badge-list">
-									<!-- 뱃지 아이템 -->
-									<div class="badge-item">
+						<button id="openModalBtn">지역 및 물품 선택</button>
+					</div>
+					<section class="bedgebox">
+					<!-- 뱃지 섹션 -->
+					<div class="badge-container">
+						<h2>My Badge Collection</h2>
+						<!-- 뱃지 리스트 -->
+						<div class="badge-list">
+							<!-- 뱃지 아이템 -->
+							<div class="badge-item">
 										<a href="#"><img src="/icon/11.png" alt="Badge 1"></a>
 									</div>
 									<div class="badge-item">
@@ -405,112 +302,110 @@ table {
 									</div>
 									<div class="badge-item">
 										<img src="/icon/16.png" alt="Badge 6">
-									</div>
+            						</div>
 									<div class="badge-item">
 										<img src="/icon/17.png" alt="Badge 7">
-									</div>
+            						</div>
 									<div class="badge-item">
 										<img src="/icon/18.png" alt="Badge 8">
-									</div>
+            						</div>
 									<div class="badge-item">
 										<img src="/icon/19.png" alt="Badge 9">
-									</div>
+            						</div>
 									<div class="badge-item">
 										<img src="/icon/20.png" alt="Badge 10">
-									</div>
-									<!-- 더보기 -->
-								</div>
-								<button id="loadMore" class="load-more">더보기</button>
-							</div>
-						</section>
+            						</div>
+						<!-- 더보기 -->
 					</div>
+						<button id="loadMore" class="load-more">더보기</button>
 				</div>
-				<div class="notfind">
-					<div>
-						<table>
-							<colgroup>
-								<col style="width: 10%;">
-								<col style="width: 60%;">
-								<col style="width: 20%;">
-								<col style="width: 10%;">
-							</colgroup>
-							<thead>
-								<tr>
-									<th>순번</th>
-									<th>제목</th>
-									<th>등록일</th>
-									<th>조회수</th>
-								</tr>
-							</thead>
-							<c:if test="${ empty notFind }">
-								<tr>
-									<th colspan="4">등록한 미완료 글이 없습니다.😁</th>
-								</tr>
-							</c:if>
-							<c:if test="${ not empty notFind }">
-								<c:forEach items="${notFind}" var="nf" varStatus="nstatus">
-									<tr>
-										<td><a href="#">${nstatus.index + 1}</a></td>
-										<td><a href="#">${nf.title}</a></td>
-										<td><a href="#">${nf.reg_date}</a></td>
-										<td><a href="#">${nf.views}</a></td>
-									</tr>
-								</c:forEach>
-							</c:if>
-						</table>
-					</div>
-
-				</div>
+				</section>
 			</div>
+		</div>
 		</div>
 
 	</main>
-	
 	<script>
-	document.addEventListener("DOMContentLoaded", function() {
-	    document.querySelector(".upBtn").addEventListener("click", function() {
-	        const locationCode = document.querySelector(".locationBtn select").value;
-	        const itemCode = document.querySelector(".itemBtn select").value;
-	        const memIdx = "${user.mem_idx}";
+	document.addEventListener("DOMContentLoaded", function () {
+	    const modal = document.getElementById("selectionModal");
+	    const openModalBtn = document.getElementById("openModalBtn");
+	    const closeModalBtn = document.getElementById("closeModalBtn");
+	    const selectRegionBtn = document.getElementById("selectRegionBtn");
+	    const selectItemBtn = document.getElementById("selectItemBtn");
+	    const saveSelectionBtn = document.getElementById("saveSelectionBtn");
+	    const selectionOutput = document.getElementById("selectionOutput");
 
-	        const jsonData = {
-	            location_code: locationCode,
-	            item_code: itemCode,
-	            mem_idx: memIdx
-	        };
+	    let selectedRegion = null;
+	    let selectedItem = null;
 
-	        fetch("UpdateMyFind", {
-	            method: "POST",
-	            headers: {
-	                "Content-Type": "application/json"
-	            },
-	            body: JSON.stringify(jsonData)
-	        })
-	        .then(response => response.json())
-	        .then(response => {
-	            if (response.status === "success") {
-	                alert("업데이트 완료");
-
-	                // 선택된 옵션의 텍스트를 가져와서 <h6>에 반영
-	                const selectedLocationText = document.querySelector(".locationBtn select option:checked").textContent;
-	                const selectedItemText = document.querySelector(".itemBtn select option:checked").textContent;
-
-	                document.querySelector(".locationBtn h6").textContent = selectedLocationText;
-	                document.querySelector(".itemBtn h6").textContent = selectedItemText;
-	            } else if (response.status === "unauthorized") {
-	                alert("권한이 없습니다.");
-	            } else if (response.status === "error") {
-	                alert("업데이트 실패");
-	            } else {
-	                alert("서버 연결이 불안정합니다.");
-	            }
-	        })
-	        .catch(error => {
-	            alert("서버 오류가 발생했습니다.");
-	            console.error("Error:", error);
-	        });
+	    // 모달 열기
+	    openModalBtn.addEventListener("click", function () {
+	        modal.style.display = "block";
 	    });
-	});
+
+	    // 모달 닫기
+	    closeModalBtn.addEventListener("click", function () {
+	        modal.style.display = "none";
+	    });
+
+	    // 지역 선택
+	    selectRegionBtn.addEventListener("click", function () {
+	        fetch("/getRegions")
+	            .then(response => response.json())
+	            .then(data => {
+	                selectionOutput.innerHTML = data.map(region => 
+	                    `<button class="regionBtn" data-id="${region.id}">${region.name}</button>`
+	                ).join("");
+	                
+	                document.querySelectorAll(".regionBtn").forEach(button => {
+	                    button.addEventListener("click", function () {
+	                        selectedRegion = button.dataset.id;
+	                        alert("선택한 지역: " + button.innerText);
+	                    });
+	                });
+	            });
+	    });
+
+	    // 물품 선택
+	    selectItemBtn.addEventListener("click", function () {
+	        fetch("/getItems")
+	            .then(response => response.json())
+	            .then(data => {
+	                selectionOutput.innerHTML = data.map(item => 
+	                    `<button class="itemBtn" data-id="${item.id}">${item.name}</button>`
+	                ).join("");
+
+	                document.querySelectorAll(".itemBtn").forEach(button => {
+	                    button.addEventListener("click", function () {
+	                        selectedItem = button.dataset.id;
+	                        alert("선택한 물품: " + button.innerText);
+	                    });
+	                });
+	            });
+	    });
+
+	    // 선택 저장
+	    saveSelectionBtn.addEventListener("click", function () {
+	        if (!selectedRegion || !selectedItem) {
+	            alert("지역과 물품을 모두 선택해주세요.");
+	            return;
+	        }
+
+	        fetch("/saveLostItem", {
+	            method: "POST",
+	            headers: { "Content-Type": "application/json" },
+	            body: JSON.stringify({
+	                regionId: selectedRegion,
+	                itemId: selectedItem
+	            })
+	        })
+	            .then(response => response.text())
+	            .then(message => {
+	                alert(message);
+	                modal.style.display = "none";
+	            });
+	    });
+	});	
 	
 	document.addEventListener("DOMContentLoaded", () => {
 		const badgeList = document.querySelector(".badge-list");
@@ -518,13 +413,13 @@ table {
 		const loadMoreButton = document.getElementById("loadMore");
 		const itemsPerRow = 4;
 		let expanded = false;
-
+		
 		if(badgeItems.length <= itemsPerRow) {
 			loadMoreButton.style.display = "none";
 		} else {
 			loadMoreButton.style.display = "block";
 		}
-
+		
 		loadMoreButton.addEventListener("click", () => {
 			if(!expanded){
 				badgeList.style.maxHeight = "none";
@@ -536,6 +431,7 @@ table {
 			expanded = !expanded;
 		});
 	});
+	
 </script>
 </body>
 </html>
