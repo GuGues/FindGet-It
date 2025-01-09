@@ -287,7 +287,7 @@ table {
 </style>
 </head>
 <body>
-	<%@include file="/WEB-INF/include/side.jsp"%>
+	<%@include file="/WEB-INF/include/adminSide.jsp"%>
 	<main>
 		<div>
 			<div id="topm">
