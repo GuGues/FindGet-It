@@ -15,7 +15,6 @@
     </style>
 </head>
 <body>
-
     <%@include file="/WEB-INF/include/side.jsp"%>
     <main>
         <div>
@@ -78,6 +77,5 @@
         </script>
     </main>
     <%@include file="/WEB-INF/include/pagefab.jsp"%>
-
 </body>
 </html>

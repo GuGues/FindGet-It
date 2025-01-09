@@ -16,7 +16,6 @@ public class FoundItemVO {
     private String colorCode;
     private int foundState;
 
-
     // 조인 결과
     private String itemName;
     private String colorName;
