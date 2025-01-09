@@ -29,7 +29,7 @@ public class AccountService implements UserDetailsService {
         if(account != null){
             List<GrantedAuthority> authorities = new ArrayList();
             authorities.add(new SimpleGrantedAuthority( "ROLE_"+account.getUser_grant()));
-            return new User(account.getEmail(), account.getPassword(),authorities);
+            return new User(account.getEmail(), account.getPassword(), authorities);
         }
         return null;
     }
@@ -47,9 +47,10 @@ public class AccountService implements UserDetailsService {
         return true;
     }
 
+
     @Transactional
     public boolean verifyPassword(String email, String inputPassword) {
-        
+
         Account account = new Account();
         account.setEmail(email);
         account = userMapper.findUser(account);
@@ -58,15 +59,15 @@ public class AccountService implements UserDetailsService {
             throw new IllegalArgumentException("해당 사용자를 찾을 수 없습니다.");
         }
 
-        
+
         return encoder.matches(inputPassword, account.getPassword());
     }
 
-    
-    
+
+
     @Transactional
     public void upJoinCount(String email) {
         userMapper.upJoinCount(email);
     }
-    
+
 }
