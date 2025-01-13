@@ -263,6 +263,12 @@ a {
 	text-align: center;
 	max-width: 800px;
 	border-radius: 5px;
+	width: 700px;
+	background-color: #fff;
+	color: #333;
+	border: 1px solid #ddd;
+	padding: 20px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .notfind table td, table th {
@@ -425,7 +431,9 @@ table {
 						</section>
 					</div>
 				</div>
+				
 				<div class="notfind">
+				<h4>미완료 글 목록</h4>
 					<div>
 						<table>
 							<colgroup>
