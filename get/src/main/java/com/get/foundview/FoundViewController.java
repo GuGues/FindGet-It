@@ -1,5 +1,6 @@
 package com.get.foundview;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -130,6 +131,52 @@ public class FoundViewController {
         // 수정 화면
         return "found/update";
     }
+
+    // 돌려줌  버튼
+    @PostMapping("/complete")
+    @Transactional
+    public String markAsFound(@RequestParam("foundIdx") String foundIdx, @RequestParam("email") String email, HttpServletRequest request) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String loginEmail = null;
+
+        if (authentication != null && authentication.isAuthenticated()) {
+            Object principal = authentication.getPrincipal();
+            if (principal instanceof UserDetails) {
+                loginEmail = ((UserDetails) principal).getUsername();
+            } else if (principal instanceof String) {
+                loginEmail = (String) principal;
+            }
+        }
+
+        if (loginEmail != null && loginEmail.equals(email)) {
+            foundViewMapper.updateFoundState(foundIdx, 1); // 상태를 1로 변경
+        }
+        return "redirect:/found/view?foundIdx=" + foundIdx;
+    }
+
+    // 돌려줌  취소
+    @PostMapping("/cancel")
+    @Transactional
+    public String cancelFound(@RequestParam("foundIdx") String foundIdx, @RequestParam("email") String email) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String loginEmail = null;
+
+        if (authentication != null && authentication.isAuthenticated()) {
+            Object principal = authentication.getPrincipal();
+            if (principal instanceof UserDetails) {
+                loginEmail = ((UserDetails) principal).getUsername();
+            } else if (principal instanceof String) {
+                loginEmail = (String) principal;
+            }
+        }
+
+        if (loginEmail != null && loginEmail.equals(email)) {
+            foundViewMapper.updateFoundState(foundIdx, 2); // 상태를 "찾는 중(2)"으로 변경
+        }
+        return "redirect:/found/view?foundIdx=" + foundIdx;
+    }
+
+
 
     /**
      * 습득물 수정 처리
