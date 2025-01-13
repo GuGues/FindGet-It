@@ -8,39 +8,113 @@
 <title>내 정보관리</title>
 <style>
 main {
-	margin-left: 20%;
+    margin-top: 330px;
+    margin-left: 35%;
+    margin-right: auto;
+    width: 50%;
+    padding: 20px;
+    background-color: #FFF5EB;
+    border: 1px solid #FE8015;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: 'Arial', sans-serif;
 }
 
-table td, table th {
-	border: solid 1px #FE8015;
-	text-align: center;
+.top {
+    margin-bottom: 20px;
+    font-size: 14px;
+    color: #555555;
 }
 
-th {
-	background-color: #FE8015;
+h2 {
+    color: #333333;
+    text-align: center;
+    margin-bottom: 20px;
+    font-weight: bold;
 }
 
-tr:hover {
-	background-color: #FFD5B2;
+hr {
+    border: 0;
+    height: 1px;
+    background-color: #FE8015;
+    margin-bottom: 20px;
+}
+
+.form-label {
+    font-size: 14px;
+    font-weight: bold;
+    color: #555555;
+}
+
+input[type="password"] {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #FE8015;
+    border-radius: 4px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+input[type="password"]:focus {
+    outline: none;
+    border-color: #FF5722;
+    box-shadow: 0 0 5px rgba(255, 87, 34, 0.5);
+}
+
+button {
+    display: inline-block;
+    background-color: #FE8015;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+    text-align: center;
+}
+
+button:hover {
+    background-color: #FF5722;
+}
+
+button:active {
+    background-color: #E64A19;
+}
+
+button:disabled {
+    background-color: #BDBDBD;
+    cursor: not-allowed;
 }
 
 a {
-	text-decoration: none;
-	color: black;
+    text-decoration: none;
+    color: #FF5722;
+    font-weight: bold;
 }
 
 a:hover {
-	color: #000000;
+    text-decoration: underline;
+}
+
+.alert {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #FFCCBC;
+    border: 1px solid #FF5722;
+    color: #333333;
+    border-radius: 4px;
+    text-align: center;
 }
 </style>
 </head>
 <body>
-	
+	<%@include file="/WEB-INF/include/side.jsp"%>
 	<main>
 		<div>
-			<div class="top">
-				<a href="/">Home</a> &gt; <a href="#">Mypage</a>
-			</div>
+			
 			<h2>나의 정보수정</h2>
 			<hr>
 			<div>
@@ -49,7 +123,7 @@ a:hover {
 					<label class="form-label" for="password">비밀번호 확인</label> 
 					<input type="password" id="password" name="checkPw" class="form-control">
 				</div>
-				<div>
+				<div style="text-align: center; marigin-top: 20px;">
 					<button type="button" id="checkPw">비밀번호 확인</button>
 				</div>
 			</div>
@@ -62,7 +136,7 @@ a:hover {
 		        const csrfToken = document.querySelector('input[name="_csrf"]').value;
 
 		        if (!checkPwButton || !passwordInput) {
-		            console.error("필수 요소가 로드되지 않았습니다.");
+		            console.error("로딩되지 않았습니다.");
 		            return;
 		        }
 
@@ -93,7 +167,7 @@ a:hover {
 		                }
 		            })
 		            .catch(error => {
-		                console.error("요청 처리 중 오류 발생:", error);
+		                console.error("오류 발생:", error);
 		                alert("오류가 발생했습니다. 관리자에게 문의하세요.");
 		            });
 		        });
