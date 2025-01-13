@@ -54,7 +54,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         }
         
         
-        accountService.upJoinCount(email);
+        accountService.updateJoinCountIfNewDay(email);
 
         SavedRequest savedRequest = this.requestCache.getRequest(request, response);
         if (savedRequest == null) {

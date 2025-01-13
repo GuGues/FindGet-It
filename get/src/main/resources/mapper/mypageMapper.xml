@@ -125,5 +125,17 @@ HAVING EMAIL = #{email}
 
 
 
+<update id="updateUser">
+    UPDATE MEMBERS
+    SET
+        NICKNAME   = #{nickname},
+        PASSWORD   = #{password},
+        PHONE      = #{phone},
+        ADDRESS1   = #{address1},
+        ADDRESS2   = #{address2},
+        POSTNUMBER = #{postnumber}
+    WHERE EMAIL = #{email}
+</update>
+
 
 </mapper>

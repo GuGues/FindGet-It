@@ -42,7 +42,8 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf(AbstractHttpConfigurer::disable)
+    	http.csrf(csrf -> csrf
+    		    .ignoringRequestMatchers("/**"))
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authorize) -> authorize
                         .dispatcherTypeMatchers(DispatcherType.FORWARD).permitAll()
@@ -51,7 +52,9 @@ public class SecurityConfig {
                         .requestMatchers("/user/**").hasAnyRole("USER")
                         .requestMatchers("/chatting/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/loginSuccess").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers("/**").permitAll()
+                        .requestMatchers("/**").permitAll()                 
+                        .requestMatchers("/Mypage/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/UpdateMyFind").authenticated()
                 )
                 .formLogin(formLogin -> formLogin
                         .loginPage("/login")

@@ -11,7 +11,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -46,6 +49,12 @@ public class AccountService implements UserDetailsService {
         userMapper.save(reg);
         return true;
     }
+<<<<<<< HEAD
+    
+    @Transactional
+    public boolean verifyPassword(String email, String inputPassword) {
+        Account account = userMapper.findUserByEmail(email); // 이메일로 사용자 검색
+=======
 
 
     @Transactional
@@ -55,19 +64,36 @@ public class AccountService implements UserDetailsService {
         account.setEmail(email);
         account = userMapper.findUser(account);
 
+>>>>>>> 2e5407cf0feff02b89e53baf8d39e1c758c7347c
         if (account == null) {
-            throw new IllegalArgumentException("해당 사용자를 찾을 수 없습니다.");
+            System.out.println("User not found with email: " + email);
+            return false;
         }
 
+<<<<<<< HEAD
+        // 입력된 비밀번호와 저장된 비밀번호 비교
+        boolean match = encoder.matches(inputPassword, account.getPassword());
+        System.out.println("Password match result: " + match);
+        return match;
+=======
 
         return encoder.matches(inputPassword, account.getPassword());
+>>>>>>> 2e5407cf0feff02b89e53baf8d39e1c758c7347c
     }
 
 
 
     @Transactional
-    public void upJoinCount(String email) {
-        userMapper.upJoinCount(email);
+    public void updateJoinCountIfNewDay(String email) {
+        Date lastLoginDate = userMapper.getLastLoginDate(email);
+        LocalDate today = LocalDate.now();
+
+        if (lastLoginDate == null || 
+            lastLoginDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().isBefore(today)) {
+            userMapper.updateLoginDateAndCount(email);
+        } else {
+            userMapper.updateLoginDate(email); // 날짜만 업데이트
+        }
     }
 
 }
