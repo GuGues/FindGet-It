@@ -11,10 +11,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -32,7 +32,7 @@ public class AccountService implements UserDetailsService {
         if(account != null){
             List<GrantedAuthority> authorities = new ArrayList();
             authorities.add(new SimpleGrantedAuthority( "ROLE_"+account.getUser_grant()));
-            return new User(account.getEmail(), account.getPassword(), authorities);
+            return new User(account.getEmail(), account.getPassword(),authorities);
         }
         return null;
     }
@@ -50,29 +50,20 @@ public class AccountService implements UserDetailsService {
         return true;
     }
 
-    
     @Transactional
     public boolean verifyPassword(String email, String inputPassword) {
-
+        
         Account account = new Account();
         account.setEmail(email);
         account = userMapper.findUser(account);
 
-
         if (account == null) {
-            System.out.println("User not found with email: " + email);
-            return false;
+            throw new IllegalArgumentException("해당 사용자를 찾을 수 없습니다.");
         }
-       
-        // 입력된 비밀번호와 저장된 비밀번호 비교
-        boolean match = encoder.matches(inputPassword, account.getPassword());
-        System.out.println("Password match result: " + match);
-        return match;
+
+        
         return encoder.matches(inputPassword, account.getPassword());
-
     }
-
-
 
     @Transactional
     public void updateJoinCountIfNewDay(String email) {
@@ -86,4 +77,10 @@ public class AccountService implements UserDetailsService {
             userMapper.updateLoginDate(email); // 날짜만 업데이트
         }
     }
+    
+    @Transactional
+    public void upJoinCount(String email) {
+        userMapper.upJoinCount(email);
+    }
+    
 }

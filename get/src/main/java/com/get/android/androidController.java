@@ -11,11 +11,8 @@ import com.get.chat.ChatMapper;
 import com.get.chat.ChatRoom;
 import com.get.chat.ChatService;
 import com.get.faq.FaqMapper;
-<<<<<<< HEAD
 import com.get.found.FoundMapper;
 import com.get.found.foundCustomVo;
-=======
->>>>>>> f120f030c0dc7f904055befa6aac13ed1bafcace
 import com.get.foundview.FoundItemVO;
 import com.get.foundview.FoundViewMapper;
 import com.get.lost.lostCustomVo;
@@ -155,32 +152,6 @@ public class androidController {
         }
         return ResponseEntity.ok(vo);
     }
-
-<<<<<<< HEAD
-=======
-    		return ResponseEntity.ok(searchLost);
-    	}
-//    @GetMapping("/app/getLostItem/{lostIdx}")
-//    public ResponseEntity<LostItemVO> getLostSearch(@PathVariable("lostIdx")String lostIdx) {
-//
-//        //{lost_title=sdsd, item_code=201205, location_code=100699, start_date=2024-12-10, end_date=2024-12-18, color_code=6}
-//        LostItemVO item = lostViewMapper.selectLostItemDetail(lostIdx);
-//        return ResponseEntity.ok(item);
-//    }
-    /**
-     * (1) 분실물 상세 조회
-     * 예) GET /app/getLostItem/{lostIdx}
-     */
-    @GetMapping("/app/getLostItem/{lostIdx}")
-    public ResponseEntity<LostItemVO> getLostItem(@PathVariable("lostIdx") String lostIdx) {
-        LostItemVO vo = lostViewMapper.selectLostItemDetail(lostIdx);
-        if (vo == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(vo);
-    }
-
->>>>>>> f120f030c0dc7f904055befa6aac13ed1bafcace
     /**
      * (2) 습득물 상세 조회
      * 예) GET /app/getFoundItem/{foundIdx}

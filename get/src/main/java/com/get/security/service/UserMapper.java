@@ -1,6 +1,6 @@
 package com.get.security.service;
 
-import java.util.Date;
+import java.sql.Date;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,5 +25,5 @@ public interface UserMapper {
 	void updateLoginDate(String email);
 
 	UserDetails loadUserByUsername(String email);
-   
+	
 }
