@@ -154,7 +154,7 @@ textarea {
 			</div>
 		</div>
 	</main>
-	<%@include file="/WEB-INF/include/pagefab.jsp"%>
+	<%@include file="/WEB-INF/include/fab.jsp"%>
 	<script>
 	<script>
     document.getElementById("delete").onclick=()=>{
