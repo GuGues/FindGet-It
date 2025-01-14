@@ -5,7 +5,9 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Login</title>
+    <link rel="icon" type="image/png" href="/img/favicon.ico" />
 </head>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <style>
 
 
@@ -91,7 +93,6 @@
     }
 </style>
 <body>
-
 <div id="headImage">
     <img src="/img/loginHeader.png" alt="img">
 </div>
@@ -107,14 +108,51 @@
                 <input type="password" name="password" placeholder="비밀번호"/>
                 </div>
                 <button type="submit" id="submit">로그인</button>
+                    <div id = "errorMessage" style="font-size: 13px; color: tomato">${errorMessage}</div>
             </div>
         </form>
-        <button class="loginBtn" id="find" onclick="document.location.href='/'">아이디/비밀번호 찾기</button>
+
+        <button class="loginBtn modal-trigger" data-bs-toggle="modal"  data-modal-url="/findId" data-modal-title="아이디 찾기" id="find" >아이디 찾기</button>
+        <button class="loginBtn modal-trigger" data-bs-toggle="modal"  data-modal-url="/findPw" data-modal-title="비밀번호 찾기" id="find" >비밀번호 찾기</button>
         <button class="loginBtn" id="signup" onclick="document.location.href='/sighup'">회원가입</button>
     </div>
     <div id="loginSideImage">
         <img src="/img/loginSideImage.png" alt="img">
     </div>
 </div>
+
+<!-- 모달 구조 -->
+<div class="modal fade" id="modalCenter" tabindex="-1" aria-labelledby="modalCenterLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalCenterLabel">모달 제목</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeModal"></button>
+            </div>
+            <div class="modal-body">
+                <!-- AJAX로 로드될 내용 -->
+            </div>
+        </div>
+    </div>
+</div>
+
 </body>
+<!-- jQuery 로드 -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<!-- Bootstrap JS 로드 -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    $(document).on("click", ".modal-trigger", function (e) {
+          e.preventDefault();
+          const modalUrl = $(this).data("modal-url");
+          const modalTitle = $(this).data("modal-title");
+          const modal = new bootstrap.Modal(document.getElementById('modalCenter'));
+          $.get(modalUrl, function (data) {
+              $("#modalCenter .modal-body").html(data);
+              $("#modalCenterLabel").text(modalTitle);
+              modal.show();
+          });
+      });
+
+</script>
 </html>

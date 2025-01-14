@@ -41,7 +41,6 @@ public class MypageVo {
 	//LOCATIONS TABLE
 	private String sido_name;
 	private String gugun_name;
-	
 	//ITEM TABLE
 	private String item;
 
@@ -86,7 +85,6 @@ public class MypageVo {
 	
 	//MY_FIND TABLE
 	private String set_date;
-	
 	//임의설정
 	private Integer count;
 	private String  title;

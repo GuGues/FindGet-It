@@ -33,6 +33,11 @@ public interface LostViewMapper {
 
     void  updateLostItem(LostItemVO vo);
 
+	String getFilePath(String lostIdx);
+
+    // ========= (추가) 조회수 증가 =========
+    void updateLostViews(@Param("lostIdx") String lostIdx);
 
 
+    void updateLostState(String lostIdx, int lostState);
 }

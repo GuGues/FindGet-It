@@ -66,5 +66,4 @@ public class Account implements UserDetails {
     public boolean isEnabled() { //계정의 비활성화 여부를 리턴한다
         return true;
     }
-
 }

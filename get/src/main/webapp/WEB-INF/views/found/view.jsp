@@ -170,7 +170,103 @@
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
       text-align: left;
     }
+    .modal-content2 textarea {
+      width: 100%;
+      height: 100px;
+      overflow-y: scroll;
+      resize: none;
+    }
 
+    /* ADMIN 전용 테마: 버튼/테두리색을 #8C6C55로 변경 */
+    <c:if test="${ sessionScope.grant eq 'ADMIN' }">
+      .detail-header {
+        border-bottom: solid #8C6C55 !important;
+      }
+      .btn-container button {
+        background-color: #8C6C55 !important;
+      }
+      .btn-container button:hover {
+        background-color: #684F36 !important;
+      }
+      .btn-container2 button {
+        background-color: #8C6C55 !important;
+      }
+      .btn-container2 button:hover {
+        background-color: #684F36 !important;
+      }
+      .content-container {
+        border-top: solid #8C6C55 !important;
+        border-bottom: solid #8C6C55 !important;
+      }
+    .btn-container a {
+      background-color: #8C6C55;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      margin: 0 5px;
+      transition: background-color 0.3s;
+    }
+
+    </c:if>
+
+    /*---------------------지도 영역--------------------------*/
+    .map_wrap, .map_wrap * {margin:0;padding:0;font-family:'Malgun Gothic',dotum,'돋움',sans-serif;font-size:12px;}
+    .map_wrap a, .map_wrap a:hover, .map_wrap a:active{color:#000;text-decoration: none;}
+    .map_wrap {
+      position:relative; width:100%; height:500px;
+      /* 처음엔 숨김 */
+      display: none;  /* 지도는 scrollToMap() 실행 시 보이도록 */
+    }lastBounds
+    #menu_wrap {
+      position:absolute;top:0;left:0;bottom:0;width:250px;margin:10px 0 30px 10px;
+      padding:5px;overflow-y:auto;background:rgba(255, 255, 255, 0.7);
+      z-index: 1;font-size:12px;border-radius: 10px; display: none; /* 검색 메뉴 숨김 */
+    }
+    .bg_white {background:#fff;}
+    #menu_wrap hr {display: block; height: 1px;border: 0; border-top: 2px solid #5F5F5F;margin:3px 0;}
+    #menu_wrap .option{text-align: center;}
+    #menu_wrap .option p {margin:10px 0;}
+    #menu_wrap .option button {margin-left:5px;}
+    #placesList li {list-style: none;}
+    #placesList .item {
+      position:relative;border-bottom:1px solid #888;overflow: hidden;
+      cursor: pointer;min-height: 65px;
+    }
+    #placesList .item span {display: block;margin-top:4px;}
+    #placesList .item h5, #placesList .item .info {text-overflow: ellipsis;overflow: hidden;white-space: nowrap;}
+    #placesList .item .info{padding:10px 0 10px 55px;}
+    #placesList .info .gray {color:#8a8a8a;}
+    #placesList .info .jibun {
+      padding-left:26px;
+      background:url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_jibun.png) no-repeat;
+    }
+    #placesList .info .tel {color:#009900;}
+    #placesList .item .markerbg {
+      float:left;position:absolute;width:36px; height:37px;
+      margin:10px 0 0 10px;
+      background:url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png) no-repeat;
+    }
+    #placesList .item .marker_1 {background-position: 0 -10px;}
+    #placesList .item .marker_2 {background-position: 0 -56px;}
+    #placesList .item .marker_3 {background-position: 0 -102px}
+    #placesList .item .marker_4 {background-position: 0 -148px;}
+    #placesList .item .marker_5 {background-position: 0 -194px;}
+    #placesList .item .marker_6 {background-position: 0 -240px;}
+    #placesList .item .marker_7 {background-position: 0 -286px;}
+    #placesList .item .marker_8 {background-position: 0 -332px;}
+    #placesList .item .marker_9 {background-position: 0 -378px;}
+    #placesList .item .marker_10 {background-position: 0 -423px;}
+    #placesList .item .marker_11 {background-position: 0 -470px;}
+    #placesList .item .marker_12 {background-position: 0 -516px;}
+    #placesList .item .marker_13 {background-position: 0 -562px;}
+    #placesList .item .marker_14 {background-position: 0 -608px;}
+    #placesList .item .marker_15 {background-position: 0 -654px;}
+    #pagination {margin:10px auto;text-align: center;}
+    #pagination a {display:inline-block;margin-right:10px;}
+    #pagination .on {font-weight: bold; cursor: default;color:#777;}
+    a{ color: black; }
   </style>
 </head>
 <body>
@@ -283,16 +379,226 @@
   </div>
 
   <!-- 지도 섹션 -->
-  <div class="map-section">
-    <img src="/img/map-placeholder.jpg" alt="지도 첨부">
+  <div class="map-section" id="mapSection">
+    <!-- 지도 섹션 (처음엔 숨김) -->
+  <div class="map_wrap">
+    <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
+    <div id="menu_wrap" class="bg_white" style="display:none;">
+      <hr />
+      <ul id="placesList"></ul>
+      <div id="pagination"></div>
+    </div>
   </div>
+  </div>
+
 </div>
 
+<!-- 카카오 맵 API 스크립트 포함 -->
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=a38a546a4aaada7aec2c459d8d1d085a&libraries=services"></script>
+<script>
+  // 지도 표시 + 스크롤 이동
+    function scrollToMap(){
+      const mapWrap = document.querySelector('.map_wrap');
+      mapWrap.style.display = 'block';
+      setTimeout(function(){
+        map.relayout();
+        if(lastBounds){
+          map.setBounds(lastBounds);
+        }
+        mapWrap.scrollIntoView({behavior:'smooth'});
+      },50);
+    }
 
 
 
 
-<!-- 신고 모달 영역 -->
+  // 신고 폼 처리
+  const reportForm = document.getElementById("reportForm");
+  if(reportForm) {
+    reportForm.addEventListener("submit", function(e) {
+      e.preventDefault();
+      const formData = new FormData(reportForm);
+      fetch("/report/submit", {
+        method: "POST",
+        body: formData
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error("신고 접수 중 오류가 발생했습니다.");
+        }
+        return response.text();
+      })
+      .then(data => {
+        alert("신고가 접수되었습니다.");
+        closeReportModal();
+        location.reload();
+      })
+      .catch(err => {
+        alert(err.message);
+      });
+    });
+  }
+</script>
+
+<!-- 실제 맵 로직 -->
+<script>
+  // 마커를 담을 배열
+  var markers = [];
+  var mapContainer = document.getElementById('map'), // 지도를 표시할 div
+      mapOption = {
+          center: new kakao.maps.LatLng(37.566826, 126.9786567),
+          level: 3
+      };
+  var map = new kakao.maps.Map(mapContainer, mapOption);
+
+  // 장소 검색 객체를 생성
+  var ps = new kakao.maps.services.Places();
+  // 검색 결과 목록이나 마커 클릭 시 장소명 표시할 인포윈도우
+  var infowindow = new kakao.maps.InfoWindow({zIndex:1});
+  var lastBounds = null;
+  // JSP에서 전달된 지역 상세정보
+  var keyword = "<c:out value='${item.fLocationDetail}'/>";
+  searchPlaces();
+
+  function searchPlaces() {
+      if (!keyword.trim()) {
+          return;
+      }
+      ps.keywordSearch(keyword, placesSearchCB);
+  }
+
+  function placesSearchCB(data, status, pagination) {
+      if (status === kakao.maps.services.Status.OK) {
+          displayPlaces(data);
+          displayPagination(pagination);
+      } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
+          console.warn('지도 정보가 없습니다.');
+      } else if (status === kakao.maps.services.Status.ERROR) {
+          console.error('검색 오류 발생');
+      }
+  }
+
+  function displayPlaces(places) {
+      var listEl = document.getElementById('placesList'),
+          menuEl = document.getElementById('menu_wrap'),
+          fragment = document.createDocumentFragment(),
+          bounds = new kakao.maps.LatLngBounds();
+
+      removeAllChildNods(listEl);
+      removeMarker();
+
+      for ( var i=0; i<places.length; i++ ) {
+          var placePosition = new kakao.maps.LatLng(places[i].y, places[i].x),
+              marker = addMarker(placePosition, i),
+              itemEl = getListItem(i, places[i]);
+
+          bounds.extend(placePosition);
+
+          (function(marker, title) {
+              kakao.maps.event.addListener(marker, 'mouseover', function() {
+                  displayInfowindow(marker, title);
+              });
+              kakao.maps.event.addListener(marker, 'mouseout', function() {
+                  infowindow.close();
+              });
+              itemEl.onmouseover =  function () {
+                  displayInfowindow(marker, title);
+              };
+              itemEl.onmouseout =  function () {
+                  infowindow.close();
+              };
+          })(marker, places[i].place_name);
+
+          fragment.appendChild(itemEl);
+      }
+      listEl.appendChild(fragment);
+      menuEl.scrollTop = 0;
+      map.setBounds(bounds);
+      lastBounds = bounds;
+  }
+
+  function getListItem(index, places) {
+      var el = document.createElement('li'),
+      itemStr = '<span class="markerbg marker_' + (index+1) + '"></span>' +
+                '<div class="info">' +
+                '   <h5>' + places.place_name + '</h5>';
+
+      if (places.road_address_name) {
+          itemStr += '    <span>' + places.road_address_name + '</span>' +
+                      '   <span class="jibun gray">' + places.address_name  + '</span>';
+      } else {
+          itemStr += '    <span>' + places.address_name  + '</span>';
+      }
+      itemStr += '  <span class="tel">' + places.phone  + '</span></div>';
+
+      el.innerHTML = itemStr;
+      el.className = 'item';
+      return el;
+  }
+
+  function addMarker(position, idx) {
+      var imageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png',
+          imageSize = new kakao.maps.Size(36, 37),
+          imgOptions =  {
+              spriteSize : new kakao.maps.Size(36, 691),
+              spriteOrigin : new kakao.maps.Point(0, (idx*46)+10),
+              offset: new kakao.maps.Point(13, 37)
+          },
+          markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imgOptions),
+          marker = new kakao.maps.Marker({
+              position: position,
+              image: markerImage
+          });
+      marker.setMap(map);
+      markers.push(marker);
+      return marker;
+  }
+
+  function removeMarker() {
+      for ( var i = 0; i < markers.length; i++ ) {
+          markers[i].setMap(null);
+      }
+      markers = [];
+  }
+
+  function displayPagination(pagination) {
+      var paginationEl = document.getElementById('pagination'),
+          fragment = document.createDocumentFragment(), i;
+      while (paginationEl.hasChildNodes()) {
+          paginationEl.removeChild (paginationEl.lastChild);
+      }
+      for (i=1; i<=pagination.last; i++) {
+          var el = document.createElement('a');
+          el.href = "#";
+          el.innerHTML = i;
+          if (i===pagination.current) {
+              el.className = 'on';
+          } else {
+              el.onclick = (function(i) {
+                  return function() {
+                      pagination.gotoPage(i);
+                  }
+              })(i);
+          }
+          fragment.appendChild(el);
+      }
+      paginationEl.appendChild(fragment);
+  }
+
+  function displayInfowindow(marker, title) {
+      var content = '<div style="padding:5px;z-index:1;">' + title + '</div>';
+      infowindow.setContent(content);
+      infowindow.open(map, marker);
+  }
+
+  function removeAllChildNods(el) {
+      while (el.hasChildNodes()) {
+          el.removeChild (el.lastChild);
+      }
+  }
+</script>
+
+<!-- 신고 모달 HTML (화면 맨 하단) -->
 <div id="reportModalOverlay" class="modal-overlay">
   <div class="modal-content">
     <h3>신고 작성</h3>

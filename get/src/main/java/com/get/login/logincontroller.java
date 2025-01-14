@@ -5,13 +5,24 @@ import com.get.security.service.AccountService;
 import com.get.security.service.UserMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class logincontroller {
@@ -62,4 +73,46 @@ public class logincontroller {
         }
         return "redirect:/";
     }
+    @GetMapping("/join/email-check")
+    @ResponseBody
+    public ResponseEntity<String> emailCheck(@RequestParam("email") String email){
+        Account account = userMapper.findUserByEmail(email);
+        //아이디가 있다면 result 에 false를 담아줌
+        if(account != null){
+            return ResponseEntity.ok("false");
+        }
+        else{
+            return ResponseEntity.ok("true");
+        }
+    }
+    
+    @GetMapping("/findId")
+    public String findId(){
+        return "login/findId";
+    }
+    @PostMapping("/findId/check")
+    public ResponseEntity<Map<String, Object>> findIdCheck(@RequestBody Map<String,Object> map){
+    	System.out.println(map);
+        String username = String.valueOf(map.get("username"));
+        String phone = String.valueOf(map.get("phone"));
+        Map<String,Object> result = new HashMap<>();
+
+        Account member = userMapper.findUserByUserNamePhone(username,phone);
+        System.out.println("member: "+member);
+        if(member!=null){
+            result.put("status",HttpStatus.OK);
+            result.put("result",member.getEmail());
+        }
+        else{
+            result.put("status",HttpStatus.BAD_REQUEST);
+            result.put("result","일치하는 정보가 없습니다.");
+        }
+        return ResponseEntity.ok().body(result);
+    }
+    
+    @GetMapping("/findPw")
+    public String findPw(){
+        return "login/findPw";
+    }
 }
+

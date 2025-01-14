@@ -30,4 +30,7 @@ public interface LostMapper {
 
 	int getTotalSearchLostCount(Map<String, String> map);
 
+	List<lostVo> getAppLostList();
+
+
 }

@@ -5,6 +5,7 @@
 
 <mapper namespace="com.get.foundview.FoundViewMapper">
 
+    <!-- 습득물 상세 -->
     <select id="selectFoundItemDetail">
         SELECT
             F.FOUND_IDX          AS foundIdx,
@@ -30,7 +31,7 @@
                  LEFT JOIN ITEMS I ON F.ITEM_CODE = I.ITEM_CODE
                  LEFT JOIN COLORS C ON F.COLOR_CODE = C.COLOR_CODE
                  LEFT JOIN LOCATIONS L ON F.LOCATION_CODE = L.LOCATION_CODE
-                 LEFT JOIN MEMBERS M ON F.EMAIL = M.EMAIL -- `F.EMAIL`을 사용하여 조인
+                 LEFT JOIN MEMBERS M ON F.EMAIL = M.EMAIL
         WHERE F.FOUND_IDX = #{foundIdx}
     </select>
 
@@ -76,22 +77,20 @@
             F_ITEM_DETAIL,
             COLOR_CODE,
             ITEM_STATE
-        ) VALUES (
-                     null,
-                     #{email},
-                     #{foundTitle},
-                     #{foundContent},
-                     TO_DATE(#{foundDate}, 'YYYY-MM-DD'),
-                     #{locationCode},
-                     #{fLocationDetail},
-                     #{itemCode},
-                     #{fItemDetail, jdbcType=VARCHAR},  -- JdbcType 명시
-                     #{colorCode},
-                     #{itemState}
-                 )
+        ) VALUES (null,
+                  #{email},
+                  #{foundTitle},
+                  #{foundContent},
+                  TO_DATE(#{foundDate}, 'YYYY-MM-DD'),
+                  #{locationCode},
+                  #{fLocationDetail},
+                  #{itemCode},
+                  #{fItemDetail, jdbcType=VARCHAR},
+                  #{colorCode},
+                  #{itemState})
     </insert>
 
-    <!-- (예시) 이메일로 회원정보 조회 -->
+    <!-- 이메일로 회원정보 조회 -->
     <select id="selectMemberByEmail">
         SELECT
             EMAIL,
@@ -100,24 +99,41 @@
         WHERE EMAIL = #{email}
     </select>
 
-    <!-- ======= (새로 추가) 습득물 수정 ======= -->
+    <!-- 습득물 수정 -->
     <update id="updateFoundItem">
         UPDATE FOUND
         SET
-        FOUND_TITLE       = #{foundTitle},
-        FOUND_CONTENT     = #{foundContent},
-        FOUND_DATE        = TO_DATE(#{foundDate}, 'YYYY-MM-DD'),
-        LOCATION_CODE     = #{locationCode},
-        F_LOCATION_DETAIL = #{fLocationDetail},
-        ITEM_CODE         = #{itemCode},
-        F_ITEM_DETAIL     = #{fItemDetail, jdbcType=VARCHAR},
-        COLOR_CODE        = #{colorCode},
-        ITEM_STATE        = #{itemState}
+            FOUND_TITLE       = #{foundTitle},
+            FOUND_CONTENT     = #{foundContent},
+            FOUND_DATE        = TO_DATE(#{foundDate}, 'YYYY-MM-DD'),
+            LOCATION_CODE     = #{locationCode},
+            F_LOCATION_DETAIL = #{fLocationDetail},
+            ITEM_CODE         = #{itemCode},
+            F_ITEM_DETAIL     = #{fItemDetail, jdbcType=VARCHAR},
+            COLOR_CODE        = #{colorCode},
+            ITEM_STATE        = #{itemState}
         WHERE FOUND_IDX = #{foundIdx}
-        AND EMAIL = #{email}
-        <!-- EMAIL도 조건에 포함시켜야 본인글만 수정됨 -->
+          AND EMAIL = #{email}
     </update>
 
+    <!-- 이미지 경로 조회 -->
+    <select id="getFoundFilePath">
+        SELECT FILE_PATH
+        FROM IMAGE_STORAGE
+        WHERE USING_TABLE_IDX = #{foundIdx}
+    </select>
 
+    <!-- 조회수 증가 -->
+    <update id="updateFoundViews">
+        UPDATE FOUND
+        SET F_VIEWS = F_VIEWS + 1
+        WHERE FOUND_IDX = #{foundIdx}
+    </update>
 
+    <!-- 상태 업데이트 -->
+    <update id="updateFoundState">
+        UPDATE FOUND
+        SET FOUND_STATE = #{foundState}
+        WHERE FOUND_IDX = #{foundIdx}
+    </update>
 </mapper>
