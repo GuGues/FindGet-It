@@ -21,7 +21,18 @@
  ,#{postnumber}
  ,SYSDATE
  ,'USER'
-,0
                                   )
     </insert>
+    
+    <update id="upJoinCount" parameterType="String">
+    UPDATE MEMBERS
+    SET JOIN_COUNT = JOIN_COUNT + 1
+    WHERE EMAIL = #{email}
+</update>
+
+    <select id="findUserByUserNamePhone">
+        SELECT *
+        FROM MEMBERS
+        WHERE USERNAME=#{param1} AND PHONE=#{param2}
+    </select>
 </mapper>
