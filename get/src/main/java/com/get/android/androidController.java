@@ -4,11 +4,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.get.android.member.Member;
+import com.get.android.member.MemberMapper;
 import com.get.chat.Chat;
 import com.get.chat.ChatMapper;
 import com.get.chat.ChatRoom;
 import com.get.chat.ChatService;
 import com.get.faq.FaqMapper;
+<<<<<<< HEAD
+import com.get.found.FoundMapper;
+import com.get.found.foundCustomVo;
+=======
+>>>>>>> f120f030c0dc7f904055befa6aac13ed1bafcace
 import com.get.foundview.FoundItemVO;
 import com.get.foundview.FoundViewMapper;
 import com.get.lost.lostCustomVo;
@@ -46,12 +53,40 @@ public class androidController {
     @Autowired
     private NoticeMapper noticeMapper;
     @Autowired
+    private MemberMapper memberMapper;
+    @Autowired
     private LostViewMapper lostViewMapper;
 
     @GetMapping("/app/lostList")
-        public ResponseEntity<List<lostCustomVo>> appLostList(@RequestParam(value = "page", defaultValue = "1") int page){
-        	int recordsPerPage = 5;  // 페이지당 보여줄 게시글 수
-            int arg0 = (page - 1) * recordsPerPage;  // 오프셋 계산
+    public ResponseEntity<Map<String,Object>> appLostList(@RequestParam(value = "page", defaultValue = "1") int page){
+    	int recordsPerPage = 5;  // 페이지당 보여줄 게시글 수
+        int arg0 = (page - 1) * recordsPerPage;  // 오프셋 계산
+        
+		//분실물 전체 리스트
+		List<lostCustomVo> lostList = lostMapper.getLostList(arg0, recordsPerPage);
+		int lostTotal = lostMapper.getTotalLostCount();
+		int pageCnt = lostTotal/recordsPerPage;
+		if(lostTotal%recordsPerPage!=0) { pageCnt += 1; }
+		
+		Map<String, Object> result = new HashMap<>();
+		result.put("lostList", lostList);
+		result.put("pageCnt", pageCnt);
+		return ResponseEntity.ok(result);
+    }
+    @GetMapping("/app/getLostSearch")
+	public ResponseEntity<List<lostCustomVo>> appGetLostSearch(@RequestParam Map<String, String> map, @RequestParam(value = "page", defaultValue = "1") int page){
+		System.out.println("searchLost map : "+map);
+		
+		int recordsPerPage = 5;  // 페이지당 보여줄 게시글 수
+        int arg0 = (page - 1) * recordsPerPage;  // 오프셋 계산
+		map.put("arg0", String.valueOf(arg0));
+		map.put("arg1", String.valueOf(recordsPerPage));
+		
+		//{lost_title=sdsd, item_code=201205, location_code=100699, start_date=2024-12-10, end_date=2024-12-18, color_code=6}
+		List<lostCustomVo> searchLost = lostMapper.getSearchLost(map);
+		int lostTotal = lostMapper.getTotalSearchLostCount(map);
+		int pageCnt = lostTotal/recordsPerPage;
+		if(lostTotal%recordsPerPage!=0) { pageCnt += 1; };
 
     		//분실물 전체 리스트
     		List<lostCustomVo> lostList = lostMapper.getLostList(arg0, recordsPerPage);
@@ -94,17 +129,35 @@ public class androidController {
          List<noticeVo> noticeList = noticeMapper.getAllNoticeList();
          return ResponseEntity.ok(noticeList);
      }
-    @GetMapping("/app/getLostSearch")
-    	public ResponseEntity<List<lostCustomVo>> getLostSearch(@RequestParam Map<String, String> map, @RequestParam(value = "page", defaultValue = "1") int page){
-    		System.out.println("searchLost map : "+map);
-    		int recordsPerPage = 15;  // 페이지당 보여줄 게시글 수
-            int arg0 = (page - 1) * recordsPerPage;  // 오프셋 계산
-    		map.put("arg0", String.valueOf(arg0));
-    		map.put("arg1", String.valueOf(recordsPerPage));
-    		System.out.println(map);
-    		//{lost_title=sdsd, item_code=201205, location_code=100699, start_date=2024-12-10, end_date=2024-12-18, color_code=6}
-    		List<lostCustomVo> searchLost = lostMapper.getSearchLost(map);
+    
+    @GetMapping("/app/lostInsert/{email}")
+    public ResponseEntity<Member> appLostInsert(@PathVariable(name = "email") String email){
+    	Member member = memberMapper.findByEmail(email);
+    	System.out.println("=============="+member);
+    	return ResponseEntity.ok(member);
+    }
+//    @GetMapping("/app/getLostItem/{lostIdx}")
+//    public ResponseEntity<LostItemVO> getLostSearch(@PathVariable("lostIdx")String lostIdx) {
+//
+//        //{lost_title=sdsd, item_code=201205, location_code=100699, start_date=2024-12-10, end_date=2024-12-18, color_code=6}
+//        LostItemVO item = lostViewMapper.selectLostItemDetail(lostIdx);
+//        return ResponseEntity.ok(item);
+//    }
+    /**
+     * (1) 분실물 상세 조회
+     * 예) GET /app/getLostItem/{lostIdx}
+     */
+    @GetMapping("/app/getLostItem/{lostIdx}")
+    public ResponseEntity<LostItemVO> getLostItem(@PathVariable("lostIdx") String lostIdx) {
+        LostItemVO vo = lostViewMapper.selectLostItemDetail(lostIdx);
+        if (vo == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(vo);
+    }
 
+<<<<<<< HEAD
+=======
     		return ResponseEntity.ok(searchLost);
     	}
 //    @GetMapping("/app/getLostItem/{lostIdx}")
@@ -127,6 +180,7 @@ public class androidController {
         return ResponseEntity.ok(vo);
     }
 
+>>>>>>> f120f030c0dc7f904055befa6aac13ed1bafcace
     /**
      * (2) 습득물 상세 조회
      * 예) GET /app/getFoundItem/{foundIdx}

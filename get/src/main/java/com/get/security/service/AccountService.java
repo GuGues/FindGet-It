@@ -49,14 +49,8 @@ public class AccountService implements UserDetailsService {
         userMapper.save(reg);
         return true;
     }
-<<<<<<< HEAD
+
     
-    @Transactional
-    public boolean verifyPassword(String email, String inputPassword) {
-        Account account = userMapper.findUserByEmail(email); // 이메일로 사용자 검색
-=======
-
-
     @Transactional
     public boolean verifyPassword(String email, String inputPassword) {
 
@@ -64,21 +58,18 @@ public class AccountService implements UserDetailsService {
         account.setEmail(email);
         account = userMapper.findUser(account);
 
->>>>>>> 2e5407cf0feff02b89e53baf8d39e1c758c7347c
+
         if (account == null) {
             System.out.println("User not found with email: " + email);
             return false;
         }
-
-<<<<<<< HEAD
+       
         // 입력된 비밀번호와 저장된 비밀번호 비교
         boolean match = encoder.matches(inputPassword, account.getPassword());
         System.out.println("Password match result: " + match);
         return match;
-=======
-
         return encoder.matches(inputPassword, account.getPassword());
->>>>>>> 2e5407cf0feff02b89e53baf8d39e1c758c7347c
+
     }
 
 
@@ -95,5 +86,4 @@ public class AccountService implements UserDetailsService {
             userMapper.updateLoginDate(email); // 날짜만 업데이트
         }
     }
-
 }
