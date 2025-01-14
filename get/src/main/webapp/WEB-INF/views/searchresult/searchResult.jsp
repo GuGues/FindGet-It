@@ -8,6 +8,7 @@
   <meta charset="UTF-8">
   <title>검색 결과</title>
   <link rel="stylesheet" href="/css/common.css" />
+  <link rel="icon" type="image/png" href="/img/favicon.ico" />
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -30,6 +31,11 @@
       border: solid #FF914B;
       border-radius: 10px;
     }
+
+    <c:if test="${ sessionScope.grant eq 'ADMIN' }">
+    table { border: solid #8C6C55; }  </c:if>
+
+
     th, td {
       padding: 12px;
       text-align: left;
@@ -38,20 +44,34 @@
       background: #FF914B;
       color: #fff;
     }
+    <c:if test="${ sessionScope.grant eq 'ADMIN' }">
+    th { background: #B39977; }  </c:if>
+
     td {
       border-left: #FE8015 solid 1px;
     }
+    <c:if test="${ sessionScope.grant eq 'ADMIN' }">
+    td { border-left: #8C6C55 solid 1px; }  </c:if>
+
     tr:nth-child(even) {
       background: #f2f2f2;
     }
+    <c:if test="${ sessionScope.grant eq 'ADMIN' }">
+    tr:nth-child(even) { background: rgba(140, 108, 85, 0.18); }  </c:if>
     .listItem {
       cursor: pointer;
       transition: background-color 0.3s ease;
       border: solid #FF914B;
     }
+    <c:if test="${ sessionScope.grant eq 'ADMIN' }">
+    .listItem { border: solid rgba(140, 108, 85, 0.46); }  </c:if>
+
     .listItem:hover {
       background-color: #FFD5B2;
     }
+    <c:if test="${ sessionScope.grant eq 'ADMIN' }">
+    .listItem:hover { background-color: #D3C4B1; }  </c:if>
+
     .pagination {
       text-align: center;
       margin-top: 20px;
@@ -65,6 +85,12 @@
       color: #fff;
       border-radius: 4px;
     }
+    <c:if test="${ sessionScope.grant eq 'ADMIN' }">
+    .pagination a, .pagination span { background: #8C6C55; }  </c:if>
+<%--    <c:if test="${ sessionScope.grant eq 'ADMIN' }">--%>
+<%--    .pagination span { background: #8C6C55; }  </c:if>--%>
+
+
     .pagination a:hover {
       background: #EFC03E;
     }
@@ -98,12 +124,22 @@
     }
     h1 {
       font-family: yangjin;
+      margin-left: 7%;
+    }
+    .bigbox {
+      margin-left: 15%;
     }
   </style>
 </head>
 <body>
-<%@ include file="/WEB-INF/include/side.jsp" %>
-
+<c:choose>
+    <c:when test="${ sessionScope.grant eq 'ADMIN' }">
+      <%@include file="/WEB-INF/include/adminSide.jsp" %>
+    </c:when>
+    <c:when test="${ sessionScope.grant ne 'ADMIN' || !sessionScope.grant }">
+      <%@include file="/WEB-INF/include/side.jsp" %>
+    </c:when>
+  </c:choose>
 <div class="bigbox">
 
   <h1>"${keyword}" 검색 결과</h1>
@@ -190,7 +226,6 @@
                 <th>습득물</th>
                 <th>이메일</th>
                 <th>습득일자</th>
-                <th>상태</th>
                 <th>물품 상세</th>
                 <th>조회수</th>
               </tr>
@@ -201,7 +236,6 @@
                   <td><c:out value="${fitem.foundTitle}"/></td>
                   <td><c:out value="${fitem.email}"/></td>
                   <td><c:out value="${fitem.foundDate}"/></td>
-                  <td><c:out value="${fitem.itemState}"/></td>
                   <td><c:out value="${fitem.fItemDetail}"/></td>
                   <td><c:out value="${fitem.fViews}"/></td>
                 </tr>

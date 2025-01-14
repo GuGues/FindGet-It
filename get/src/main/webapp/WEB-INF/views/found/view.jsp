@@ -179,6 +179,12 @@
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
       text-align: left;
     }
+    .modal-content2 textarea {
+      width: 100%;
+      height: 100px;
+      overflow-y: scroll;
+      resize: none;
+    }
 
     /* ADMIN 전용 테마: 버튼/테두리색을 #8C6C55로 변경 */
     <c:if test="${ sessionScope.grant eq 'ADMIN' }">
@@ -217,7 +223,11 @@
     /*---------------------지도 영역--------------------------*/
     .map_wrap, .map_wrap * {margin:0;padding:0;font-family:'Malgun Gothic',dotum,'돋움',sans-serif;font-size:12px;}
     .map_wrap a, .map_wrap a:hover, .map_wrap a:active{color:#000;text-decoration: none;}
-    .map_wrap {position:relative;width:100%;height:500px;}
+    .map_wrap {
+      position:relative; width:100%; height:500px;
+      /* 처음엔 숨김 */
+      display: none;  /* 지도는 scrollToMap() 실행 시 보이도록 */
+    }lastBounds
     #menu_wrap {
       position:absolute;top:0;left:0;bottom:0;width:250px;margin:10px 0 30px 10px;
       padding:5px;overflow-y:auto;background:rgba(255, 255, 255, 0.7);
@@ -411,17 +421,15 @@
 
   <!-- 지도 섹션 -->
   <div class="map-section" id="mapSection">
-    <div class="map_wrap">
-      <!-- 지도 표시 영역 -->
-      <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
-
-      <!-- 검색 메뉴 숨김 처리 -->
-      <div id="menu_wrap" class="bg_white" style="display: none;">
-          <hr />
-          <ul id="placesList"></ul>
-          <div id="pagination"></div>
-      </div>
+    <!-- 지도 섹션 (처음엔 숨김) -->
+  <div class="map_wrap">
+    <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
+    <div id="menu_wrap" class="bg_white" style="display:none;">
+      <hr />
+      <ul id="placesList"></ul>
+      <div id="pagination"></div>
     </div>
+  </div>
   </div>
 
 </div>
@@ -429,11 +437,18 @@
 <!-- 카카오 맵 API 스크립트 포함 -->
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=a38a546a4aaada7aec2c459d8d1d085a&libraries=services"></script>
 <script>
-  // [1] 지도 영역으로 스크롤
-  function scrollToMap(){
-    const mapSection = document.getElementById('mapSection');
-    mapSection.scrollIntoView({ behavior: 'smooth' });
-  }
+  // 지도 표시 + 스크롤 이동
+    function scrollToMap(){
+      const mapWrap = document.querySelector('.map_wrap');
+      mapWrap.style.display = 'block';
+      setTimeout(function(){
+        map.relayout();
+        if(lastBounds){
+          map.setBounds(lastBounds);
+        }
+        mapWrap.scrollIntoView({behavior:'smooth'});
+      },50);
+    }
 
   // 1) 채팅 열기(모달 or 새창 등)
   function openChat() {
@@ -507,7 +522,7 @@
   var ps = new kakao.maps.services.Places();
   // 검색 결과 목록이나 마커 클릭 시 장소명 표시할 인포윈도우
   var infowindow = new kakao.maps.InfoWindow({zIndex:1});
-
+  var lastBounds = null;
   // JSP에서 전달된 지역 상세정보
   var keyword = "<c:out value='${item.fLocationDetail}'/>";
   searchPlaces();
@@ -566,6 +581,7 @@
       listEl.appendChild(fragment);
       menuEl.scrollTop = 0;
       map.setBounds(bounds);
+      lastBounds = bounds;
   }
 
   function getListItem(index, places) {

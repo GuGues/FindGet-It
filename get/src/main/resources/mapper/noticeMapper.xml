@@ -42,5 +42,9 @@
     DELETE NOTICE
      WHERE NOTICE_IDX = #{ notice_idx }
   </delete>
-  
+  <select id="getAllNoticeList">
+      SELECT NOTICE_IDX, NOTICE_TITLE, NOTICE_CONTENT, N_VIEWS, TO_CHAR(N_REG_DATE,'YY-MM-DD') N_REG_DATE
+          FROM NOTICE
+          ORDER BY NOTICE_IDX DESC
+  </select>
 </mapper>

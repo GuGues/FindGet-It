@@ -26,4 +26,6 @@ public interface FaqMapper {
 
 	int getTotalCsCount();
 
+	void insertCs(Map<String, Object> map);
+
 }

@@ -21,6 +21,7 @@ import com.get.police.PoliceVo;
 import com.get.search.SearchMapper;
 import com.get.vo.faqVo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,6 +49,11 @@ public class androidController {
     @Autowired
     private LostViewMapper lostViewMapper;
 
+    @Value("${server.img.url}")
+    private String severUrl;
+
+
+
     @GetMapping("/app/lostList")
         public ResponseEntity<List<lostCustomVo>> appLostList(@RequestParam(value = "page", defaultValue = "1") int page){
         	int recordsPerPage = 5;  // 페이지당 보여줄 게시글 수
@@ -58,6 +64,7 @@ public class androidController {
 
             return ResponseEntity.ok(lostList);
         }
+
     @GetMapping("/app/chatting-roomList/{email}")
     public ResponseEntity<Map<String, Object>> appChatList(@PathVariable("email") String email) {
         Map<String, Object> map = chatService.findRoomByEmail(email);
@@ -114,30 +121,79 @@ public class androidController {
 //        LostItemVO item = lostViewMapper.selectLostItemDetail(lostIdx);
 //        return ResponseEntity.ok(item);
 //    }
+
     /**
      * (1) 분실물 상세 조회
-     * 예) GET /app/getLostItem/{lostIdx}
+     *  GET /app/getLostItem/{lostIdx}
      */
     @GetMapping("/app/getLostItem/{lostIdx}")
-    public ResponseEntity<LostItemVO> getLostItem(@PathVariable("lostIdx") String lostIdx) {
+    public ResponseEntity<Map<String, Object>> getLostItem(@PathVariable("lostIdx") String lostIdx) {
+
+        // (a) DB에서 filePath 가져오기 (분실물 이미지 경로 등)
+        String filePath = lostViewMapper.getFilePath(lostIdx);
+        String finalPath = "";
+        if (filePath != null && !filePath.isEmpty()) {
+            // Windows 경로라면 역슬래시(\) → 슬래시(/)
+            filePath = filePath.replace("\\", "/");
+            // 만약 Desktop/ 라는 경로가 포함되어 있다면 이후 부분만 자르기
+            if (filePath.contains("Desktop/")) {
+                // 예: C:/Users/xxx/Desktop/upload/myImage.jpg
+                filePath = filePath.split("Desktop/")[1];
+                // 결과: upload/myImage.jpg
+            }
+            finalPath = filePath;
+        }
+
+        // (b) 분실물 상세 정보 얻기
         LostItemVO vo = lostViewMapper.selectLostItemDetail(lostIdx);
         if (vo == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(vo);
-    }
 
+        // (c) 결과 Map 구성
+        //     → JSON 응답 시 { "lostItem": {...}, "filePath": "...", "severUrl": "..." }
+        Map<String, Object> result = new HashMap<>();
+        result.put("lostItem", vo);        // 실제 분실물 VO
+        result.put("filePath", finalPath); // 최종 파일 경로
+        result.put("serverUrl", severUrl); // 서버의 이미지 경로 prefix (ex: http://192.168.0.214:9090)
+
+        return ResponseEntity.ok(result);
+    }
     /**
      * (2) 습득물 상세 조회
      * 예) GET /app/getFoundItem/{foundIdx}
      */
     @GetMapping("/app/getFoundItem/{foundIdx}")
-    public ResponseEntity<FoundItemVO> getFoundItem(@PathVariable("foundIdx") String foundIdx) {
+    public ResponseEntity<Map<String, Object>> getFoundItem(@PathVariable("foundIdx") String foundIdx) {
+
+
+        // (a) DB에서 filePath 가져오기 (분실물 이미지 경로 등)
+        String filePath = foundViewMapper.getFoundFilePath(foundIdx);
+        String finalPath = "";
+        if (filePath != null && !filePath.isEmpty()) {
+            // Windows 경로라면 역슬래시(\) → 슬래시(/)
+            filePath = filePath.replace("\\", "/");
+            // 만약 Desktop/ 라는 경로가 포함되어 있다면 이후 부분만 자르기
+            if (filePath.contains("Desktop/")) {
+                // 예: C:/Users/xxx/Desktop/upload/myImage.jpg
+                filePath = filePath.split("Desktop/")[1];
+                // 결과: upload/myImage.jpg
+            }
+            finalPath = filePath;
+        }
+
+
         FoundItemVO vo = foundViewMapper.selectFoundItemDetail(foundIdx);
         if (vo == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(vo);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("foundItem", vo);        // 실제 분실물 VO
+        result.put("filePath", finalPath); // 최종 파일 경로
+        result.put("serverUrl", severUrl); // 서버의 이미지 경로 prefix (ex: http://192.168.0.214:9090)
+
+        return ResponseEntity.ok(result);
     }
 
     /**
