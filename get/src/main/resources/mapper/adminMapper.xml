@@ -12,9 +12,35 @@
      OFFSET #{arg0} ROWS FETCH NEXT #{arg1} ROWS ONLY
   </select>
   
+  <select id="getReportMembers">
+    SELECT EMAIL, USERNAME, MEM_IDX, TO_CHAR(COM_DATE,'YY-MM-DD') COM_DATE, USER_GRANT, COUNT(RECEIVER_EMAIL) RECEIVER_EMAIL_CNT
+     FROM MEMBERS JOIN CHATTING_REPORT ON MEMBERS.EMAIL = CHATTING_REPORT.RECEIVER_EMAIL
+     WHERE USER_GRANT IN ('USER')
+     GROUP BY EMAIL, USERNAME, MEM_IDX, COM_DATE, USER_GRANT
+     ORDER BY COM_DATE
+     OFFSET #{arg0} ROWS FETCH NEXT #{arg1} ROWS ONLY
+  </select>
+  
+  <select id="getReportUser">
+    SELECT CHAT_REPORT_CONTENT, CHAT_REPORT_IDX, RECEIVER_EMAIL, TO_CHAR(REG_DATE, 'YY-MM-DD') REG_DATE, REPORT_ROOM, REPORTER_EMAIL
+     FROM CHATTING_REPORT
+     WHERE RECEIVER_EMAIL = #{email}
+  </select>
+  
+  <select id="getChatting">
+    
+  </select>
+  
   <select id="getTotalMembersCount">
     SELECT COUNT(*)
       FROM MEMBERS
+      WHERE USER_GRANT IN ('USER')
+  </select>
+  
+  <select id="getTotalReportMembersCount">
+    SELECT COUNT(RECEIVER_EMAIL)
+     FROM MEMBERS JOIN CHATTING_REPORT ON MEMBERS.EMAIL = CHATTING_REPORT.RECEIVER_EMAIL
+     WHERE USER_GRANT IN ('USER')
   </select>
   
   <select id="getBanMembers">
@@ -71,13 +97,14 @@
   </select>
   
   <select id="adminPostList">
-  SELECT COUNT(RESIVER_IDX) RESIVER_IDX_CNT, RESIVER_IDX, TITLE, EMAIL, P_REG_DATE
+  SELECT COUNT(RESIVER_IDX) RESIVER_IDX_CNT, RESIVER_IDX, TITLE, EMAIL, P_REG_DATE, POST_STATE
     FROM(
       SELECT
           MEMBER_REPORT.RESIVER_IDX
         , FOUND.FOUND_TITLE TITLE
         , FOUND.EMAIL EMAIL
         , TO_CHAR(FOUND.FOUND_DATE,'YY-MM-DD') AS P_REG_DATE
+        , FOUND_STATE POST_STATE
       FROM MEMBER_REPORT
        JOIN FOUND ON MEMBER_REPORT.RESIVER_IDX = FOUND.FOUND_IDX
       WHERE FOUND_STATE IN(2)
@@ -87,66 +114,73 @@
         , LOST_ITEMS.LOST_TITLE TITLE
         , LOST_ITEMS.EMAIL EMAIL
         , TO_CHAR(LOST_ITEMS.LOST_DATE,'YY-MM-DD') AS P_REG_DATE
+        , LOST_STATE POST_STATE
       FROM MEMBER_REPORT
        JOIN LOST_ITEMS ON MEMBER_REPORT.RESIVER_IDX = LOST_ITEMS.LOST_IDX
       WHERE LOST_STATE IN(2))
-    GROUP BY TITLE, EMAIL, P_REG_DATE, RESIVER_IDX
+    GROUP BY TITLE, EMAIL, P_REG_DATE, RESIVER_IDX, POST_STATE
     OFFSET #{arg0} ROWS FETCH NEXT #{arg1} ROWS ONLY
   </select>
   
   <select id="getReport">
-    SELECT REPORT_IDX, REPORTER_IDX, RESIVER_IDX, R_CONTENT, TO_CHAR(R_REG_DATE,'YY-MM-DD') R_REG_DATE
-     FROM MEMBER_REPORT
+    SELECT REPORT_IDX, REPORTER_IDX, RESIVER_IDX, R_CONTENT, TO_CHAR(R_REG_DATE,'YY-MM-DD') R_REG_DATE, EMAIL
+     FROM MEMBER_REPORT JOIN MEMBERS ON MEMBER_REPORT.REPORTER_IDX = MEMBERS.MEM_IDX
      WHERE RESIVER_IDX = #{ resiver_idx }
   </select>
   
   <update id="postBan">
     UPDATE
     <if test="resiver_idx.contains('LO') and !resiver_idx.contains('FD')">
-      LOST_ITEMS
-       SET LOST_STATE = 3
+      LOST_ITEMS SET
+      <if test="lostState==1">LOST_STATE = 3</if>
+      <if test="lostState==2">LOST_STATE = 4</if>
       WHERE LOST_IDX = #{ resiver_idx }
     </if>
     <if test="!resiver_idx.contains('LO') and resiver_idx.contains('FD')">
-      FOUND
-       SET FOUND_STATE = 3
+      FOUND SET
+      <if test="foundState==1">FOUND_STATE = 3</if>
+      <if test="foundState==2">	FOUND_STATE = 4</if>
       WHERE FOUND_IDX = #{ resiver_idx }
     </if>
   </update>
   
   <select id="adminBanPostList">
-   SELECT COUNT(RESIVER_IDX) RESIVER_IDX_CNT, RESIVER_IDX, TITLE, EMAIL, P_REG_DATE
+   SELECT COUNT(RESIVER_IDX) RESIVER_IDX_CNT, RESIVER_IDX, TITLE, EMAIL, P_REG_DATE, POST_STATE
     FROM(
       SELECT
           MEMBER_REPORT.RESIVER_IDX
         , FOUND.FOUND_TITLE TITLE
         , FOUND.EMAIL EMAIL
         , TO_CHAR(FOUND.FOUND_DATE,'YY-MM-DD') AS P_REG_DATE
-      FROM MEMBER_REPORT
-       JOIN FOUND ON MEMBER_REPORT.RESIVER_IDX = FOUND.FOUND_IDX
-      WHERE FOUND_STATE = 3
+        , FOUND_STATE POST_STATE
+      FROM FOUND LEFT JOIN MEMBER_REPORT ON MEMBER_REPORT.RESIVER_IDX = FOUND.FOUND_IDX
+      WHERE FOUND_STATE IN(3, 4)
       UNION ALL
       SELECT
           MEMBER_REPORT.RESIVER_IDX
         , LOST_ITEMS.LOST_TITLE TITLE
         , LOST_ITEMS.EMAIL EMAIL
         , TO_CHAR(LOST_ITEMS.LOST_DATE,'YY-MM-DD') AS P_REG_DATE
-      FROM MEMBER_REPORT
-       JOIN LOST_ITEMS ON MEMBER_REPORT.RESIVER_IDX = LOST_ITEMS.LOST_IDX
-      WHERE LOST_STATE = 3)
-    GROUP BY RESIVER_IDX, TITLE, EMAIL, P_REG_DATE
+        , LOST_STATE POST_STATE
+      FROM LOST_ITEMS LEFT JOIN MEMBER_REPORT ON MEMBER_REPORT.RESIVER_IDX = LOST_ITEMS.LOST_IDX
+      WHERE LOST_STATE IN(3, 4))
+    GROUP BY RESIVER_IDX, TITLE, EMAIL, P_REG_DATE, POST_STATE
   </select>
   
   <update id="postBanClear">
     UPDATE
     <if test="resiver_idx.contains('LO') and !resiver_idx.contains('FD')">
       LOST_ITEMS
-       SET LOST_STATE = 2
+       SET
+       <if test="lostState==3">LOST_STATE = 1</if>
+       <if test="lostState==4">LOST_STATE = 2</if>
       WHERE LOST_IDX = #{ resiver_idx }
     </if>
     <if test="!resiver_idx.contains('LO') and resiver_idx.contains('FD')">
       FOUND
-       SET FOUND_STATE = 2
+       SET
+       <if test="foundState==3">FOUND_STATE = 1</if>
+       <if test="foundState==4">FOUND_STATE = 2</if>
       WHERE FOUND_IDX = #{ resiver_idx }
     </if>
   </update>

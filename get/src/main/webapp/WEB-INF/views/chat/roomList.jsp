@@ -5,19 +5,16 @@
     <title>Title</title>
 </head>
 <style>
-
-    #body {
-
-    }
-
     #modalContent {
         position: absolute;
         background-color: #ffffff;
-        width: 100%;
-        height: 100%;
-        /*overflow-y: scroll;*/
-        /*overflow-x: hidden;*/
+        width: 95%;
+        height: 90%;
+        overflow-y: scroll;
+        overflow-x: hidden;
         padding: 15px;
+        box-sizing: border-box;
+        border-radius: 20px;
     }
 
     .roomList {
@@ -60,11 +57,18 @@
     .hidden{
         display: none;
     }
+    #roomListContainer{
+      box-sizing: border-box;
+      width:100%;
+    }
+    ::-webkit-scrollbar {
+    width: 0; /* 세로 스크롤바의 너비 */
+    height: 0; /* 가로 스크롤바의 높이 */
+    }
 </style>
 <body>
 <div id="modalContainer">
     <div id="modalContent">
-        <h2>${sessionScope.nickname}님의 채팅방</h2>
         <div id="roomListContainer">
             <c:forEach items="${map.roomList}" var="room" varStatus="status">
                 <div class="roomList">

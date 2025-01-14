@@ -18,4 +18,5 @@ public class reportVo {
 	private String email;
 	private String p_reg_date;
 	private int resiver_idx_cnt;
+	private int post_state;
 }

@@ -20,4 +20,6 @@ public class membersVo {
 	private int postnumber;
 	private String com_date;
 	private String user_grant;
+	
+	private int receiver_email_cnt;
 }

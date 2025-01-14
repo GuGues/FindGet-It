@@ -52,7 +52,7 @@ public class AccountService implements UserDetailsService {
 
     @Transactional
     public boolean verifyPassword(String email, String inputPassword) {
-        
+
         Account account = new Account();
         account.setEmail(email);
         account = userMapper.findUser(account);
@@ -61,7 +61,7 @@ public class AccountService implements UserDetailsService {
             throw new IllegalArgumentException("해당 사용자를 찾을 수 없습니다.");
         }
 
-        
+
         return encoder.matches(inputPassword, account.getPassword());
     }
 
@@ -70,17 +70,17 @@ public class AccountService implements UserDetailsService {
         Date lastLoginDate = userMapper.getLastLoginDate(email);
         LocalDate today = LocalDate.now();
 
-        if (lastLoginDate == null || 
+        if (lastLoginDate == null ||
             lastLoginDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().isBefore(today)) {
             userMapper.updateLoginDateAndCount(email);
         } else {
             userMapper.updateLoginDate(email); // 날짜만 업데이트
         }
     }
-    
+
     @Transactional
     public void upJoinCount(String email) {
         userMapper.upJoinCount(email);
     }
-    
+
 }
