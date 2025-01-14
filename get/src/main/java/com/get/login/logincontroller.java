@@ -3,24 +3,19 @@ package com.get.login;
 import com.get.security.service.Account;
 import com.get.security.service.AccountService;
 import com.get.security.service.UserMapper;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 public class logincontroller {
@@ -71,6 +66,7 @@ public class logincontroller {
         }
         return "redirect:/";
     }
+<<<<<<< HEAD
 
     @GetMapping("/join/email-check")
     @ResponseBody
@@ -113,5 +109,7 @@ public class logincontroller {
     public String findPw(){
         return "login/findPw";
     }
+=======
+>>>>>>> f120f030c0dc7f904055befa6aac13ed1bafcace
 }
 

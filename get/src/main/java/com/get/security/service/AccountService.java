@@ -49,6 +49,8 @@ public class AccountService implements UserDetailsService {
         userMapper.save(reg);
         return true;
     }
+
+    
     @Transactional
     public boolean verifyPassword(String email, String inputPassword) {
 
@@ -56,15 +58,18 @@ public class AccountService implements UserDetailsService {
         account.setEmail(email);
         account = userMapper.findUser(account);
 
+
         if (account == null) {
             System.out.println("User not found with email: " + email);
             return false;
         }
+       
         // 입력된 비밀번호와 저장된 비밀번호 비교
         boolean match = encoder.matches(inputPassword, account.getPassword());
         System.out.println("Password match result: " + match);
-
+        return match;
         return encoder.matches(inputPassword, account.getPassword());
+
     }
 
 

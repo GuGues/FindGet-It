@@ -46,7 +46,7 @@
     <select id="findOpenedRoom">
         SELECT *
         FROM CHATTING_ROOM
-        WHERE (OPEN_MEMBER=#{param1} AND PARTICIPANT=#{param2}) OR (OPEN_MEMBER=#{param2} AND PARTICIPANT=#{param1})
+        WHERE (OPEN_MEMBER=#{email} AND PARTICIPANT=#{openerEmail}) OR (OPEN_MEMBER=#{openerEmail} AND PARTICIPANT=#{email})
     </select>
     <select id="findChatLastest">
         SELECT *

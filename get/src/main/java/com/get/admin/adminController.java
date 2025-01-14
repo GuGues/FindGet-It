@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -53,41 +52,10 @@ public class adminController {
 		return ResponseEntity.ok(vo);
 	}
 	
-	@PostMapping("/getReportMember")
-	public ResponseEntity<List<chatReportVo>> getReportUser(@RequestBody Map<String, String> map){
-		System.out.println(map);
-		String email = map.get("email");
-		List<chatReportVo> vo = adminMapper.getReportUser(email);
-		return ResponseEntity.ok(vo);
-	}
-	
-	@PostMapping("/getChatLog")
-	public ResponseEntity<List<messageVo>> getChatLog(@RequestBody Map<String, String> map){
-		int chatting_no = Integer.parseInt(map.get("chatting_no"));
-		List<messageVo> chatting = adminMapper.getChatting(chatting_no);
-		return ResponseEntity.ok(chatting);
-	}
-	
 	@PostMapping("/user/ban")
 	public String userBan(@RequestParam(name="mem_idx") String mem_idx){
 		adminMapper.userBan(mem_idx);
 		return "redirect:/admin";
-	}
-	
-	@GetMapping("/user")
-	public ModelAndView reportUserList(@RequestParam(value = "page", defaultValue = "1") int page) {
-		
-		int recordsPerPage = 15;  // 페이지당 보여줄 게시글 수
-        int offset = (page - 1) * recordsPerPage;  // 오프셋 계산
-        int totalRecords = adminMapper.getTotalReportMembersCount();  // 전체 게시글 수
-        pagingHelper pagingHelper = new pagingHelper(totalRecords, page, recordsPerPage);
-		
-		List<membersVo> members = adminMapper.getReportMembers(offset, recordsPerPage);
-		ModelAndView mv = new ModelAndView();
-		mv.addObject("members", members);
-		mv.addObject("pagingHelper", pagingHelper);
-		mv.setViewName("admin/user/reportBoard");
-		return mv;
 	}
 	
 	@RequestMapping("/ban")
@@ -144,9 +112,8 @@ public class adminController {
 	}
 	
 	@PostMapping("/post/ban")
-	public String adminBanPost(@RequestParam Map<String, String> map) {
-		//System.out.println(map);
-		adminMapper.postBan(map);
+	public String adminBanPost(@RequestParam(name="resiver_idx") String resiver_idx) {
+		adminMapper.postBan(resiver_idx);
 		return "redirect:/admin/post";
 	}
 	
@@ -167,9 +134,8 @@ public class adminController {
 	}
 	
 	@PostMapping("/post/ban/clear")
-	public String adminBanClearPost(@RequestParam Map<String, String> map) {
-		//System.out.println(map);
-		adminMapper.postBanClear(map);
+	public String adminBanClearPost(@RequestParam(name="resiver_idx") String resiver_idx) {
+		adminMapper.postBanClear(resiver_idx);
 		return "redirect:/admin/post/ban";
 	}
 	

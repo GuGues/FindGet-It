@@ -12,7 +12,7 @@ WHERE  EMAIL = #{email}
 </select>
 
 <select id="getMyFind">
-SELECT TO_CHAR(SET_DATE, 'YYYY-MM-DD')AS SET_DATE, MEM_IDX, ITEM_CODE, LOCATION_CODE
+SELECT *
 FROM   MY_FIND
 WHERE  MEM_IDX = #{mem_idx}
 </select>
@@ -85,7 +85,7 @@ WHERE  EMAIL = #{email}
     </select>
 
 <select id="getAllLocation">
-SELECT LOCATION_CODE, GUGUN_NAME, SIDO_NAME
+SELECT *
 FROM   LOCATIONS
 </select>
 
@@ -97,7 +97,7 @@ FROM   LOCATIONS
 
 
 <select id="getAllItem">
-        SELECT ITEM_CODE, ITEM
+        SELECT *
         FROM ITEMS
     </select>
 
@@ -123,26 +123,18 @@ GROUP BY EMAIL
 HAVING EMAIL = #{email}
 </select>    
 
-<select id="getNotFind">
-SELECT EMAIL, TITLE, VIEWS, TO_CHAR(REG_DATE, 'YYYY-MM-DD')AS REG_DATE
-FROM (
-    SELECT EMAIL, FOUND_TITLE AS TITLE,  F_VIEWS AS VIEWS, F_REG_DATE AS REG_DATE
-    FROM FOUND
-    WHERE EMAIL = #{email} 
-    UNION ALL
-    SELECT EMAIL, LOST_TITLE AS TITLE, L_VIEWS AS VIEWS, L_REG_DATE AS REG_DATE
-    FROM LOST_ITEMS
-    WHERE EMAIL = #{email}
-) T
-</select>
 
-<update id="updateMyFind">
-    UPDATE MY_FIND
+
+<update id="updateUser">
+    UPDATE MEMBERS
     SET
-        SET_DATE = SYSDATE,
-        LOCATION_CODE = #{location_code},
-        ITEM_CODE = #{item_code}
-    WHERE MEM_IDX = #{mem_idx}
+        NICKNAME   = #{nickname},
+        PASSWORD   = #{password},
+        PHONE      = #{phone},
+        ADDRESS1   = #{address1},
+        ADDRESS2   = #{address2},
+        POSTNUMBER = #{postnumber}
+    WHERE EMAIL = #{email}
 </update>
 
 <update id="updateUser">
