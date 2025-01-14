@@ -14,6 +14,7 @@ import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,7 +33,10 @@ public class InfoController {
     @Autowired
     private MypageMapper mypageMapper;
     
-
+    @Autowired
+    private BCryptPasswordEncoder encoder;
+    
+    
     @GetMapping("/Password")
     public ModelAndView passwordCheck() {
     	 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();        
@@ -111,6 +115,7 @@ public class InfoController {
     @PostMapping("/UpdateUser")
     public ResponseEntity<Map<String, String>> updateMyFind(@RequestBody Map<String, Object> requestData) {
         try {
+        	requestData.put("password", encoder.encode(String.valueOf(requestData.get("password"))));
             int result = mypageMapper.updateUser(requestData);
             if (result > 0) {
                 Map<String, String> response = new HashMap<>();
