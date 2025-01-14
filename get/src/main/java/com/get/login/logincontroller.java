@@ -46,6 +46,7 @@ public class logincontroller {
     }
     @RequestMapping("/loginSuccess")
     public String loginSuccess(HttpServletRequest request){
+        System.out.println("================================석세스 페이지 작동!======================================");
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = null;
@@ -113,3 +114,4 @@ public class logincontroller {
         return "login/findPw";
     }
 }
+

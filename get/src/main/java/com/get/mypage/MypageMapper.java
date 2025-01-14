@@ -54,6 +54,7 @@ public interface MypageMapper {
 
 	int updateMyFind(Map<String, Object> requestData);
 
+	int updateUser(Map<String, Object> requestData);
+
 
 }
-

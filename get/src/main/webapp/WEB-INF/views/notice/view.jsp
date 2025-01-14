@@ -9,7 +9,6 @@
 <link rel="icon" type="image/png" href="/img/favicon.ico" />
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="/css/common.css">
-<link rel="icon" type="image/png" href="/img/favicon.ico" />
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 </head>
 <style>
@@ -28,6 +27,8 @@
    }
    .right{ width: 100%; padding: 0 20px; text-align:right; margin: 0;}
    a{ color: black; cursor: pointer; text-decoration: none;}
+   .btn{ background-color: #B39977; color: white;}
+   .btn:hover{ background-color: #8C6C55;}
    .tableDiv { 
      border-radius: 7px;
      padding: 30px;
@@ -41,14 +42,10 @@
   <c:if test="${ sessionScope.grant eq 'ADMIN' }">
      hr{ color: #8C6C55; border-width: 3px; }
      .tableDiv { border: 2px solid #684F36; }
-     .btn{ background-color: #B39977; color: white;}
-     .btn:hover{ background-color: #8C6C55;}
   </c:if>
   <c:if test="${ sessionScope.grant ne 'ADMIN' }">
      hr{ color: #FE8015; border-width: 3px; }
      .tableDiv { border: 2px solid #FE8015; }
-     .btn{ background-color: #FE8015; color: white;}
-     .btn:hover{ background-color: #FFD5B2;}
   </c:if>
 </style>
 <body>
@@ -74,11 +71,6 @@
         <input type="button" value="수정" class="updateBtn btn" style="padding: 5px 15px;">
         <input type="button" value="삭제" class="delBtn btn" style="padding: 5px 15px;">
         &nbsp;&nbsp;&nbsp;
-        <input type="button" value="목록" class="listBtn btn" style="padding: 5px 15px;">
-      </div>
-    </c:if>
-    <c:if test="${ sessionScope.grant ne 'ADMIN' }">
-      <div class="right" style="padding-right: 5%; margin-bottom: 5px; margin-top: -30px;">
         <input type="button" value="목록" class="listBtn btn" style="padding: 5px 15px;">
       </div>
     </c:if>
@@ -113,18 +105,14 @@
   </main>
   <script>
     const updateBtn = document.querySelector('.updateBtn');
-    if(updateBtn){
-    	updateBtn.addEventListener('click', function(){
-        	window.location.href="/notice/update?notice_idx=${notice.notice_idx}";
-        });
-    }
+    updateBtn.addEventListener('click', function(){
+    	window.location.href="/notice/update?notice_idx=${notice.notice_idx}";
+    });
     
     const delBtn = document.querySelector('.delBtn');
-    if(delBtn){
-    	delBtn.addEventListener('click', function(){
-        	window.location.href="/notice/delete?notice_idx=${notice.notice_idx}";
-        });
-    }
+    delBtn.addEventListener('click', function(){
+    	window.location.href="/notice/delete?notice_idx=${notice.notice_idx}";
+    });
     
     const listBtn = document.querySelector('.listBtn');
     listBtn.addEventListener('click', function(){

@@ -172,7 +172,7 @@
     </div>
     <div class="modal">
       <div class="modal_content">
-        <form method="POST" action="/faq/update" class="submit">
+        <form method="POST" class="submit">
         <h3>자주묻는질문 수정</h3>
         <div class="content">
           <input type="hidden" name="faq_idx" class="idx">
@@ -245,11 +245,9 @@
 	  
 	  //작성 버튼 클릭시
 	  const write = document.querySelector('.write');
-	  if(write){
-		  write.addEventListener('click', function(){
-			  window.location.href = '/faq/insert';
-		  });
-	  }
+	  write.addEventListener('click', function(){
+		  window.location.href = '/faq/insert';
+	  });
   </script>
 </body>
 </html>

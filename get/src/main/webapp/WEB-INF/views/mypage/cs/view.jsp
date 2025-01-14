@@ -101,6 +101,6 @@
             <p>관리자가 답변을 작성할 공간입니다.</p>
         </div>
     </main>
-    	<%@include file="/WEB-INF/include/pagefab.jsp"%>
+    	<%@include file="/WEB-INF/include/fab.jsp"%>
 </body>
 </html>

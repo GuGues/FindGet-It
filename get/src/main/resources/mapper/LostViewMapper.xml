@@ -119,12 +119,20 @@
         AND EMAIL = #{email}
         <!-- EMAIL도 조건에 포함시켜야 본인글만 수정됨 -->
     </update>
-    
+
     <select id="getFilePath">
       SELECT FILE_PATH
        FROM IMAGE_STORAGE
        WHERE USING_TABLE_IDX = #{ lostIdx }
     </select>
+
+
+    <!-- ★ 완료 버튼(찾음) ★ -->
+    <update id="updateLostState">
+        UPDATE LOST_ITEMS
+        SET LOST_STATE = #{lostState}
+        WHERE LOST_IDX = #{lostIdx}
+    </update>
 
     <!-- ★ 추가: 조회수 증가 쿼리 ★ -->
     <update id="updateLostViews">

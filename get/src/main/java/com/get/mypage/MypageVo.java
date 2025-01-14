@@ -87,10 +87,8 @@ public class MypageVo {
 	private String set_date;
 	//임의설정
 	private Integer count;
-
 	private String  title;
 	private String  reg_date;
 	private int  views;
 	
 }
-
