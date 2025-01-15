@@ -138,7 +138,7 @@
      <li><a href="/Mypage/Lost/Board">나의 분실물</a></li>
      <li><a href="/Mypage/Found/Board">나의 습득물</a></li>
      <li><a href="/Mypage/Cs/Board">나의 문의글</a></li>
-     <li><a href="/Mypage/InfoUpdate">내정보수정</a></li>
+     <li><a href="/Mypage/InfoUpdate/Password">내정보수정</a></li>
     </c:if>
 
      <c:if test="${url.contains('/search')}">

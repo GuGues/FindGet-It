@@ -23,5 +23,4 @@ public interface NoticeMapper {
 	void deleteNotice(String notice_idx);
 
 
-	List<noticeVo> getAllNoticeList();
 }
