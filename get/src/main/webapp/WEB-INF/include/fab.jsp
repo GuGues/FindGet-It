@@ -296,7 +296,10 @@
         </c:if>
         <c:if test="${ not empty sessionScope.idx }">
             <a class="fab-option" href="#" onclick="openIdCheckModal()">
-                <c:if test="${url.contains('/home') || sessionScope.grant eq 'ADMIN'}">
+               <c:if test="${sessionScope.grant eq 'ADMIN'}">
+                    <img src="/icon/get_talk_brown.png" alt="Chat" style="width:30px; height:30px;">
+                </c:if>
+                <c:if test="${url.contains('/home') && sessionScope.grant ne 'ADMIN'}">
                     <img src="/icon/get_talk_white.png" alt="Chat" style="width:30px; height:30px;">
                 </c:if>
                 <c:if test="${!url.contains('/home') && sessionScope.grant ne 'ADMIN'}">

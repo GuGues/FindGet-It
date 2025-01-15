@@ -94,6 +94,20 @@
     .btn-container button:hover {
       background-color: #E87A2E;
     }
+    .btn-container a {
+      background-color: #FF914B;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      margin: 0 5px;
+      transition: background-color 0.3s;
+    }
+
+    .btn-container a:hover {
+      background-color: #E87A2E;
+    }
 
     /* 하단 버튼(목록/수정/블라인드/신고)을 모두 한 줄에 배치 */
     .btn-container2 {
@@ -165,6 +179,12 @@
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
       text-align: left;
     }
+    .modal-content2 textarea {
+      width: 100%;
+      height: 100px;
+      overflow-y: scroll;
+      resize: none;
+    }
 
     /* ADMIN 전용 테마: 버튼/테두리색을 #8C6C55로 변경 */
     <c:if test="${ sessionScope.grant eq 'ADMIN' }">
@@ -187,12 +207,27 @@
         border-top: solid #8C6C55 !important;
         border-bottom: solid #8C6C55 !important;
       }
+    .btn-container a {
+      background-color: #8C6C55;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      margin: 0 5px;
+      transition: background-color 0.3s;
+    }
+
     </c:if>
 
     /*---------------------지도 영역--------------------------*/
     .map_wrap, .map_wrap * {margin:0;padding:0;font-family:'Malgun Gothic',dotum,'돋움',sans-serif;font-size:12px;}
     .map_wrap a, .map_wrap a:hover, .map_wrap a:active{color:#000;text-decoration: none;}
-    .map_wrap {position:relative;width:100%;height:500px;}
+    .map_wrap {
+      position:relative; width:100%; height:500px;
+      /* 처음엔 숨김 */
+      display: none;  /* 지도는 scrollToMap() 실행 시 보이도록 */
+    }lastBounds
     #menu_wrap {
       position:absolute;top:0;left:0;bottom:0;width:250px;margin:10px 0 30px 10px;
       padding:5px;overflow-y:auto;background:rgba(255, 255, 255, 0.7);
@@ -309,9 +344,15 @@
         <span class="label">지역:</span>
         <c:out value="${item.sidoName}" /> <c:out value="${item.gugunName}" />
       </div>
-      <div class="info">
-        <span class="label">물품상태:</span>
-        <c:out value="${item.itemState}" />
+      <div class="found-state-message">
+        <c:choose>
+          <c:when test="${item.foundState == 2}">
+            보관중이며 주인을 찾고 있는 물건입니다.
+          </c:when>
+          <c:when test="${item.foundState == 1}">
+            주인의 품으로 돌아간 물건입니다.
+          </c:when>
+        </c:choose>
       </div>
     </div>
   </div>
@@ -319,8 +360,9 @@
   <!-- 버튼 영역 -->
   <div class="btn-container">
     <button type="button" onclick="openChat()">1대1 채팅 보내기</button>
-    <button type="button" onclick="scrollToMap()">지도에 습득위치 보기</button>
-  </div>
+    <a href="/lost/process">처리절차안내</a>
+    <!-- 버튼 클릭 -> 지도 보이기 + 스크롤 이동 -->
+    <button onclick="scrollToMap()">지도에 분실위치 보기</button>  </div>
 
   <!-- 본문 영역 -->
   <div class="content-container">
@@ -331,112 +373,86 @@
     <!-- 버튼영역: 목록/수정/블라인드/신고 모두 한 줄 -->
     <div class="btn-container2">
       <!-- 목록 버튼 -->
-      <button onclick="location.href='/found'">목록</button>
+      <button onclick="history.back()">목록</button>
 
-      <!-- 작성자인 경우: 수정 버튼 -->
-      <c:if test="${loginEmail eq item.email}">
+      <c:choose>
+        <c:when test="${loginEmail eq item.email}">
+        <!-- 작성자인 경우 수정 버튼 -->
         <button onclick="location.href='/found/update?foundIdx=${item.foundIdx}'">수정</button>
-      </c:if>
 
-      <!-- 관리자(ADMIN)인 경우: 블라인드 버튼 -->
-      <c:if test="${sessionScope.grant eq 'ADMIN'}">
-        <form class="form" method="post" style="display:inline-block;">
-          <input type="hidden" name="resiver_idx" value="${item.foundIdx}" />
-          <input type="hidden" name="foundState" value="${item.foundState}">
-          <button type="button" class="banBtn">블라인드</button>
+        <!-- 찾음/취소 버튼 -->
+        <form action="<c:out value='${item.foundState == 1 ? "/found/cancel" : "/found/complete"}' />"
+              method="post" style="display: inline;">
+            <input type="hidden" name="foundIdx" value="${item.foundIdx}" />
+            <input type="hidden" name="email" value="${item.email}" />
+            <button type="submit">
+                <c:choose>
+                    <c:when test="${item.foundState == 1}">
+                        잘못 눌렀어요!
+                    </c:when>
+                    <c:otherwise>
+                        주인을 찾아줬어요!
+                    </c:otherwise>
+                </c:choose>
+            </button>
         </form>
-      </c:if>
+    </c:when>
 
-      <!-- 작성자가 아니고, 관리자도 아닌 경우: 신고 버튼 -->
-      <c:if test="${loginEmail ne item.email && sessionScope.grant ne 'ADMIN'}">
-        <button type="button" onclick="openReportModal()">신고하기</button>
-      </c:if>
+
+        <c:when test="${ sessionScope.grant eq 'ADMIN'}" >
+       <form class="form" method="post">
+
+    <input type="hidden" name="resiver_idx" value="${item.foundIdx}">
+    <input type="hidden" name="foundState" value="${item.foundState}">
+    <button type="button" class="banBtn btn">블라인드</button>
+</form>
+
+
+
+        </c:when>
+        <c:otherwise>
+          <!-- 작성자가 아니면 신고하기 버튼 -->
+          <button type="button" onclick="openReportModal()">신고하기</button>
+        </c:otherwise>
+      </c:choose>
     </div>
   </div>
 
 
   <!-- 지도 섹션 -->
   <div class="map-section" id="mapSection">
-    <div class="map_wrap">
-      <!-- 지도 표시 영역 -->
-      <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
-
-      <!-- 검색 메뉴 숨김 처리 -->
-      <div id="menu_wrap" class="bg_white" style="display: none;">
-          <hr />
-          <ul id="placesList"></ul>
-          <div id="pagination"></div>
-      </div>
+    <!-- 지도 섹션 (처음엔 숨김) -->
+  <div class="map_wrap">
+    <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
+    <div id="menu_wrap" class="bg_white" style="display:none;">
+      <hr />
+      <ul id="placesList"></ul>
+      <div id="pagination"></div>
     </div>
   </div>
+  </div>
 
+<!-- 신고 모달 HTML (화면 맨 하단) -->
+<div id="reportModalOverlay" class="modal-overlay">
+  <div class="modal-content2">
+    <h3>신고 작성</h3>
+    <form id="reportForm">
+      <input type="hidden" name="reporterIdx" value="${loginMemIdx}" />
+      <input type="hidden" name="resiverIdx" value="${item.foundIdx}" />
+      <label for="rContent">신고 상세내용</label>
+      <textarea id="rContent" name="rContent" required></textarea>
+      <div class="modal-buttons">
+        <button type="button" onclick="closeReportModal()">취소</button>
+        <button type="submit">제출</button>
+      </div>
+    </form>
+  </div>
+</div>
 </div>
 
 <!-- 카카오 맵 API 스크립트 포함 -->
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=a38a546a4aaada7aec2c459d8d1d085a&libraries=services"></script>
-<script>
-  // [1] 지도 영역으로 스크롤
-  function scrollToMap(){
-    const mapSection = document.getElementById('mapSection');
-    mapSection.scrollIntoView({ behavior: 'smooth' });
-  }
 
-  // 1) 채팅 열기(모달 or 새창 등)
-  function openChat() {
-    var modal = document.getElementById('modal');
-    var iframe = document.getElementById('modal-iframe');
-    // item.email은 습득물 작성자의 이메일
-    iframe.src = '/chatting/room/open/${item.email}';
-    modal.style.display = 'block';
-  }
-
-  // [2] 블라인드 폼 submit
-  const banBtn = document.querySelector('.banBtn');
-  if (banBtn) {
-      banBtn.addEventListener('click', function() {
-          const form = document.querySelector('.form');
-          if (form) {
-              form.action = "/admin/post/ban";
-              form.submit();
-          }
-      });
-  }
-
-  // [3] 신고 모달 열기/닫기
-  function openReportModal() {
-    document.getElementById("reportModalOverlay").style.display = "flex";
-  }
-  function closeReportModal() {
-    document.getElementById("reportModalOverlay").style.display = "none";
-  }
-
-  // 신고 폼 처리
-  const reportForm = document.getElementById("reportForm");
-  if(reportForm) {
-    reportForm.addEventListener("submit", function(e) {
-      e.preventDefault();
-      const formData = new FormData(reportForm);
-      fetch("/report/submit", {
-        method: "POST",
-        body: formData
-      })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error("신고 접수 중 오류가 발생했습니다.");
-        }
-        return response.text();
-      })
-      .then(data => {
-        alert("신고가 접수되었습니다.");
-        closeReportModal();
-        location.reload();
-      })
-      .catch(err => {
-        alert(err.message);
-      });
-    });
-  }
-</script>
 
 <!-- 실제 맵 로직 -->
 <script>
@@ -453,7 +469,7 @@
   var ps = new kakao.maps.services.Places();
   // 검색 결과 목록이나 마커 클릭 시 장소명 표시할 인포윈도우
   var infowindow = new kakao.maps.InfoWindow({zIndex:1});
-
+  var lastBounds = null;
   // JSP에서 전달된 지역 상세정보
   var keyword = "<c:out value='${item.fLocationDetail}'/>";
   searchPlaces();
@@ -512,6 +528,7 @@
       listEl.appendChild(fragment);
       menuEl.scrollTop = 0;
       map.setBounds(bounds);
+      lastBounds = bounds;
   }
 
   function getListItem(index, places) {
@@ -593,24 +610,78 @@
           el.removeChild (el.lastChild);
       }
   }
+
+  // 지도 표시 + 스크롤 이동
+    function scrollToMap(){
+      const mapWrap = document.querySelector('.map_wrap');
+      mapWrap.style.display = 'block';
+      setTimeout(function(){
+        map.relayout();
+        if(lastBounds){
+          map.setBounds(lastBounds);
+        }
+        mapWrap.scrollIntoView({behavior:'smooth'});
+      },50);
+    }
+
+  // 1) 채팅 열기(모달 or 새창 등)
+  function openChat() {
+    var modal = document.getElementById('modal');
+    var iframe = document.getElementById('modal-iframe');
+    // item.email은 습득물 작성자의 이메일
+    iframe.src = '/chatting/room/open/${item.email}';
+    modal.style.display = 'block';
+  }
+
+  // [2] 블라인드 폼 submit
+  const banBtn = document.querySelector('.banBtn');
+  if (banBtn) {
+      banBtn.addEventListener('click', function() {
+          const form = document.querySelector('.form');
+          if (form) {
+              form.action = "/admin/post/ban";
+              form.submit();
+          }
+      });
+  }
+
+  // [3] 신고 모달 열기/닫기
+  function openReportModal() {
+    document.getElementById("reportModalOverlay").style.display = "flex";
+  }
+  function closeReportModal() {
+    document.getElementById("reportModalOverlay").style.display = "none";
+  }
+
+  // 신고 폼 처리
+  const reportForm = document.getElementById("reportForm");
+  if(reportForm) {
+    reportForm.addEventListener("submit", function(e) {
+      e.preventDefault();
+      const formData = new FormData(reportForm);
+      fetch("/report/submit", {
+        method: "POST",
+        body: formData
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error("신고 접수 중 오류가 발생했습니다.");
+        }
+        return response.text();
+      })
+      .then(data => {
+        alert("신고가 접수되었습니다.");
+        closeReportModal();
+        location.reload();
+      })
+      .catch(err => {
+        alert(err.message);
+      });
+    });
+  }
+
 </script>
 
-<!-- 신고 모달 HTML (화면 맨 하단) -->
-<div id="reportModalOverlay" class="modal-overlay">
-  <div class="modal-content2">
-    <h3>신고 작성</h3>
-    <form id="reportForm">
-      <input type="hidden" name="reporterIdx" value="${loginMemIdx}" />
-      <input type="hidden" name="resiverIdx" value="${item.foundIdx}" />
-      <label for="rContent">신고 상세내용</label>
-      <textarea id="rContent" name="rContent" required></textarea>
-      <div class="modal-buttons">
-        <button type="button" onclick="closeReportModal()">취소</button>
-        <button type="submit">제출</button>
-      </div>
-    </form>
-  </div>
-</div>
 
 <!-- 채팅 모달(예시) -->
 <div id="modal" class="modal-overlay" style="display:none;">

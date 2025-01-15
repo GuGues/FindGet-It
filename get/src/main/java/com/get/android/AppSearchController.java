@@ -19,7 +19,7 @@ public class AppSearchController {
     private SearchMapper searchMapper;
 
     // 페이지당 표시할 레코드 수
-    private static final int PAGE_SIZE = 5;
+    private static final int PAGE_SIZE = 8;
 
     /**
      * 예) GET /appSearch/result?keyword=키워드&lostPage=1&foundPage=1&policePage=1

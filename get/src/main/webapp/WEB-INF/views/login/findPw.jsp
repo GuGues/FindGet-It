@@ -4,7 +4,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>GUGUIN : 개인아이디찾기</title>
+    <title>GUGUIN : 개인비밀번호찾기</title>
     <link rel="icon" type="image/png" href="/img/favicon.png" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <style>
@@ -92,8 +92,12 @@
 <body>
 <main class="findIdModal">
 <%--    <img src="/img/banner.png" alt="Logo" style="width: 70%; margin-top: -15%; ">--%>
-    <h2>아이디 찾기</h2>
+    <h2>비밀번호 찾기</h2>
 <form action="" method="post">
+    <div class='form-floating'>
+        <input type="text" class='form-control' name="email"  id='floatingId' placeholder="아이디">
+        <label for='floatingId'>아이디</label>
+    </div>
     <div class='form-floating'>
         <input type="text" class='form-control' name="username"  id='floatingName' placeholder="이름">
         <label for='floatingName'>이름</label>
@@ -115,6 +119,10 @@
 </main>
 <script>
     document.getElementsByTagName('form')[1].onsubmit=()=>{
+        if(document.getElementById('floatingId').value==null||document.getElementById('floatingId').value==''){
+            alert("아이디을 입력해주세요.");
+            return false;
+        }
         if(document.getElementById('floatingName').value==null||document.getElementById('floatingName').value==''){
             alert("이름을 입력해주세요.");
             return false;
@@ -123,12 +131,13 @@
             alert("전화번호를 입력해주세요.");
             return false;
         }
-        fetch("/findId/check",{
+        fetch("/findPw/check",{
             method:"POST",
             headers:{
                 "Content-type":"application/json"
             },
             body:JSON.stringify({
+                "email":document.getElementById('floatingId').value,
                 "username":document.getElementById('floatingName').value,
                 "phone":document.getElementById('floatingTel').value
             })

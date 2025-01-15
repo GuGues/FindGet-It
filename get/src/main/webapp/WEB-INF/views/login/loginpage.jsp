@@ -112,7 +112,8 @@
             </div>
         </form>
 
-        <button class="loginBtn modal-trigger" data-bs-toggle="modal"  data-modal-url="/findId" data-modal-title="아이디 찾기" id="find" >아이디/비밀번호 찾기</button>
+        <button class="loginBtn modal-trigger" data-bs-toggle="modal"  data-modal-url="/findId" data-modal-title="아이디 찾기" id="find" >아이디 찾기</button>
+        <button class="loginBtn modal-trigger" data-bs-toggle="modal"  data-modal-url="/findPw" data-modal-title="비밀번호 찾기" id="find" >비밀번호 찾기</button>
         <button class="loginBtn" id="signup" onclick="document.location.href='/sighup'">회원가입</button>
     </div>
     <div id="loginSideImage">
