@@ -116,7 +116,12 @@
     <c:if test="${url.contains('/lost') && !url.contains('/mypage')}">
      <li><h3 class="side-title">분실물</h3></li>
      <li><a href="/lost">찾GET어 분실물</a></li>
-     <li><a href="/lost/write">분실물 의뢰</a></li>
+     <c:if test="${ empty sessionScope.grant }">
+       <li><a href="/login">분실물 의뢰</a></li>
+     </c:if>
+     <c:if test="${ not empty sessionScope.grant }">
+       <li><a href="/lost/write">분실물 의뢰</a></li>
+     </c:if>
      <li><a href="https://www.lost112.go.kr/html.do?html=/member/login&sub=U&title=%ED%9A%8C%EC%9B%90%EB%A7%88%EB%8B%B9&ptitle=%EB%A1%9C%EA%B7%B8%EC%9D%B8&MENU_NO=MENU5400" target="blank">경찰청 분실물 신고</a></li>
     </c:if>
     <c:if test="${ url.contains('/police') || url.contains('/found') && !url.contains('/mypage')}">
@@ -128,7 +133,13 @@
     <c:if test="${url.contains('/faq') || url.contains('/cs') && !url.contains('/mypage')}">
      <li><h3>FAQ</h3></li>
      <li><a href="/faq">자주 묻는 질문</a></li>
-     <li><a href="/faq/cs/insert">1:1 문의</a></li>    </c:if>
+     <c:if test="${ empty sessionScope.grant }">
+       <li><a href="/login">1:1 문의</a></li>
+     </c:if>
+     <c:if test="${ not empty sessionScope.grant }">
+       <li><a href="/faq/cs/insert">1:1 문의</a></li>
+     </c:if>
+    </c:if>
     <c:if test="${url.contains('/notice')}">
      <li><h3>공지사항</h3></li>
      <li><a href="/notice">공지사항</a></li>
@@ -144,7 +155,12 @@
      <c:if test="${url.contains('/search')}">
      <li><h3>검색 페이지</h3></li>
      <li><a href="/">홈으로</a></li>
-     <li><a href="/cs/write">1:1 문의</a></li>
+     <c:if test="${ empty sessionScope.grant }">
+       <li><a href="/login">1:1 문의</a></li>
+     </c:if>
+     <c:if test="${ not empty sessionScope.grant }">
+       <li><a href="/cs/write">1:1 문의</a></li>
+     </c:if>
      <li><a href="/police/found">경찰 습득물</a></li>
      <li><a href="https://www.handphone.or.kr/" target="blank">핸드폰찾기 콜센터</a></li>
      <li><a href="https://www.lost112.go.kr/html.do?html=/member/login&sub=U&title=%ED%9A%8C%EC%9B%90%EB%A7%88%EB%8B%B9&ptitle=%EB%A1%9C%EA%B7%B8%EC%9D%B8&MENU_NO=MENU5400" target="blank">경찰청 분실물 신고</a></li>
