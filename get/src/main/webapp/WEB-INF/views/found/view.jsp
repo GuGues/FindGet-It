@@ -369,7 +369,25 @@
     </div>
   </div>
 
+<!-- 신고 모달 HTML (화면 맨 하단) -->
+<div id="reportModalOverlay" class="modal-overlay">
+  <div class="modal-content2">
+    <h3>신고 작성</h3>
+    <form id="reportForm" action="/report/submit" method="post">
+      <input type="hidden" name="reporterIdx" value="${loginMemIdx}" />
+      <input type="hidden" name="resiverIdx" value="${item.foundIdx}" />
+      <label for="rContent">신고 상세내용</label>
+      <textarea id="rContent" name="rContent" required></textarea>
+      <div class="modal-buttons">
+        <button type="button" onclick="closeReportModal()">취소</button>
+        <button type="submit">제출</button>
+      </div>
+    </form>
+  </div>
 </div>
+
+</div>
+
 
 <!-- 카카오 맵 API 스크립트 포함 -->
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=a38a546a4aaada7aec2c459d8d1d085a&libraries=services"></script>
@@ -412,8 +430,9 @@
   // 신고 폼 처리
   const reportForm = document.getElementById("reportForm");
   if(reportForm) {
-    reportForm.addEventListener("submit", function(e) {
+    reportForm.onsubmit=(function(e) {
       e.preventDefault();
+      e.stopPropagation();
       const formData = new FormData(reportForm);
       fetch("/report/submit", {
         method: "POST",
@@ -433,6 +452,7 @@
       .catch(err => {
         alert(err.message);
       });
+    return false;
     });
   }
 </script>
@@ -593,30 +613,5 @@
       }
   }
 </script>
-
-<!-- 신고 모달 HTML (화면 맨 하단) -->
-<div id="reportModalOverlay" class="modal-overlay">
-  <div class="modal-content2">
-    <h3>신고 작성</h3>
-    <form id="reportForm">
-      <input type="hidden" name="reporterIdx" value="${loginMemIdx}" />
-      <input type="hidden" name="resiverIdx" value="${item.foundIdx}" />
-      <label for="rContent">신고 상세내용</label>
-      <textarea id="rContent" name="rContent" required></textarea>
-      <div class="modal-buttons">
-        <button type="button" onclick="closeReportModal()">취소</button>
-        <button type="submit">제출</button>
-      </div>
-    </form>
-  </div>
-</div>
-
-<!-- 채팅 모달(예시) -->
-<div id="modal" class="modal-overlay" style="display:none;">
-  <div class="modal-content2">
-    <iframe id="modal-iframe" style="width:100%;height:400px;"></iframe>
-  </div>
-</div>
-
 </body>
 </html>
