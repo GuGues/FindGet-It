@@ -473,7 +473,12 @@ table {
 								<c:forEach items="${notFind}" var="nf" varStatus="nstatus">
 									<tr>
 										<td><a href="#">${nstatus.index + 1}</a></td>
-										<td><a href="#">${nf.title}</a></td>
+										<c:if test="${nf.idx.contains('LO')}">
+										<td><a href="/lost/view?lostIdx=${nf.idx}">${nf.title}</a></td>
+										</c:if>
+										<c:if test="${nf.idx.contains('FD')}">
+										<td><a href="/found/view?foundIdx=${nf.idx}">${nf.title}</a></td>
+										</c:if>
 										<td><a href="#">${nf.reg_date}</a></td>
 										<td><a href="#">${nf.views}</a></td>
 									</tr>

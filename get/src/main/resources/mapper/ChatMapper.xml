@@ -29,8 +29,8 @@
         INSERT INTO CHATTING_ROOM
         VALUES ( null
                , SYSDATE
-               , #{openerEmail}
-               , #{email})
+               , #{param2}
+               , #{param1})
     </insert>
     <select id="findRoomListByEmail">
         SELECT *

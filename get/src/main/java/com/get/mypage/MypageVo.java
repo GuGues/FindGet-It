@@ -90,5 +90,6 @@ public class MypageVo {
 	private String  title;
 	private String  reg_date;
 	private int  views;
-	
+	private String  idx;
+
 }
