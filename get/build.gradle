@@ -67,7 +67,7 @@ dependencies {
 	
 	implementation 'org.springframework.boot:spring-boot-starter-mail' // Spring Boot 메일 스타터
 	implementation 'org.hibernate.validator:hibernate-validator:6.2.0.Final' // Hibernate Validator
-	
+
 }
 
 tasks.named('test') {

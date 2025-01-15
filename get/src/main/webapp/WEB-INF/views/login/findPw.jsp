@@ -83,7 +83,6 @@
             border-radius: 5px;
             background-color: white;
         }
-<<<<<<< HEAD
         .find-modal-content>.btn:hover{
             background-color: #E67E22;
             color: white;
@@ -92,23 +91,13 @@
           color: green;
           margin: 10px;
         }
-=======
-        .find-modal-content>button:hover{
-            background-color: #E67E22;
-            color: white;
-        }
->>>>>>> d4032ee16fce93ac50b05fcc4db0c5b9fe7ac6bd
     </style>
 </head>
 <body>
 <main class="findIdModal">
 <%--    <img src="/img/banner.png" alt="Logo" style="width: 70%; margin-top: -15%; ">--%>
     <h2>비밀번호 찾기</h2>
-<<<<<<< HEAD
 <form action="" method="post" class="findPwForm">
-=======
-<form action="" method="post">
->>>>>>> d4032ee16fce93ac50b05fcc4db0c5b9fe7ac6bd
     <div class='form-floating'>
         <input type="text" class='form-control' name="email"  id='floatingId' placeholder="아이디">
         <label for='floatingId'>아이디</label>
@@ -124,7 +113,6 @@
     <div id="result-text"></div>
     <input type="submit" class="btn btn-light" value="확인"/>
 </form>
-<<<<<<< HEAD
 <form action="/changePw" method="post" class="changePw">
     <div class="find-modal hidden">
         <div class="find-modal-content">
@@ -145,18 +133,6 @@
     	e.preventDefault();
     	let key ="";
     	let email ="";
-=======
-    <div class="find-modal hidden">
-        <div class="find-modal-content">
-            <div class="find-modal-detail">
-            </div>
-            <button id="find-close-modal">닫기</button>
-        </div>
-    </div>
-</main>
-<script>
-    document.getElementsByTagName('form')[1].onsubmit=()=>{
->>>>>>> d4032ee16fce93ac50b05fcc4db0c5b9fe7ac6bd
         if(document.getElementById('floatingId').value==null||document.getElementById('floatingId').value==''){
             alert("아이디을 입력해주세요.");
             return false;
@@ -169,13 +145,10 @@
             alert("전화번호를 입력해주세요.");
             return false;
         }
-<<<<<<< HEAD
         else{
         	document.getElementById("result-text").innerHTML = 
 			    "<div class='keyText'>* 인증번호를 발송하였습니다</div>";
         }
-=======
->>>>>>> d4032ee16fce93ac50b05fcc4db0c5b9fe7ac6bd
         fetch("/findPw/check",{
             method:"POST",
             headers:{
@@ -184,7 +157,6 @@
             body:JSON.stringify({
                 "email":document.getElementById('floatingId').value,
                 "username":document.getElementById('floatingName').value,
-<<<<<<< HEAD
                 "phone":document.getElementById('floatingTel').value,
             })
         }).then(result=>result.json())
@@ -250,29 +222,11 @@
         }
         else{
         	//이메일, 이름, 전화번호가 일치하지 않을경우
-=======
-                "phone":document.getElementById('floatingTel').value
-            })
-        }).then(result=>result.json())
-    .then(result=>{
-        if(result.status=="OK"){
-            document.getElementsByClassName("find-modal-detail")[0].innerHTML=result.result;
-            document.getElementsByClassName("find-modal")[0].classList.remove("hidden");
-        }
-        else{
->>>>>>> d4032ee16fce93ac50b05fcc4db0c5b9fe7ac6bd
             document.getElementById("result-text").innerHTML = result.result;
         }
         })
     return false;
     }
-<<<<<<< HEAD
-=======
-    document.getElementById("find-close-modal").onclick=()=>{
-           document.getElementsByClassName("find-modal")[0].classList.add("hidden");
-           document.querySelector('.btn-close').click();
-    }
->>>>>>> d4032ee16fce93ac50b05fcc4db0c5b9fe7ac6bd
 </script>
 
 </body>

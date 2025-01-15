@@ -54,7 +54,6 @@
 		SET LAST_LOGIN_DATE = SYSDATE
 		WHERE EMAIL = #{email}
 	</update>
-<<<<<<< HEAD
 	
 	<select id="findUserByUserNamePhoneEmail">
         SELECT *
@@ -68,6 +67,3 @@
 		WHERE EMAIL = #{email}
 	</update>
 </mapper>
-=======
-</mapper>
->>>>>>> d4032ee16fce93ac50b05fcc4db0c5b9fe7ac6bd

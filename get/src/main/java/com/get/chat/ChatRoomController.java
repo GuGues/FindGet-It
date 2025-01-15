@@ -59,6 +59,7 @@ public class ChatRoomController {
     public String updateView(@RequestBody HashMap<String, Object> params) {
         String chatting_no = String.valueOf(params.get("chatting_no"));
         String email = String.valueOf(params.get("email"));
+        System.out.println("ChatRoomController.updateView");
         System.out.println("chatting_no = " + chatting_no);
         System.out.println("email = " + email);
         chatService.updateMessageViewed(chatting_no,email);

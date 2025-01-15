@@ -12,11 +12,7 @@ body {
     font-family: 'Arial', sans-serif;
     margin: 0;
     padding: 0;
-<<<<<<< HEAD
-    background-color: #FFF5EB;
-=======
     background-color: #FFF;
->>>>>>> d4032ee16fce93ac50b05fcc4db0c5b9fe7ac6bd
 }
 
 main {

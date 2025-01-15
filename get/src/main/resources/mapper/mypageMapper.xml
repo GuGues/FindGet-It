@@ -11,19 +11,11 @@
         WHERE  EMAIL = #{email}
     </select>
 
-<<<<<<< HEAD
-<select id="getMyFind">
-SELECT TO_CHAR(SET_DATE, 'YYYY-MM-DD')AS SET_DATE, MEM_IDX, ITEM_CODE, LOCATION_CODE
-FROM   MY_FIND
-WHERE  MEM_IDX = #{mem_idx}
-</select>
-=======
     <select id="getMyFind">
         SELECT TO_CHAR(SET_DATE, 'YYYY-MM-DD')AS SET_DATE, MEM_IDX, ITEM_CODE, LOCATION_CODE
         FROM   MY_FIND
         WHERE  MEM_IDX = #{mem_idx}
     </select>
->>>>>>> d4032ee16fce93ac50b05fcc4db0c5b9fe7ac6bd
 
     <select id="getLostList">
         SELECT LOST_IDX, LOST_TITLE, TO_CHAR(L_REG_DATE, 'YYYY-MM-DD')AS L_REG_DATE, L_VIEWS
@@ -92,17 +84,10 @@ WHERE  MEM_IDX = #{mem_idx}
         WHERE LOCATION_CODE = #{location_code}
     </select>
 
-<<<<<<< HEAD
-<select id="getAllLocation">
-SELECT LOCATION_CODE, GUGUN_NAME, SIDO_NAME
-FROM   LOCATIONS
-</select>
-=======
     <select id="getAllLocation">
         SELECT LOCATION_CODE, GUGUN_NAME, SIDO_NAME
         FROM   LOCATIONS
     </select>
->>>>>>> d4032ee16fce93ac50b05fcc4db0c5b9fe7ac6bd
 
     <select id="getItems">
         SELECT *
@@ -111,11 +96,7 @@ FROM   LOCATIONS
     </select>
 
 
-<<<<<<< HEAD
-<select id="getAllItem">
-=======
     <select id="getAllItem">
->>>>>>> d4032ee16fce93ac50b05fcc4db0c5b9fe7ac6bd
         SELECT ITEM_CODE, ITEM
         FROM ITEMS
     </select>
@@ -127,41 +108,6 @@ FROM   LOCATIONS
         WHERE EMAIL = #{email}
     </select>
 
-<<<<<<< HEAD
-<select id="getNotFind">
-SELECT EMAIL, TITLE, VIEWS, TO_CHAR(REG_DATE, 'YYYY-MM-DD')AS REG_DATE
-FROM (
-    SELECT EMAIL, FOUND_TITLE AS TITLE,  F_VIEWS AS VIEWS, F_REG_DATE AS REG_DATE
-    FROM FOUND
-    WHERE EMAIL = #{email} 
-    UNION ALL
-    SELECT EMAIL, LOST_TITLE AS TITLE, L_VIEWS AS VIEWS, L_REG_DATE AS REG_DATE
-    FROM LOST_ITEMS
-    WHERE EMAIL = #{email}
-) T
-</select>
-
-<update id="updateMyFind">
-    UPDATE MY_FIND
-    SET
-        SET_DATE = SYSDATE,
-        LOCATION_CODE = #{location_code},
-        ITEM_CODE = #{item_code}
-    WHERE MEM_IDX = #{mem_idx}
-</update>
-
-<update id="updateUser">
-    UPDATE MEMBERS
-    SET
-        NICKNAME   = #{nickname},
-        PASSWORD   = #{password},
-        PHONE      = #{phone},
-        ADDRESS1   = #{address1},
-        ADDRESS2   = #{address2},
-        POSTNUMBER = #{postnumber}
-    WHERE EMAIL = #{email}
-</update>
-=======
     <select id="getCountWrite">
         SELECT SUM(A + B)AS COUNT
         FROM (
@@ -210,7 +156,6 @@ FROM (
             POSTNUMBER = #{postnumber}
         WHERE EMAIL = #{email}
     </update>
->>>>>>> d4032ee16fce93ac50b05fcc4db0c5b9fe7ac6bd
 
 
 </mapper>

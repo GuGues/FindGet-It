@@ -136,11 +136,7 @@ body {
 
 /* 프로필 박스 전체 */
 .profile-box {
-<<<<<<< HEAD
-	width: 700px;
-=======
 	width: 100%;
->>>>>>> d4032ee16fce93ac50b05fcc4db0c5b9fe7ac6bd
 	background-color: #fff;
 	color: #333;
 	border: 1px solid #ddd;
@@ -269,14 +265,8 @@ a {
 .notfind {
 	margin: 50px auto 0;
 	text-align: center;
-<<<<<<< HEAD
-	max-width: 800px;
-	border-radius: 5px;
-	width: 700px;
-=======
 	border-radius: 5px;
 	width: 100%;
->>>>>>> d4032ee16fce93ac50b05fcc4db0c5b9fe7ac6bd
 	background-color: #fff;
 	color: #333;
 	border: 1px solid #ddd;
@@ -299,10 +289,6 @@ table {
     width: 100%;
 }
 
-<<<<<<< HEAD
-.upbox {
-    
-=======
 .bigdiv {
 	margin-top: 60px; /* 상단 여백 */
 	background-color: #F2F2F2; /* 배경색 */
@@ -316,7 +302,6 @@ table {
 	position: relative; /* 자식의 절대 위치를 기준으로 함 */
 	height: auto; /* 고정 높이를 제거하여 콘텐츠에 맞게 확장 */
 	overflow: hidden; /* 넘치는 콘텐츠 숨김 */
->>>>>>> d4032ee16fce93ac50b05fcc4db0c5b9fe7ac6bd
 }
 
 </style>
@@ -324,11 +309,7 @@ table {
 <body>
 	<%@include file="/WEB-INF/include/side.jsp"%>
 	<main>
-<<<<<<< HEAD
-		<div>
-=======
 		<div class="bigdiv">
->>>>>>> d4032ee16fce93ac50b05fcc4db0c5b9fe7ac6bd
 			<div id="topm">
 				<a href="/">Home</a> &nbsp;&nbsp;>&nbsp;&nbsp; <a href="#">Mypage</a>
 			</div>

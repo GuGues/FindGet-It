@@ -165,13 +165,6 @@
             </div>
             </div>
         </form>
-<<<<<<< HEAD
-=======
-
-        <button class="loginBtn modal-trigger" data-bs-toggle="modal"  data-modal-url="/findId" data-modal-title="아이디 찾기" id="find" >아이디 찾기</button>
-        <button class="loginBtn modal-trigger" data-bs-toggle="modal"  data-modal-url="/findPw" data-modal-title="비밀번호 찾기" id="find" >비밀번호 찾기</button>
-        <button class="loginBtn" id="signup" onclick="document.location.href='/sighup'">회원가입</button>
->>>>>>> d4032ee16fce93ac50b05fcc4db0c5b9fe7ac6bd
     </div>
     <div id="loginSideImage">
       <a href="/">
@@ -194,15 +187,11 @@
         </div>
     </div>
 </div>
-<<<<<<< HEAD
 <footer>
   <img alt="" src="/logo/logoopen.png">
   &nbsp;
   <span>&copy;guguin</span>
 </footer>
-=======
-
->>>>>>> d4032ee16fce93ac50b05fcc4db0c5b9fe7ac6bd
 </body>
 <!-- jQuery 로드 -->
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
