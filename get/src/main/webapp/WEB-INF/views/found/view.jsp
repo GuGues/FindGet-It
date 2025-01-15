@@ -94,20 +94,6 @@
     .btn-container button:hover {
       background-color: #E87A2E;
     }
-    .btn-container a {
-      background-color: #FF914B;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      font-size: 16px;
-      cursor: pointer;
-      margin: 0 5px;
-      transition: background-color 0.3s;
-    }
-
-    .btn-container a:hover {
-      background-color: #E87A2E;
-    }
 
     /* 하단 버튼(목록/수정/블라인드/신고)을 모두 한 줄에 배치 */
     .btn-container2 {
@@ -201,17 +187,6 @@
         border-top: solid #8C6C55 !important;
         border-bottom: solid #8C6C55 !important;
       }
-    .btn-container a {
-      background-color: #8C6C55;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      font-size: 16px;
-      cursor: pointer;
-      margin: 0 5px;
-      transition: background-color 0.3s;
-    }
-
     </c:if>
 
     /*---------------------지도 영역--------------------------*/
@@ -334,15 +309,9 @@
         <span class="label">지역:</span>
         <c:out value="${item.sidoName}" /> <c:out value="${item.gugunName}" />
       </div>
-      <div class="found-state-message">
-        <c:choose>
-          <c:when test="${item.foundState == 2}">
-            보관중이며 주인을 찾고 있는 물건입니다.
-          </c:when>
-          <c:when test="${item.foundState == 1}">
-            주인의 품으로 돌아간 물건입니다.
-          </c:when>
-        </c:choose>
+      <div class="info">
+        <span class="label">물품상태:</span>
+        <c:out value="${item.itemState}" />
       </div>
     </div>
   </div>
@@ -350,9 +319,8 @@
   <!-- 버튼 영역 -->
   <div class="btn-container">
     <button type="button" onclick="openChat()">1대1 채팅 보내기</button>
-    <a href="/lost/process">처리절차안내</a>
-    <!-- 버튼 클릭 -> 지도 보이기 + 스크롤 이동 -->
-    <button onclick="scrollToMap()">지도에 분실위치 보기</button>  </div>
+    <button type="button" onclick="scrollToMap()">지도에 습득위치 보기</button>
+  </div>
 
   <!-- 본문 영역 -->
   <div class="content-container">
@@ -363,48 +331,26 @@
     <!-- 버튼영역: 목록/수정/블라인드/신고 모두 한 줄 -->
     <div class="btn-container2">
       <!-- 목록 버튼 -->
-      <button onclick="history.back()">목록</button>
+      <button onclick="location.href='/found'">목록</button>
 
-      <c:choose>
-        <c:when test="${loginEmail eq item.email}">
-        <!-- 작성자인 경우 수정 버튼 -->
+      <!-- 작성자인 경우: 수정 버튼 -->
+      <c:if test="${loginEmail eq item.email}">
         <button onclick="location.href='/found/update?foundIdx=${item.foundIdx}'">수정</button>
+      </c:if>
 
-        <!-- 찾음/취소 버튼 -->
-        <form action="<c:out value='${item.foundState == 1 ? "/found/cancel" : "/found/complete"}' />"
-              method="post" style="display: inline;">
-            <input type="hidden" name="foundIdx" value="${item.foundIdx}" />
-            <input type="hidden" name="email" value="${item.email}" />
-            <button type="submit">
-                <c:choose>
-                    <c:when test="${item.foundState == 1}">
-                        잘못 눌렀어요!
-                    </c:when>
-                    <c:otherwise>
-                        주인을 찾아줬어요!
-                    </c:otherwise>
-                </c:choose>
-            </button>
+      <!-- 관리자(ADMIN)인 경우: 블라인드 버튼 -->
+      <c:if test="${sessionScope.grant eq 'ADMIN'}">
+        <form class="form" method="post" style="display:inline-block;">
+          <input type="hidden" name="resiver_idx" value="${item.foundIdx}" />
+          <input type="hidden" name="foundState" value="${item.foundState}">
+          <button type="button" class="banBtn">블라인드</button>
         </form>
-    </c:when>
+      </c:if>
 
-
-        <c:when test="${ sessionScope.grant eq 'ADMIN'}" >
-       <form class="form" method="post">
-
-    <input type="hidden" name="resiver_idx" value="${item.foundIdx}">
-    <input type="hidden" name="foundState" value="${item.foundState}">
-    <button type="button" class="banBtn btn">블라인드</button>
-</form>
-
-
-
-        </c:when>
-        <c:otherwise>
-          <!-- 작성자가 아니면 신고하기 버튼 -->
-          <button type="button" onclick="openReportModal()">신고하기</button>
-        </c:otherwise>
-      </c:choose>
+      <!-- 작성자가 아니고, 관리자도 아닌 경우: 신고 버튼 -->
+      <c:if test="${loginEmail ne item.email && sessionScope.grant ne 'ADMIN'}">
+        <button type="button" onclick="openReportModal()">신고하기</button>
+      </c:if>
     </div>
   </div>
 

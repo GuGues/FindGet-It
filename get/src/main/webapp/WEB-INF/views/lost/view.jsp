@@ -102,21 +102,6 @@
       background-color: #E87A2E;
     }
 
-    .btn-container a {
-      background-color: #FF914B;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      font-size: 16px;
-      cursor: pointer;
-      margin: 0 5px;
-      transition: background-color 0.3s;
-    }
-
-    .btn-container a:hover {
-      background-color: #E87A2E;
-    }
-
     .content-container {
       text-align: center;
       border-top: solid #FF914B;
@@ -134,11 +119,6 @@
     .btn-container2 {
       text-align: center;
       margin: 20px 0;
-    }
-    .btn-container2 > * {
-      display: inline-block;
-      margin: 0 5px;
-      vertical-align: middle;
     }
 
     .btn-container2 button {
@@ -224,7 +204,6 @@
      overflow-y: scroll;
      resize: none;
     }
-
     <c:if test="${ sessionScope.grant eq 'ADMIN' }">
     .detail-header {
       text-align: left;
@@ -271,16 +250,6 @@
       margin: 0 5px;
       transition: background-color 0.3s;
     }
-    .btn-container a {
-      background-color: #8C6C55;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      font-size: 16px;
-      cursor: pointer;
-      margin: 0 5px;
-      transition: background-color 0.3s;
-    }
 
     .btn-container button:hover {
       background-color: #684F36;
@@ -292,50 +261,29 @@
       border-bottom: solid #8C6C55;
       margin-bottom: 20px;
     }
+
+
     </c:if>
 
-    /*---------------------지도 영역--------------------------*/
-    .map_wrap, .map_wrap * {
-      margin:0;padding:0;font-family:'Malgun Gothic',dotum,'돋움',sans-serif;font-size:12px;
-    }
-    .map_wrap a, .map_wrap a:hover, .map_wrap a:active {
-      color:#000;text-decoration: none;
-    }
-    .map_wrap {
-      position:relative;width:100%;height:500px;
-      /* 처음에 숨김 추가 -> inline style에서 처리 */
-    }
-    #menu_wrap {
-      position:absolute;top:0;left:0;bottom:0;width:250px;margin:10px 0 30px 10px;
-      padding:5px;overflow-y:auto;background:rgba(255, 255, 255, 0.7);z-index: 1;
-      font-size:12px;border-radius: 10px; display: none;
-    }
+  /*---------------------지도 영역--------------------------*/
+    .map_wrap, .map_wrap * {margin:0;padding:0;font-family:'Malgun Gothic',dotum,'돋움',sans-serif;font-size:12px;}
+    .map_wrap a, .map_wrap a:hover, .map_wrap a:active{color:#000;text-decoration: none;}
+    .map_wrap {position:relative;width:100%;height:500px;}
+    #menu_wrap {position:absolute;top:0;left:0;bottom:0;width:250px;margin:10px 0 30px 10px;padding:5px;overflow-y:auto;background:rgba(255, 255, 255, 0.7);z-index: 1;font-size:12px;border-radius: 10px; display: none;} /* 검색 메뉴 숨김 */
     .bg_white {background:#fff;}
-    #menu_wrap hr {
-      display: block; height: 1px;border: 0; border-top: 2px solid #5F5F5F;margin:3px 0;
-    }
-    #menu_wrap .option {text-align: center;}
+    #menu_wrap hr {display: block; height: 1px;border: 0; border-top: 2px solid #5F5F5F;margin:3px 0;}
+    #menu_wrap .option{text-align: center;}
     #menu_wrap .option p {margin:10px 0;}
     #menu_wrap .option button {margin-left:5px;}
     #placesList li {list-style: none;}
-    #placesList .item {
-      position:relative;border-bottom:1px solid #888;overflow: hidden;
-      cursor: pointer;min-height: 65px;
-    }
+    #placesList .item {position:relative;border-bottom:1px solid #888;overflow: hidden;cursor: pointer;min-height: 65px;}
     #placesList .item span {display: block;margin-top:4px;}
-    #placesList .item h5, #placesList .item .info {
-      text-overflow: ellipsis;overflow: hidden;white-space: nowrap;
-    }
+    #placesList .item h5, #placesList .item .info {text-overflow: ellipsis;overflow: hidden;white-space: nowrap;}
     #placesList .item .info{padding:10px 0 10px 55px;}
     #placesList .info .gray {color:#8a8a8a;}
-    #placesList .info .jibun {
-      padding-left:26px;background:url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_jibun.png) no-repeat;
-    }
+    #placesList .info .jibun {padding-left:26px;background:url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_jibun.png) no-repeat;}
     #placesList .info .tel {color:#009900;}
-    #placesList .item .markerbg {
-      float:left;position:absolute;width:36px; height:37px;margin:10px 0 0 10px;
-      background:url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png) no-repeat;
-    }
+    #placesList .item .markerbg {float:left;position:absolute;width:36px; height:37px;margin:10px 0 0 10px;background:url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png) no-repeat;}
     #placesList .item .marker_1 {background-position: 0 -10px;}
     #placesList .item .marker_2 {background-position: 0 -56px;}
     #placesList .item .marker_3 {background-position: 0 -102px}
@@ -427,27 +375,14 @@
         <span class="label">사례금:</span>
         <c:out value="${item.reward}"/>
       </div>
-      <!-- 상태 -->
-      <div class="lost-state-message">
-        <c:choose>
-          <c:when test="${item.lostState == 2}">
-            주인이 아직 애타게 찾고 있는 물건입니다.
-          </c:when>
-          <c:when test="${item.lostState == 1}">
-            주인의 품으로 돌아간 물건입니다.
-          </c:when>
-        </c:choose>
-      </div>
-
     </div>
   </div>
 
   <!-- 상단 버튼 (예: 1:1문의, 처리현황, 지도보기) -->
   <div class="btn-container">
     <button onclick="openChat()">1대1 채팅 보내기</button>
-    <a href="/lost/process">처리절차안내</a>
-    <!-- 버튼 클릭 -> 지도 보이기 + 스크롤 이동 -->
-    <button onclick="scrollToMap()">지도에 분실위치 보기</button>
+    <button>분실물 처리현황</button>
+    <button>지도에 분실위치 보기</button>
   </div>
 
   <!-- 본문 컨텐츠 -->
@@ -456,40 +391,43 @@
       <c:out value="${item.lostContent}"/>
     </div>
     <div class="btn-container2">
-      <button onclick="history.back()">목록</button>
+      <button onclick="location.href='/lost'">목록</button>
 
       <!-- 작성자인지 비교 (loginEmail eq item.email) -->
       <c:choose>
         <c:when test="${loginEmail eq item.email}">
           <!-- 작성자인 경우 수정 버튼 -->
           <button onclick="location.href='/lost/update?lostIdx=${item.lostIdx}'">수정</button>
-
-          <!-- 찾음/취소 버튼 -->
-          <form action="<c:out value='${item.lostState == 1 ? "/lost/cancel" : "/lost/complete"}' />"
-                method="post" style="display: inline;">
-              <input type="hidden" name="lostIdx" value="${item.lostIdx}" />
-              <input type="hidden" name="email" value="${item.email}" />
-              <button type="submit">
-                  <c:choose>
-                      <c:when test="${item.lostState == 1}">
-                          잘못 눌렀어요!
-                      </c:when>
-                      <c:otherwise>
-                          물건을 찾았어요!
-                      </c:otherwise>
-                  </c:choose>
-              </button>
-          </form>
         </c:when>
+        <c:when test="${ sessionScope.grant eq 'ADMIN'}" >
+       <form class="form" method="post">
 
-        <c:when test="${ sessionScope.grant eq 'ADMIN'}">
-          <form class="form" method="post">
-              <input type="hidden" name="resiver_idx" value="${item.lostIdx}">
-              <input type="hidden" name="lostState" value="${item.lostState}">
-              <button type="button" class="banBtn btn">블라인드</button>
-          </form>
+    <input type="hidden" name="resiver_idx" value="${item.lostIdx}">
+    <input type="hidden" name="lostState" value="${item.lostState}">
+    <button type="button" class="banBtn btn">블라인드</button>
+</form>
+
+<script>
+    // 버튼 요소를 가져옵니다.
+    const banBtn = document.querySelector('.banBtn');
+    if (banBtn) {
+        banBtn.addEventListener('click', function () {
+            // 폼 태그를 가져옵니다.
+            const form = document.querySelector('.form');
+            if (form) {
+                // 폼의 액션 설정 및 제출
+                form.action = "/admin/post/ban";
+                form.submit();
+            } else {
+                console.error('폼 태그가 존재하지 않습니다.');
+            }
+        });
+    } else {
+        console.error('banBtn 버튼이 존재하지 않습니다.');
+    }
+</script>
+
         </c:when>
-
         <c:otherwise>
           <!-- 작성자가 아니면 신고하기 버튼 -->
           <button type="button" onclick="openReportModal()">신고하기</button>
@@ -499,93 +437,124 @@
   </div>
 
   <!-- 지도 섹션 -->
-  <!-- 처음에 감춰둠 -->
-  <div class="map_wrap" style="display: none;">
+  <div class="map_wrap">
     <!-- 지도 표시 영역 -->
     <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
 
     <!-- 검색 메뉴 숨김 처리 -->
     <div id="menu_wrap" class="bg_white" style="display: none;">
-      <hr>
-      <ul id="placesList"></ul>
-      <div id="pagination"></div>
+        <hr>
+        <ul id="placesList"></ul>
+        <div id="pagination"></div>
     </div>
   </div>
-
+  
   <!-- 카카오 맵 API 스크립트 포함 -->
   <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=a38a546a4aaada7aec2c459d8d1d085a&libraries=services"></script>
   <script>
- // 마커를 담을 배열
+  // 마커를 담을 배열입니다
   var markers = [];
 
-  // 지도 생성 옵션
-  var mapContainer = document.getElementById('map'),
+  var mapContainer = document.getElementById('map'), // 지도를 표시할 div
       mapOption = {
-          center: new kakao.maps.LatLng(37.566826, 126.9786567),
-          level: 3
+          center: new kakao.maps.LatLng(37.566826, 126.9786567), // 지도의 중심좌표 (기본값: 서울시청)
+          level: 3 // 지도의 확대 레벨
       };
 
-  // 지도 생성
+  // 지도를 생성합니다
   var map = new kakao.maps.Map(mapContainer, mapOption);
 
-  // 전역 변수: 검색된 마커 범위(bounds) 보관
-  var lastBounds = null;
-
-  // 장소 검색 객체 생성
+  // 장소 검색 객체를 생성합니다
   var ps = new kakao.maps.services.Places();
+
+  // 검색 결과 목록이나 마커를 클릭했을 때 장소명을 표출할 인포윈도우를 생성합니다
   var infowindow = new kakao.maps.InfoWindow({zIndex:1});
 
   // JSP에서 전달된 지역 상세 정보를 키워드로 설정
   var keyword = "<c:out value='${item.lLocationDetail}'/>";
-  // 키워드 검색 실행
+  // 키워드로 장소를 검색합니다
   searchPlaces();
 
+  // 키워드 검색을 요청하는 함수입니다
   function searchPlaces() {
+
+      // 키워드가 유효한지 확인
       if (!keyword.replace(/^\s+|\s+$/g, '')) {
           alert('키워드를 입력해주세요!');
           return false;
       }
-      ps.keywordSearch(keyword, placesSearchCB);
+
+      // 장소검색 객체를 통해 키워드로 장소검색을 요청합니다
+      ps.keywordSearch( keyword, placesSearchCB);
   }
 
+  // 장소검색이 완료됐을 때 호출되는 콜백함수 입니다
   function placesSearchCB(data, status, pagination) {
       if (status === kakao.maps.services.Status.OK) {
+
+          // 정상적으로 검색이 완료됐으면
+          // 검색 목록과 마커를 표출합니다
           displayPlaces(data);
+
+          // 페이지 번호를 표출합니다
           displayPagination(pagination);
+
       } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
+
           alert('검색 결과가 존재하지 않습니다.');
+          return;
+
       } else if (status === kakao.maps.services.Status.ERROR) {
+
           alert('검색 결과 중 오류가 발생했습니다.');
+          return;
+
       }
   }
 
+  // 검색 결과 목록과 마커를 표출하는 함수입니다
   function displayPlaces(places) {
-      var listEl = document.getElementById('placesList'),
-          menuEl = document.getElementById('menu_wrap'),
-          fragment = document.createDocumentFragment(),
-          bounds = new kakao.maps.LatLngBounds();
 
+      var listEl = document.getElementById('placesList'),
+      menuEl = document.getElementById('menu_wrap'),
+      fragment = document.createDocumentFragment(),
+      bounds = new kakao.maps.LatLngBounds(),
+      listStr = '';
+
+      // 검색 결과 목록에 추가된 항목들을 제거합니다
       removeAllChildNods(listEl);
+
+      // 지도에 표시되고 있는 마커를 제거합니다
       removeMarker();
 
-      for (var i = 0; i < places.length; i++) {
+      for ( var i=0; i<places.length; i++ ) {
+
+          // 마커를 생성하고 지도에 표시합니다
           var placePosition = new kakao.maps.LatLng(places[i].y, places[i].x),
               marker = addMarker(placePosition, i),
-              itemEl = getListItem(i, places[i]);
+              itemEl = getListItem(i, places[i]); // 검색 결과 항목 Element를 생성합니다
 
+          // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
+          // LatLngBounds 객체에 좌표를 추가합니다
           bounds.extend(placePosition);
 
+          // 마커와 검색결과 항목에 mouseover 했을때
+          // 해당 장소에 인포윈도우에 장소명을 표시합니다
+          // mouseout 했을 때는 인포윈도우를 닫습니다
           (function(marker, title) {
               kakao.maps.event.addListener(marker, 'mouseover', function() {
                   displayInfowindow(marker, title);
               });
+
               kakao.maps.event.addListener(marker, 'mouseout', function() {
                   infowindow.close();
               });
-              itemEl.onmouseover = function() {
+
+              itemEl.onmouseover =  function () {
                   displayInfowindow(marker, title);
               };
-              itemEl.onmouseout = function() {
+
+              itemEl.onmouseout =  function () {
                   infowindow.close();
               };
           })(marker, places[i].place_name);
@@ -593,76 +562,84 @@
           fragment.appendChild(itemEl);
       }
 
+      // 검색결과 항목들을 검색결과 목록 Element에 추가합니다
       listEl.appendChild(fragment);
       menuEl.scrollTop = 0;
 
-      // 처음 실행 시 (화면이 숨겨져 있어도) 한 번 bounds 적용
+      // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
       map.setBounds(bounds);
-
-      // 전역 변수에 보관 -> 지도 노출 후 재적용
-      lastBounds = bounds;
   }
 
+  // 검색결과 항목을 Element로 반환하는 함수입니다
   function getListItem(index, places) {
+
       var el = document.createElement('li'),
-          itemStr = '<span class="markerbg marker_' + (index+1) + '"></span>' +
-                    '<div class="info">' +
-                    '   <h5>' + places.place_name + '</h5>';
+      itemStr = '<span class="markerbg marker_' + (index+1) + '"></span>' +
+                  '<div class="info">' +
+                  '   <h5>' + places.place_name + '</h5>';
 
       if (places.road_address_name) {
           itemStr += '    <span>' + places.road_address_name + '</span>' +
-                     '   <span class="jibun gray">' +  places.address_name  + '</span>';
+                      '   <span class="jibun gray">' +  places.address_name  + '</span>';
       } else {
           itemStr += '    <span>' +  places.address_name  + '</span>';
       }
-      itemStr += '  <span class="tel">' + places.phone  + '</span>' +
-                 '</div>';
+
+        itemStr += '  <span class="tel">' + places.phone  + '</span>' +
+                  '</div>';
 
       el.innerHTML = itemStr;
       el.className = 'item';
+
       return el;
   }
 
+  // 마커를 생성하고 지도 위에 마커를 표시하는 함수입니다
   function addMarker(position, idx, title) {
-      var imageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png',
-          imageSize = new kakao.maps.Size(36, 37),
-          imgOptions = {
-              spriteSize : new kakao.maps.Size(36, 691),
-              spriteOrigin : new kakao.maps.Point(0, (idx*46)+10),
-              offset: new kakao.maps.Point(13, 37)
+      var imageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png', // 마커 이미지 url, 스프라이트 이미지를 씁니다
+          imageSize = new kakao.maps.Size(36, 37),  // 마커 이미지의 크기
+          imgOptions =  {
+              spriteSize : new kakao.maps.Size(36, 691), // 스프라이트 이미지의 크기
+              spriteOrigin : new kakao.maps.Point(0, (idx*46)+10), // 스프라이트 이미지 중 사용할 영역의 좌상단 좌표
+              offset: new kakao.maps.Point(13, 37) // 마커 좌표에 일치시킬 이미지 내에서의 좌표
           },
           markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imgOptions),
-          marker = new kakao.maps.Marker({
-              position: position,
+              marker = new kakao.maps.Marker({
+              position: position, // 마커의 위치
               image: markerImage
           });
 
-      marker.setMap(map);
-      markers.push(marker);
+      marker.setMap(map); // 지도 위에 마커를 표출합니다
+      markers.push(marker);  // 배열에 생성된 마커를 추가합니다
+
       return marker;
   }
 
+  // 지도 위에 표시되고 있는 마커를 모두 제거합니다
   function removeMarker() {
-      for (var i = 0; i < markers.length; i++) {
+      for ( var i = 0; i < markers.length; i++ ) {
           markers[i].setMap(null);
       }
       markers = [];
   }
 
+  // 검색결과 목록 하단에 페이지번호를 표시는 함수입니다
   function displayPagination(pagination) {
       var paginationEl = document.getElementById('pagination'),
           fragment = document.createDocumentFragment(),
           i;
 
+      // 기존에 추가된 페이지번호를 삭제합니다
       while (paginationEl.hasChildNodes()) {
-          paginationEl.removeChild(paginationEl.lastChild);
+          paginationEl.removeChild (paginationEl.lastChild);
       }
+
       for (i=1; i<=pagination.last; i++) {
           var el = document.createElement('a');
           el.href = "#";
           el.innerHTML = i;
 
-          if (i === pagination.current) {
+          if (i===pagination.current) {
               el.className = 'on';
           } else {
               el.onclick = (function(i) {
@@ -671,93 +648,95 @@
                   }
               })(i);
           }
+
           fragment.appendChild(el);
       }
       paginationEl.appendChild(fragment);
   }
 
+  // 검색결과 목록 또는 마커를 클릭했을 때 호출되는 함수입니다
+  // 인포윈도우에 장소명을 표시합니다
   function displayInfowindow(marker, title) {
       var content = '<div style="padding:5px;z-index:1;">' + title + '</div>';
+
       infowindow.setContent(content);
       infowindow.open(map, marker);
   }
 
+   // 검색결과 목록의 자식 Element를 제거하는 함수입니다
   function removeAllChildNods(el) {
       while (el.hasChildNodes()) {
-          el.removeChild(el.lastChild);
+          el.removeChild (el.lastChild);
       }
   }
+  </script>
 
-  // 버튼 클릭 시 지도 노출 + 화면 스크롤 + Bounds 재적용
-  function scrollToMap() {
-      const mapWrap = document.querySelector('.map_wrap');
-      // 지도 영역 보이기
-      mapWrap.style.display = 'block';
+  <!-- 신고 모달 영역 -->
+  <div id="reportModalOverlay" class="modal-overlay">
+    <div class="modal-content1">
+      <h3>신고 작성</h3>
+      <form id="reportForm">
+        <input type="hidden" name="reporterIdx" value="${loginMemIdx}" />
+        <input type="hidden" name="resiverIdx" value="${item.lostIdx}" />
 
-      // 숨겨진 상태로 지도 생성 시 표시가 깨질 수 있어 재정렬
-      setTimeout(function() {
-          map.relayout();
+        <label for="rContent">신고 상세내용</label>
+        <textarea id="rContent" name="rContent" required></textarea>
 
-          // 전역 변수에 저장된 Bounds 재적용 -> 마커를 다시 가운데로
-          if (lastBounds) {
-              map.setBounds(lastBounds);
-          }
+        <div class="modal-buttons">
+          <button type="button" onclick="closeReportModal()">취소</button>
+          <button type="submit">제출</button>
+        </div>
+      </form>
+    </div>
+  </div>
 
-          // 지도 영역으로 부드럽게 스크롤
-          mapWrap.scrollIntoView({ behavior: 'smooth' });
-      }, 50);
-  }
-  // 모달 열기/닫기, 신고 폼 로직은 원본 그대로
-  function openReportModal() {
-    document.getElementById("reportModalOverlay").style.display = "flex";
-  }
-  function closeReportModal() {
-    document.getElementById("reportModalOverlay").style.display = "none";
-  }
+  <script>
+    // 모달 열기
+    function openReportModal() {
+      document.getElementById("reportModalOverlay").style.display = "flex";
+    }
+    // 모달 닫기
+    function closeReportModal() {
+      document.getElementById("reportModalOverlay").style.display = "none";
+    }
 
-  const reportForm = document.getElementById("reportForm");
-  reportForm.addEventListener("submit", function(e) {
-    e.preventDefault();
-    const formData = new FormData(reportForm);
-    fetch("/report/submit", {
-      method: "POST",
-      body: formData
-    })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error("신고 접수 중 오류가 발생했습니다.");
-      }
-      return response.text();
-    })
-    .then(data => {
-      alert("신고가 접수되었습니다.");
-      closeReportModal();
-      location.reload();
-    })
-    .catch(err => {
-      alert(err.message);
+    // 신고 폼 submit
+    const reportForm = document.getElementById("reportForm");
+    reportForm.addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      // 폼 데이터 직렬화
+      const formData = new FormData(reportForm);
+
+      // fetch POST
+      fetch("/report/submit", {
+        method: "POST",
+        body: formData
+      })
+              .then(response => {
+                if (!response.ok) {
+                  throw new Error("신고 접수 중 오류가 발생했습니다.");
+                }
+                return response.text(); // 단순 응답
+              })
+              .then(data => {
+                alert("신고가 접수되었습니다.");
+                closeReportModal();
+                // 신고 후 필요하다면 페이지 새로고침/이동
+                location.reload();
+              })
+              .catch(err => {
+                alert(err.message);
+              });
     });
-  });
-
-  // 블라인드
-  const banBtn = document.querySelector('.banBtn');
-  if (banBtn) {
-    banBtn.addEventListener('click', function () {
-      const form = document.querySelector('.form');
-      if (form) {
-        form.action = "/admin/post/ban";
-        form.submit();
-      }
-    });
-  }
-
-  // 채팅 열기
+      //-----------chat open-----------
   function openChat() {
-    var modal = document.getElementById('modal');
-    var iframe = document.getElementById('modal-iframe');
-    iframe.src = '/chatting/room/open/${item.email}';
-    modal.style.display = 'block';
-  }
+        // 모달 표시
+        var modal = document.getElementById('modal');
+        var iframe = document.getElementById('modal-iframe');
+        iframe.src = '/chatting/room/open/${item.email}';
+        modal.style.display = 'block';
+    }
   </script>
 </div>
 </body>

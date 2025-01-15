@@ -140,12 +140,12 @@ public class logincontroller {
     }
     
     @PostMapping("/changePw")
-    public String changePw(@RequestParam Account account) {
-    	System.out.println("==============account: "+account);
+    public String changePw(Account account) {
+    	//System.out.println("==============account: "+account);
     	if(accountService.changePw(account,account.getEmail(),account.getPassword())) {
     		return "login/loginpage";
     	}
-    	else return "/";//error 페이지 만들까?
+    	else return "redirect:/error-page/403";
     }
 }
 
