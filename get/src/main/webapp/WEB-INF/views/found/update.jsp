@@ -6,25 +6,79 @@
   <meta charset="UTF-8">
   <title>습득물 수정</title>
   <style>
-    /* 간단한 스타일 */
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Arial', sans-serif;
       padding: 20px;
+      background-color: #FFFDF9;
     }
-    .form-group { margin-bottom: 15px; }
-    .form-group label { display: block; font-weight: bold; margin-bottom: 5px; }
-    .form-control { width: 100%; padding: 10px; margin-top: 5px; box-sizing: border-box; }
-    input[type="text"], input[type="date"], textarea, select {
-      border: 1px solid #ccc; border-radius: 4px;
+
+    .form-group {
+      margin-bottom: 15px;
       width: 100%;
+      text-align: left;
     }
-    .readonly {
-      background-color: #f0f0f0; /* 읽기 전용 느낌 */
+
+    .form-group label {
+      font-weight: bold;
+      margin-bottom: 5px;
     }
+
+    .form-control {
+      width: 100%;
+      padding: 10px;
+      font-size: 14px;
+      border: 1px solid #FE8015;
+      border-radius: 5px;
+      outline: none;
+      background-color: #FFFDF9;
+      box-sizing: border-box;
+    }
+
+    .form-control:focus {
+      border-color: #FF5722;
+      box-shadow: 0 0 5px rgba(255, 87, 34, 0.5);
+    }
+
+    .big-div {
+      margin-top: 60px;
+      background-color: #FFF;
+      border: 1px solid #FE8015;
+      padding: 5%;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      width: 70%;
+      margin: 0 auto;
+    }
+
+    .titleBox {
+      text-align: left;
+      margin-left: 10%;
+      margin-bottom: 1%;
+    }
+
+    main {
+      margin-left: 20%;
+    }
+
+    a {
+      color: black;
+    }
+
     button {
-      padding: 10px 20px; background-color: #FF914B; color: white; border: none; border-radius: 5px; cursor: pointer;
+      padding: 10px 20px;
+      background-color: #FE8015;
+      color: white;
+      font-weight: bold;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
     }
-    button:hover { background-color: #E67E22; }
+
+    button:hover {
+      background-color: #FF5722;
+    }
   </style>
 </head>
 <body>
