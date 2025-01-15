@@ -73,7 +73,6 @@ class _GetTalkState extends State<GetTalkPage> with SingleTickerProviderStateMix
       callback: (frame) {
         //List<dynamic>? result = json.decode(frame.body!);
         Map<String, dynamic> obj = json.decode(frame.body!);
-        print(obj);
         setState(() => {
         });
       },
@@ -145,7 +144,7 @@ class _GetTalkState extends State<GetTalkPage> with SingleTickerProviderStateMix
               switch (item) {
                 case 1:
                   print("Menu item 1 selected");
-                  // Menu item 1 클릭 시 처리할 내용
+                  Navigator.pushNamed(context, '/map');
                   break;
                 case 2:
                   print("Menu item 2 selected");
@@ -211,10 +210,9 @@ class _GetTalkState extends State<GetTalkPage> with SingleTickerProviderStateMix
             return const Center(child: Text('데이터가 없습니다.'));  // 데이터가 없을 때
           } else {
             final items = snapshot.data!;  // 받아온 Lost 리스트
-            print(items.memberList);
             // ListView로 아이템 표시
             // ListView로 아이템 표시
-            return ListView.builder(
+            return ListView.separated(
               itemCount: items.roomList.length,
               itemBuilder: (context, index) {
                 var room = items.roomList[index];
@@ -260,7 +258,7 @@ class _GetTalkState extends State<GetTalkPage> with SingleTickerProviderStateMix
                     Navigator.pushNamed(context, '/getTalkDetail', arguments: room['chatting_no']);
                   },
                 );
-              },
+              }, separatorBuilder: (BuildContext context, int index) => const Divider(),
             );
           }
         },

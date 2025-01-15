@@ -56,10 +56,17 @@ class _JoinPageState extends State<JoinPage> {
       }),
     );
 
+    print("==================");
+    print(resp.statusCode);
+    print(resp.body);
     if (resp.statusCode == 200) {
-      final data = json.decode(resp.body);
-      // 예: { "success": true } 형태
-      return data['success'] == true;
+      var response = json.decode(resp.body);
+      if(response['success'] == true){
+        return true;
+      }
+      else{
+        return false;
+      }
     }
     return false;
   }
@@ -111,6 +118,7 @@ class _JoinPageState extends State<JoinPage> {
       address1: addr1,
       address2: addr2,
     );
+    print(success);
 
     if (!mounted) return;
     if (success) {

@@ -3,37 +3,33 @@ import 'package:find_get_it_mobile/appConfig.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:location/location.dart';
 import 'package:stomp_dart_client/stomp.dart';
 import 'package:stomp_dart_client/stomp_config.dart';
 import 'package:stomp_dart_client/stomp_frame.dart';
 import 'global.dart';
 
-class Chatting {
+class RoomInfo {
   final String chatting_no;
   final Map<String, dynamic> room;
-  final List<Map<String, dynamic>> chatList;
 
-  Chatting({
+  RoomInfo({
     required this.chatting_no,
     required this.room,
-    required this.chatList,
   });
 
   @override
   String toString() {
     print(chatting_no);
     print(room);
-    print(chatList);
     return "OK";
   }
 
-  factory Chatting.fromJson(Map<String, dynamic> json) {
-    Chatting chatting = Chatting(
+  factory RoomInfo.fromJson(Map<String, dynamic> json) {
+    RoomInfo roomInfo = RoomInfo(
         chatting_no: json['chatting_no'] ?? '',
-        room: Map<String, dynamic>.from(json['room']),
-        chatList:
-            List<Map<String, dynamic>>.from(json['chatList']) ?? List.empty());
-    return chatting;
+        room: Map<String, dynamic>.from(json['room']));
+    return roomInfo;
   }
 }
 
@@ -65,19 +61,6 @@ class Chat {
   }
 }
 
-Future<Chatting> fetchItems(var args) async {
-  var uri = Uri.parse(appConfig.url+'/app/chatting/' + args);
-  final response = await http.get(uri); //광석
-
-  if (response.statusCode == 200) {
-    // 서버에서 받은 JSON 데이터를 파싱해서 List<ChattingRoom>로 변환
-    Map<String, dynamic> data = json.decode(utf8.decode(response.bodyBytes));
-    return Chatting.fromJson(data);
-  } else {
-    throw Exception('Failed to load items');
-  }
-}
-
 class GetTalkDetailPage extends StatefulWidget {
   const GetTalkDetailPage({super.key});
 
@@ -93,27 +76,102 @@ class _GetTalkDetailPageState extends State<GetTalkDetailPage>
   String open_member = '';
   String participant = '';
   List<Chat> chats = [];
-  late Chatting chatting;
+  late RoomInfo roomInfo;
   late StompClient stompClient;
   ScrollController scrollController = ScrollController();
 
-  fetch(var args) async {
-    var uri = Uri.parse(appConfig.url+'/app/chatting/' + args);
+
+
+
+  double lat = 0;
+  double lng = 0;
+  Location location = new Location();
+  bool _serviceEnabled = true;
+  late PermissionStatus _permissionGranted;
+
+  _locateMe() async {
+    _serviceEnabled = await location.serviceEnabled();
+    if (!_serviceEnabled) {
+      _serviceEnabled = await location.requestService();
+      if (!_serviceEnabled) {
+        return;
+      }
+    }
+
+    _permissionGranted = await location.hasPermission();
+    if (_permissionGranted == PermissionStatus.denied) {
+      _permissionGranted = await location.requestPermission();
+      if (_permissionGranted != PermissionStatus.granted) {
+        return;
+      }
+    }
+    await location.getLocation().then((value) {
+      setState(() {
+        lat = value.latitude!;
+        lng = value.longitude!;
+        var uri = Uri.parse(appConfig.url + '/app/chatting/update-location');
+        if(roomInfo.room['open_member']==GlobalState.loginEmail){
+            http.post(uri,
+            headers: <String, String>{'Content-Type': 'application/json'},
+            body: jsonEncode(<String, String>{
+              'chatting_no':_roomIdx,
+              'open_member':GlobalState.loginEmail,
+              'open_member_permission':'Y',
+              'open_member_lat': value.latitude.toString(),
+              'open_member_lng': value.longitude.toString(),
+            }));
+        }else{
+          http.post(uri,
+              headers: <String, String>{'Content-Type': 'application/json'},
+              body: jsonEncode(<String, String>{
+                'chatting_no':_roomIdx,
+                'participant':GlobalState.loginEmail,
+                'participant_permission':'Y',
+                'participant_lat': value.latitude.toString(),
+                'participant_lng': value.longitude.toString(),
+              }));
+        }
+        Navigator.pushNamed(context, "/map",arguments: _roomIdx);
+      });
+    });
+  }
+
+
+
+
+
+  fetchRoom(var args) async {
+    var uri = Uri.parse(appConfig.url + '/app/roomInfo/' + args);
     final response = await http.get(uri); //광석
 
     if (response.statusCode == 200) {
       // 서버에서 받은 JSON 데이터를 파싱해서 List<ChattingRoom>로 변환
       Map<String, dynamic> data = json.decode(utf8.decode(response.bodyBytes));
       setState(() {
-        chatting = Chatting.fromJson(data);
+        roomInfo = RoomInfo.fromJson(data);
       });
     } else {
-      throw Exception('Failed to load items');
+      throw Exception('Failed to load fetchRoom');
+    }
+  }
+
+  fetchChatting(var args) async {
+    var uri = Uri.parse(appConfig.url + '/app/get-chatting/' + args);
+    final response = await http.get(uri); //광석
+
+    if (response.statusCode == 200) {
+      // 서버에서 받은 JSON 데이터를 파싱해서 List<ChattingRoom>로 변환
+      List<dynamic> data = json.decode(utf8.decode(response.bodyBytes));
+      setState(() {
+        chats = data.map((json) => Chat.fromJson(json)).toList();
+      });
+    } else {
+      throw Exception('Failed to load fetchChatting');
     }
   }
 
   updateView(var args) async {
-    var uri = Uri.parse(appConfig.url+'/app/chatting/update-view');
+    var uri = Uri.parse(appConfig.url + '/app/chatting/update-view');
     final response = await http.post(uri,
         headers: <String, String>{'Content-Type': 'application/json'},
         body: jsonEncode(<String, String>{
@@ -124,7 +182,7 @@ class _GetTalkDetailPageState extends State<GetTalkDetailPage>
     if (response.statusCode == 200) {
       // 서버에서 받은 JSON 데이터를 파싱해서 List<ChattingRoom>로 변환
     } else {
-      throw Exception('Failed to load items');
+      throw Exception('Failed to load updateView');
     }
   }
 
@@ -136,7 +194,9 @@ class _GetTalkDetailPageState extends State<GetTalkDetailPage>
         Map<String, dynamic> obj = json.decode(frame.body!);
         updateView(_roomIdx);
         Chat chat = Chat.fromJson(obj);
-        setState(() => {chats.add(chat)});
+        setState(() {
+          chats.insert(0, chat);
+        });
       },
     );
     stompClient.send(
@@ -152,13 +212,13 @@ class _GetTalkDetailPageState extends State<GetTalkDetailPage>
   @override
   void initState() {
     super.initState();
-
     // 탭: 분실물 / 습득물 / 경찰 습득물
     // 화면 빌드 후 arguments 로부터 검색어 받기
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final args = ModalRoute.of(context)?.settings.arguments;
       if (args is String) {
-        fetch(args);
+        fetchRoom(args);
+        fetchChatting(args);
         updateView(args);
         setState(() {
           _roomIdx = args;
@@ -234,41 +294,46 @@ class _GetTalkDetailPageState extends State<GetTalkDetailPage>
           children: [
 // 채팅 목록을 표시하는 ListView
             Expanded(
-              child: FutureBuilder<Chatting>(
-                future: fetchItems(_roomIdx), // fetchItems() 함수에서 API 호출
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(
-                        child: CircularProgressIndicator()); // 로딩 화면
-                  } else if (snapshot.hasError) {
-                    return Center(
-                        child: Text('에러 발생: ${snapshot.error}')); // 에러 처리
-                  } else if (!snapshot.hasData) {
-                    return const Center(child: Text('데이터가 없습니다.')); // 데이터가 없을 때
-                  } else {
-                    final items = snapshot.data!; // 받아온 Lost 리스트
-                    print(items);
-                    return ListView.builder(
-                      reverse: true,
-                      controller: scrollController,
-                      itemCount: items.chatList.length,
-                      itemBuilder: (context, index) {
-                        var chat = items.chatList[index];
-                        return ChatBubble(
-                            chat['message_content'],
-                            chat['send_time'],
-                            (chat['sender'] == GlobalState.loginEmail)
-                                ? true
-                                : false);
-                      },
-                    );
-                  }
+              child: ListView.builder(
+                reverse: true,
+                controller: scrollController,
+                itemCount: chats.length,
+                itemBuilder: (context, index) {
+                  var chat = chats[index];
+                  return ChatBubble(chat.message_content, chat.send_time,
+                      (chat.sender == GlobalState.loginEmail) ? true : false);
                 },
               ),
             ),
 // 텍스트 입력 필드와 전송 버튼을 가진 Row
             Row(
               children: [
+                IconButton(
+                  icon: const Icon(Icons.add),
+                  onPressed: () {
+                    showModalBottomSheet(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return Container(
+                          height: 300, // 모달 높이 크기
+                          decoration: const BoxDecoration(
+                            color: Colors.white, // 모달 배경색
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(0), // 모달 좌상단 라운딩 처리
+                              topRight: Radius.circular(0), // 모달 우상단 라운딩 처리
+                            ),
+                          ),
+                          child: IconButton(
+                              onPressed: () {
+                                _locateMe();
+                              },
+                              icon: Icon(Icons.map)), // 모달 내부 디자인 영역
+                        );
+                      },
+                    );
+                  },
+                ),
+
 // 텍스트 입력 필드
                 Expanded(
                   child: TextField(
@@ -297,7 +362,7 @@ class _GetTalkDetailPageState extends State<GetTalkDetailPage>
                       );
                       stompClient.send(
                         destination: '/app/roomList/' +
-                            chatting.room['open_member'], // 전송할 destination
+                            roomInfo.room['open_member'], // 전송할 destination
                         body: json.encode({
                           "chatting_no": _roomIdx.toString(),
                           "sender": GlobalState.loginEmail,
@@ -306,15 +371,19 @@ class _GetTalkDetailPageState extends State<GetTalkDetailPage>
                       );
                       stompClient.send(
                         destination: '/app/roomList/' +
-                            chatting.room['participant'], // 전송할 destination
+                            roomInfo.room['participant'], // 전송할 destination
                         body: json.encode({
                           "chatting_no": _roomIdx.toString(),
                           "sender": GlobalState.loginEmail,
                           "message_content": message,
                         }), // 메시지의 내용
                       );
-// 텍스트 입력 필드를 비움
+                      // 텍스트 입력 필드를 비움
                       textController.clear();
+                      scrollController.animateTo(
+                          scrollController.position.minScrollExtent,
+                          duration: const Duration(milliseconds: 500),
+                          curve: Curves.easeOut);
                     }
                   },
                 ),

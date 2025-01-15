@@ -101,7 +101,7 @@ class _LoginPageState extends State<LoginPage> {
         children: [
           // 로고
           Image.asset(
-            "assets/icon/login_side.png",
+            "assets/logo/logo_open_orange.png",
             width: 120,
             height: 120,
           ),
