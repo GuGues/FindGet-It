@@ -9,12 +9,30 @@
   <link rel="icon" type="image/png" href="/img/favicon.ico" />
   <style>
     /* 기존 스타일 유지 */
-    body { font-family: Arial, sans-serif; padding: 20px; }
-    .form-group { margin-bottom: 15px; width: 100%; text-align: left; }
-    .form-group label { display: block; font-weight: bold; margin-bottom: 5px; width: 100%; }
-    .form-control { width: 100%; padding: 10px; margin-top: 5px; box-sizing: border-box; }
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    .form-group {
+      margin-bottom: 15px;
+      width: 100%;
+      text-align: left;
+    }
+    .form-group label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 5px;
+      width: 100%;
+    }
+    .form-control {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      box-sizing: border-box;
+    }
     select, input[type="text"], input[type="date"], textarea {
-      border: 1px solid #ccc; border-radius: 4px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
       width: 100%;
     }
     button { padding: 10px 20px; background-color: #FF914B; color: white; border: none; border-radius: 5px; cursor: pointer; }
@@ -172,10 +190,10 @@
 
 
 
-    <div class="form-group">
-      <label for="itemState">물품 상태 정보</label>
-      <input type="text" id="itemState" name="itemState" class="form-control">
-    </div>
+<%--    <div class="form-group">--%>
+<%--      <label for="itemState">물품 상태 정보</label>--%>
+<%--      <input type="text" id="itemState" name="itemState" class="form-control">--%>
+<%--    </div>--%>
 
     <!-- 이미지 업로드 섹션 -->
     <div class="form-group image-upload-section">

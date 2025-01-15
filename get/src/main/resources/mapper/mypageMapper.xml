@@ -5,61 +5,61 @@
 
 <mapper namespace="com.get.mypage.MypageMapper">
 
-<select id="getEmail">
-SELECT EMAIL, NICKNAME, PASSWORD, USERNAME, BIRTH, PHONE, MEM_IDX, ADDRESS1, ADDRESS2, POSTNUMBER, TO_CHAR(COM_DATE, 'YYYY-MM-DD')AS COM_DATE, USER_GRANT, JOIN_COUNT    
-FROM   MEMBERS
-WHERE  EMAIL = #{email}
-</select>
+    <select id="getEmail">
+        SELECT EMAIL, NICKNAME, PASSWORD, USERNAME, BIRTH, PHONE, MEM_IDX, ADDRESS1, ADDRESS2, POSTNUMBER, TO_CHAR(COM_DATE, 'YYYY-MM-DD')AS COM_DATE, USER_GRANT, JOIN_COUNT
+        FROM   MEMBERS
+        WHERE  EMAIL = #{email}
+    </select>
 
-<select id="getMyFind">
-SELECT *
-FROM   MY_FIND
-WHERE  MEM_IDX = #{mem_idx}
-</select>
+    <select id="getMyFind">
+        SELECT TO_CHAR(SET_DATE, 'YYYY-MM-DD')AS SET_DATE, MEM_IDX, ITEM_CODE, LOCATION_CODE
+        FROM   MY_FIND
+        WHERE  MEM_IDX = #{mem_idx}
+    </select>
 
-<select id="getLostList">
-SELECT LOST_IDX, LOST_TITLE, TO_CHAR(L_REG_DATE, 'YYYY-MM-DD')AS L_REG_DATE, L_VIEWS
-FROM   LOST_ITEMS
-WHERE  EMAIL = #{email}
-</select>
+    <select id="getLostList">
+        SELECT LOST_IDX, LOST_TITLE, TO_CHAR(L_REG_DATE, 'YYYY-MM-DD')AS L_REG_DATE, L_VIEWS
+        FROM   LOST_ITEMS
+        WHERE  EMAIL = #{email}
+    </select>
 
-<select id="getCsList">
-SELECT CS_IDX, CS_TITLE, TO_CHAR(CS_REG_DATE, 'YYYY-MM-DD') AS CS_REG_DATE, CS_STATE
-FROM   CS_CENTER
-WHERE  EMAIL = #{email}
-</select>
+    <select id="getCsList">
+        SELECT CS_IDX, CS_TITLE, TO_CHAR(CS_REG_DATE, 'YYYY-MM-DD') AS CS_REG_DATE, CS_STATE
+        FROM   CS_CENTER
+        WHERE  EMAIL = #{email}
+    </select>
 
-<select id="getFoundList">
-SELECT FOUND_IDX, FOUND_TITLE, TO_CHAR(F_REG_DATE, 'YYYY-MM-DD') AS F_REG_DATE, F_VIEWS
-FROM   FOUND
-WHERE  EMAIL = #{email}
-</select>
+    <select id="getFoundList">
+        SELECT FOUND_IDX, FOUND_TITLE, TO_CHAR(F_REG_DATE, 'YYYY-MM-DD') AS F_REG_DATE, F_VIEWS
+        FROM   FOUND
+        WHERE  EMAIL = #{email}
+    </select>
 
-<delete id="deleteLost" parameterType="list">
-    DELETE FROM LOST_ITEMS
-    WHERE LOST_IDX IN 
-    <foreach item="lost_idx" index="index" collection="list" open="(" separator="," close=")">
-        #{lost_idx}
-    </foreach>
-</delete>
+    <delete id="deleteLost" parameterType="list">
+        DELETE FROM LOST_ITEMS
+        WHERE LOST_IDX IN
+        <foreach item="lost_idx" index="index" collection="list" open="(" separator="," close=")">
+            #{lost_idx}
+        </foreach>
+    </delete>
 
-<delete id="deleteCs" parameterType="list">
-    DELETE FROM CS_CENTER 
-    WHERE CS_IDX IN 
-    <foreach item="cs_idx" index="index" collection="list" open="(" separator="," close=")">
-        #{cs_idx}
-    </foreach>
-</delete>
+    <delete id="deleteCs" parameterType="list">
+        DELETE FROM CS_CENTER
+        WHERE CS_IDX IN
+        <foreach item="cs_idx" index="index" collection="list" open="(" separator="," close=")">
+            #{cs_idx}
+        </foreach>
+    </delete>
 
-<delete id="deleteFound" parameterType="list">
-    DELETE FROM FOUND
-    WHERE FOUND_IDX IN 
-    <foreach item="found_idx" index="index" collection="list" open="(" separator="," close=")">
-        #{found_idx}
-    </foreach>
-</delete>
+    <delete id="deleteFound" parameterType="list">
+        DELETE FROM FOUND
+        WHERE FOUND_IDX IN
+        <foreach item="found_idx" index="index" collection="list" open="(" separator="," close=")">
+            #{found_idx}
+        </foreach>
+    </delete>
 
-  <select id="getFound">
+    <select id="getFound">
         SELECT *
         FROM FOUND
         WHERE FOUND_IDX = #{found_idx}
@@ -70,84 +70,92 @@ WHERE  EMAIL = #{email}
         FROM  CS_CENTER
         WHERE CS_IDX = #{cs_idx}
     </select>
-    
-     <select id="getLost">
+
+    <select id="getLost">
         SELECT *
         FROM  LOST_ITEMS
         WHERE LOST_IDX = #{lost_idx}
     </select>
-    
-    
-<select id="getLocations">
+
+
+    <select id="getLocations">
         SELECT *
         FROM LOCATIONS
         WHERE LOCATION_CODE = #{location_code}
     </select>
 
-<select id="getAllLocation">
-SELECT *
-FROM   LOCATIONS
-</select>
+    <select id="getAllLocation">
+        SELECT LOCATION_CODE, GUGUN_NAME, SIDO_NAME
+        FROM   LOCATIONS
+    </select>
 
-<select id="getItems">
+    <select id="getItems">
         SELECT *
         FROM ITEMS
         WHERE ITEM_CODE = #{item_code}
     </select>
 
 
-<select id="getAllItem">
-        SELECT *
+    <select id="getAllItem">
+        SELECT ITEM_CODE, ITEM
         FROM ITEMS
     </select>
 
 
-<select id="getMember">
+    <select id="getMember">
         SELECT *
         FROM MEMBERS
         WHERE EMAIL = #{email}
     </select>
-    
-<select id="getCountWrite">
-SELECT SUM(A + B)AS COUNT
-FROM (
-    SELECT EMAIL, COUNT(*) AS A, 0 AS B
-    FROM FOUND
-    GROUP BY EMAIL
-    UNION ALL
-    SELECT EMAIL, 0 AS A, COUNT(*) AS B
-    FROM LOST_ITEMS
-    GROUP BY EMAIL
-) T
-GROUP BY EMAIL
-HAVING EMAIL = #{email}
-</select>    
 
+    <select id="getCountWrite">
+        SELECT SUM(A + B)AS COUNT
+        FROM (
+            SELECT EMAIL, COUNT(*) AS A, 0 AS B
+            FROM FOUND
+            GROUP BY EMAIL
+            UNION ALL
+            SELECT EMAIL, 0 AS A, COUNT(*) AS B
+            FROM LOST_ITEMS
+            GROUP BY EMAIL
+            ) T
+        GROUP BY EMAIL
+        HAVING EMAIL = #{email}
+    </select>
 
+    <select id="getNotFind">
+        SELECT EMAIL, TITLE, VIEWS, TO_CHAR(REG_DATE, 'YYYY-MM-DD')AS REG_DATE, IDX
+        FROM (
+                 SELECT EMAIL, FOUND_TITLE AS TITLE,  F_VIEWS AS VIEWS, F_REG_DATE AS REG_DATE, FOUND_IDX AS IDX
+                 FROM FOUND
+                 WHERE EMAIL = #{email}
+                 UNION ALL
+                 SELECT EMAIL, LOST_TITLE AS TITLE, L_VIEWS AS VIEWS, L_REG_DATE AS REG_DATE, LOST_IDX AS IDX
+                 FROM LOST_ITEMS
+                 WHERE EMAIL = #{email}
+             ) T
+    </select>
 
-<update id="updateUser">
-    UPDATE MEMBERS
-    SET
-        NICKNAME   = #{nickname},
-        PASSWORD   = #{password},
-        PHONE      = #{phone},
-        ADDRESS1   = #{address1},
-        ADDRESS2   = #{address2},
-        POSTNUMBER = #{postnumber}
-    WHERE EMAIL = #{email}
-</update>
+    <update id="updateMyFind">
+        UPDATE MY_FIND
+        SET
+            SET_DATE = SYSDATE,
+            LOCATION_CODE = #{location_code},
+            ITEM_CODE = #{item_code}
+        WHERE MEM_IDX = #{mem_idx}
+    </update>
 
-<update id="updateUser">
-    UPDATE MEMBERS
-    SET
-        NICKNAME   = #{nickname},
-        PASSWORD   = #{password},
-        PHONE      = #{phone},
-        ADDRESS1   = #{address1},
-        ADDRESS2   = #{address2},
-        POSTNUMBER = #{postnumber}
-    WHERE EMAIL = #{email}
-</update>
+    <update id="updateUser">
+        UPDATE MEMBERS
+        SET
+            NICKNAME   = #{nickname},
+            PASSWORD   = #{password},
+            PHONE      = #{phone},
+            ADDRESS1   = #{address1},
+            ADDRESS2   = #{address2},
+            POSTNUMBER = #{postnumber}
+        WHERE EMAIL = #{email}
+    </update>
 
 
 </mapper>

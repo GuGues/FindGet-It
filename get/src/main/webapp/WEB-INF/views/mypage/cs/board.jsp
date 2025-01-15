@@ -9,7 +9,7 @@
 </head>
 <style>
 main {
-	margin-left: 20%;
+	margin-left: 25%;
 }
 
 table td, table th {

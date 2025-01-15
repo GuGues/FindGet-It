@@ -134,7 +134,7 @@
      <li><a href="/notice">공지사항</a></li>
     </c:if>
     <c:if test="${url.contains('/mypage')}">
-     <li><h3>마이페이지</h3></li>
+     <li><h3><a class="h3" href="/Mypage">마이페이지</a></h3></li>
      <li><a href="/Mypage/Lost/Board">나의 분실물</a></li>
      <li><a href="/Mypage/Found/Board">나의 습득물</a></li>
      <li><a href="/Mypage/Cs/Board">나의 문의글</a></li>

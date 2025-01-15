@@ -14,12 +14,16 @@
 <style>
 main {
 	margin-left: 20%;
+
 	padding: 20px 40px;
+
+
+	background-color: #F2F2F2;
 }
 /* 전체 페이지 스타일 */
 body {
 	font-family: Arial, sans-serif;
-	background-color: white; /* 어두운 배경 */
+	background-color: #F2F2F2; /* 어두운 배경 */
 	color: #fff;
 	margin: 0;
 	padding: 10px;
@@ -132,7 +136,7 @@ body {
 
 /* 프로필 박스 전체 */
 .profile-box {
-	width: 700px;
+	width: 100%;
 	background-color: #fff;
 	color: #333;
 	border: 1px solid #ddd;
@@ -261,9 +265,8 @@ a {
 .notfind {
 	margin: 50px auto 0;
 	text-align: center;
-	max-width: 800px;
 	border-radius: 5px;
-	width: 700px;
+	width: 100%;
 	background-color: #fff;
 	color: #333;
 	border: 1px solid #ddd;
@@ -286,16 +289,27 @@ table {
     width: 100%;
 }
 
-.upbox {
-    
+.bigdiv {
+	margin-top: 60px; /* 상단 여백 */
+	background-color: #F2F2F2; /* 배경색 */
+	border-radius: 10px; /* 모서리 반지름 */
+	/*box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); !* 그림자 효과 *!*/
+	text-align: center; /* 텍스트 중앙 정렬 */
+	width: 100%; /* 너비 설정 */
+	z-index: 1; /* 배경보다 위에 오도록 설정 */
+	margin: 0; /* 화면에서 수평 중앙 정렬 */
+	justify-content: center; /* 자식 요소를 수평 중앙 정렬 */
+	position: relative; /* 자식의 절대 위치를 기준으로 함 */
+	height: auto; /* 고정 높이를 제거하여 콘텐츠에 맞게 확장 */
+	overflow: hidden; /* 넘치는 콘텐츠 숨김 */
 }
 
 </style>
 </head>
 <body>
-	<%@include file="/WEB-INF/include/adminSide.jsp"%>
+	<%@include file="/WEB-INF/include/side.jsp"%>
 	<main>
-		<div>
+		<div class="bigdiv">
 			<div id="topm">
 				<a href="/">Home</a> &nbsp;&nbsp;>&nbsp;&nbsp; <a href="#">Mypage</a>
 			</div>
@@ -459,7 +473,12 @@ table {
 								<c:forEach items="${notFind}" var="nf" varStatus="nstatus">
 									<tr>
 										<td><a href="#">${nstatus.index + 1}</a></td>
-										<td><a href="#">${nf.title}</a></td>
+										<c:if test="${nf.idx.contains('LO')}">
+										<td><a href="/lost/view?lostIdx=${nf.idx}">${nf.title}</a></td>
+										</c:if>
+										<c:if test="${nf.idx.contains('FD')}">
+										<td><a href="/found/view?foundIdx=${nf.idx}">${nf.title}</a></td>
+										</c:if>
 										<td><a href="#">${nf.reg_date}</a></td>
 										<td><a href="#">${nf.views}</a></td>
 									</tr>

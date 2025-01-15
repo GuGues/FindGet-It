@@ -84,6 +84,8 @@
                 <td>${member.username }</td>
                 <th>아이디</th>
                 <td>${member.email }</td>
+                <th>닉네임</th>
+                <td>${member.nickname }</td>
                 <th>작성일</th>
                 <td>${cs.cs_reg_date }</td>
             </tr>

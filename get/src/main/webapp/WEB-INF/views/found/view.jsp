@@ -344,16 +344,16 @@
         <span class="label">지역:</span>
         <c:out value="${item.sidoName}" /> <c:out value="${item.gugunName}" />
       </div>
-      <div class="found-state-message">
-        <c:choose>
-          <c:when test="${item.foundState == 2}">
-            보관중이며 주인을 찾고 있는 물건입니다.
-          </c:when>
-          <c:when test="${item.foundState == 1}">
-            주인의 품으로 돌아간 물건입니다.
-          </c:when>
-        </c:choose>
-      </div>
+<div class="found-state-message">
+    <c:choose>
+        <c:when test="${item.foundState == 2}">
+            <span style="color: red;">보관중이며 주인을 찾고 있는 물건입니다.</span>
+        </c:when>
+        <c:when test="${item.foundState == 1}">
+            <span style="color: green;">주인의 품으로 돌아간 물건입니다.</span>
+        </c:when>
+    </c:choose>
+</div>
     </div>
   </div>
 
@@ -432,80 +432,27 @@
   </div>
   </div>
 
+<!-- 신고 모달 HTML (화면 맨 하단) -->
+<div id="reportModalOverlay" class="modal-overlay">
+  <div class="modal-content2">
+    <h3>신고 작성</h3>
+    <form id="reportForm">
+      <input type="hidden" name="reporterIdx" value="${loginMemIdx}" />
+      <input type="hidden" name="resiverIdx" value="${item.foundIdx}" />
+      <label for="rContent">신고 상세내용</label>
+      <textarea id="rContent" name="rContent" required></textarea>
+      <div class="modal-buttons">
+        <button type="button" onclick="closeReportModal()">취소</button>
+        <button type="submit">제출</button>
+      </div>
+    </form>
+  </div>
+</div>
 </div>
 
 <!-- 카카오 맵 API 스크립트 포함 -->
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=a38a546a4aaada7aec2c459d8d1d085a&libraries=services"></script>
-<script>
-  // 지도 표시 + 스크롤 이동
-    function scrollToMap(){
-      const mapWrap = document.querySelector('.map_wrap');
-      mapWrap.style.display = 'block';
-      setTimeout(function(){
-        map.relayout();
-        if(lastBounds){
-          map.setBounds(lastBounds);
-        }
-        mapWrap.scrollIntoView({behavior:'smooth'});
-      },50);
-    }
 
-  // 1) 채팅 열기(모달 or 새창 등)
-  function openChat() {
-    var modal = document.getElementById('modal');
-    var iframe = document.getElementById('modal-iframe');
-    // item.email은 습득물 작성자의 이메일
-    iframe.src = '/chatting/room/open/${item.email}';
-    modal.style.display = 'block';
-  }
-
-  // [2] 블라인드 폼 submit
-  const banBtn = document.querySelector('.banBtn');
-  if (banBtn) {
-      banBtn.addEventListener('click', function() {
-          const form = document.querySelector('.form');
-          if (form) {
-              form.action = "/admin/post/ban";
-              form.submit();
-          }
-      });
-  }
-
-  // [3] 신고 모달 열기/닫기
-  function openReportModal() {
-    document.getElementById("reportModalOverlay").style.display = "flex";
-  }
-  function closeReportModal() {
-    document.getElementById("reportModalOverlay").style.display = "none";
-  }
-
-  // 신고 폼 처리
-  const reportForm = document.getElementById("reportForm");
-  if(reportForm) {
-    reportForm.addEventListener("submit", function(e) {
-      e.preventDefault();
-      const formData = new FormData(reportForm);
-      fetch("/report/submit", {
-        method: "POST",
-        body: formData
-      })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error("신고 접수 중 오류가 발생했습니다.");
-        }
-        return response.text();
-      })
-      .then(data => {
-        alert("신고가 접수되었습니다.");
-        closeReportModal();
-        location.reload();
-      })
-      .catch(err => {
-        alert(err.message);
-      });
-    });
-  }
-</script>
 
 <!-- 실제 맵 로직 -->
 <script>
@@ -663,24 +610,78 @@
           el.removeChild (el.lastChild);
       }
   }
+
+  // 지도 표시 + 스크롤 이동
+    function scrollToMap(){
+      const mapWrap = document.querySelector('.map_wrap');
+      mapWrap.style.display = 'block';
+      setTimeout(function(){
+        map.relayout();
+        if(lastBounds){
+          map.setBounds(lastBounds);
+        }
+        mapWrap.scrollIntoView({behavior:'smooth'});
+      },50);
+    }
+
+  // 1) 채팅 열기(모달 or 새창 등)
+  function openChat() {
+    var modal = document.getElementById('modal');
+    var iframe = document.getElementById('modal-iframe');
+    // item.email은 습득물 작성자의 이메일
+    iframe.src = '/chatting/room/open/${item.email}';
+    modal.style.display = 'block';
+  }
+
+  // [2] 블라인드 폼 submit
+  const banBtn = document.querySelector('.banBtn');
+  if (banBtn) {
+      banBtn.addEventListener('click', function() {
+          const form = document.querySelector('.form');
+          if (form) {
+              form.action = "/admin/post/ban";
+              form.submit();
+          }
+      });
+  }
+
+  // [3] 신고 모달 열기/닫기
+  function openReportModal() {
+    document.getElementById("reportModalOverlay").style.display = "flex";
+  }
+  function closeReportModal() {
+    document.getElementById("reportModalOverlay").style.display = "none";
+  }
+
+  // 신고 폼 처리
+  const reportForm = document.getElementById("reportForm");
+  if(reportForm) {
+    reportForm.addEventListener("submit", function(e) {
+      e.preventDefault();
+      const formData = new FormData(reportForm);
+      fetch("/report/submit", {
+        method: "POST",
+        body: formData
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error("신고 접수 중 오류가 발생했습니다.");
+        }
+        return response.text();
+      })
+      .then(data => {
+        alert("신고가 접수되었습니다.");
+        closeReportModal();
+        location.reload();
+      })
+      .catch(err => {
+        alert(err.message);
+      });
+    });
+  }
+
 </script>
 
-<!-- 신고 모달 HTML (화면 맨 하단) -->
-<div id="reportModalOverlay" class="modal-overlay">
-  <div class="modal-content2">
-    <h3>신고 작성</h3>
-    <form id="reportForm">
-      <input type="hidden" name="reporterIdx" value="${loginMemIdx}" />
-      <input type="hidden" name="resiverIdx" value="${item.foundIdx}" />
-      <label for="rContent">신고 상세내용</label>
-      <textarea id="rContent" name="rContent" required></textarea>
-      <div class="modal-buttons">
-        <button type="button" onclick="closeReportModal()">취소</button>
-        <button type="submit">제출</button>
-      </div>
-    </form>
-  </div>
-</div>
 
 <!-- 채팅 모달(예시) -->
 <div id="modal" class="modal-overlay" style="display:none;">
