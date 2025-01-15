@@ -1,7 +1,11 @@
 package com.get.foundview;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+import com.get.alarm.AlarmService;
+import com.get.alarm.AlarmVo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,22 +14,33 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+
+
 import java.security.Principal;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/found")
 public class FoundViewController {
 
+
     @Autowired
     private FoundViewMapper foundViewMapper;
+    @Autowired
+    private AlarmService alarmService;
+
+    @Value("${server.img.url}")
+    private String severUrl;
 
     /**
      * 습득물 상세 보기
      */
     @GetMapping("/view")
-    public String foundView(@RequestParam("foundIdx") String foundIdx, Model model) {
+    public String foundView(@RequestParam("foundIdx") String foundIdx, Model model, HttpServletRequest request) {
+        HttpSession session = request.getSession();
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = null;
 
@@ -37,6 +52,15 @@ public class FoundViewController {
                 email = (String) principal;
             }
         }
+        
+        String filePath = foundViewMapper.getFoundFilePath(foundIdx);
+        if( filePath != null) {
+        	filePath = filePath.replace("\\", "/");
+        	filePath = filePath.split("Desktop/")[1];
+        	
+        	model.addAttribute("filePath", filePath);
+            model.addAttribute("severUrl", severUrl);
+        }
 
 
         FoundItemVO item = foundViewMapper.selectFoundItemDetail(foundIdx);
@@ -45,6 +69,37 @@ public class FoundViewController {
 
         // ☆ 이 부분이 중요: 현재 로그인 이메일을 model에 추가
         model.addAttribute("loginEmail", email);
+
+
+        // =============== 조회수 증가 로직 추가 ===============
+        // 로그인한 사용자인 경우 && 중복조회 방지
+        if (email != null && !email.equals("anonymousUser")) {
+            // 세션에서 alreadyViewedFound 라는 Set<String> 가져옴
+            @SuppressWarnings("unchecked")
+            Set<String> viewedFoundSet = (Set<String>) session.getAttribute("alreadyViewedFound");
+            if (viewedFoundSet == null) {
+                viewedFoundSet = new HashSet<>();
+            }
+
+            // 만약 현재 foundIdx가 세션에 없다면
+            if (!viewedFoundSet.contains(foundIdx)) {
+                // DB 조회수 + 1
+                foundViewMapper.updateFoundViews(foundIdx);
+                // 세션 Set에 추가
+                viewedFoundSet.add(foundIdx);
+                session.setAttribute("alreadyViewedFound", viewedFoundSet);
+
+                // 최신 조회수 반영 위해 다시 select (선택사항)
+                // FoundItemVO updatedItem = foundViewMapper.selectFoundItemDetail(foundIdx);
+                // model.addAttribute("item", updatedItem);
+            }
+        }
+        // ===============================================
+
+
+
+
+
         return "found/view";
     }
 
@@ -131,52 +186,6 @@ public class FoundViewController {
         // 수정 화면
         return "found/update";
     }
-
-    // 돌려줌  버튼
-    @PostMapping("/complete")
-    @Transactional
-    public String markAsFound(@RequestParam("foundIdx") String foundIdx, @RequestParam("email") String email, HttpServletRequest request) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String loginEmail = null;
-
-        if (authentication != null && authentication.isAuthenticated()) {
-            Object principal = authentication.getPrincipal();
-            if (principal instanceof UserDetails) {
-                loginEmail = ((UserDetails) principal).getUsername();
-            } else if (principal instanceof String) {
-                loginEmail = (String) principal;
-            }
-        }
-
-        if (loginEmail != null && loginEmail.equals(email)) {
-            foundViewMapper.updateFoundState(foundIdx, 1); // 상태를 1로 변경
-        }
-        return "redirect:/found/view?foundIdx=" + foundIdx;
-    }
-
-    // 돌려줌  취소
-    @PostMapping("/cancel")
-    @Transactional
-    public String cancelFound(@RequestParam("foundIdx") String foundIdx, @RequestParam("email") String email) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String loginEmail = null;
-
-        if (authentication != null && authentication.isAuthenticated()) {
-            Object principal = authentication.getPrincipal();
-            if (principal instanceof UserDetails) {
-                loginEmail = ((UserDetails) principal).getUsername();
-            } else if (principal instanceof String) {
-                loginEmail = (String) principal;
-            }
-        }
-
-        if (loginEmail != null && loginEmail.equals(email)) {
-            foundViewMapper.updateFoundState(foundIdx, 2); // 상태를 "찾는 중(2)"으로 변경
-        }
-        return "redirect:/found/view?foundIdx=" + foundIdx;
-    }
-
-
 
     /**
      * 습득물 수정 처리

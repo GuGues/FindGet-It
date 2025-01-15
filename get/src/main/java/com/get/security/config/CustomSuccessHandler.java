@@ -1,7 +1,6 @@
 package com.get.security.config;
 
 import com.get.security.service.Account;
-import com.get.security.service.AccountService;
 import com.get.security.service.UserMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -11,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.savedrequest.RequestCache;
@@ -24,7 +24,6 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
-	private final AccountService accountService;
     private final UserMapper userMapper;
     private RequestCache requestCache = new HttpSessionRequestCache();
 
@@ -52,9 +51,6 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
             session.setAttribute("nickname", account.getNickname());
 
         }
-        
-        
-        accountService.updateJoinCountIfNewDay(email);
 
         SavedRequest savedRequest = this.requestCache.getRequest(request, response);
         if (savedRequest == null) {

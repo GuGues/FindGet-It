@@ -14,9 +14,6 @@ import org.springframework.web.servlet.ModelAndView;
 import com.get.found.FoundMapper;
 import com.get.found.foundCustomVo;
 import com.get.paging.pagingHelper;
-import com.get.vo.colorVo;
-import com.get.vo.itemVo;
-import com.get.vo.locationVo;
 
 @RestController
 public class searchController {
@@ -74,6 +71,7 @@ public class searchController {
 		ModelAndView mv = new ModelAndView();
 		mv.addObject("lostList",searchLost);
 		mv.addObject("pagingHelper",pagingHelper);
+		mv.addObject("search",map);
 		mv.setViewName("lost/board");
 		
 		return mv;
@@ -94,6 +92,7 @@ public class searchController {
 		ModelAndView mv = new ModelAndView();
 		mv.addObject("foundList",searchFound);
 		mv.addObject("pagingHelper",pagingHelper);
+		mv.addObject("search",map);
 		mv.setViewName("found/board");
 		
 		return mv;

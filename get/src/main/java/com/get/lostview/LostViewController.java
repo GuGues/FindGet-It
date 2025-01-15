@@ -2,7 +2,9 @@ package com.get.lostview;
 
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,8 +14,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Principal;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 
 @Controller
@@ -22,10 +26,14 @@ public class LostViewController {
 
     @Autowired
     private LostViewMapper lostViewMapper;
+    
+    @Value("${server.img.url}")
+    private String severUrl;
 
 
     @GetMapping("/view")
-    public String lostView(@RequestParam("lostIdx") String lostIdx, Model model) {
+    public String lostView(@RequestParam("lostIdx") String lostIdx, Model model, HttpServletRequest request) {
+        HttpSession session = request.getSession();
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = null;
 
@@ -37,12 +45,46 @@ public class LostViewController {
                 email = (String) principal;
             }
         }
-
+        
+        String filePath = lostViewMapper.getFilePath(lostIdx);
+        if( filePath != null) {
+        	filePath = filePath.replace("\\", "/");
+        	filePath = filePath.split("Desktop/")[1];
+        	
+        	model.addAttribute("filePath", filePath);
+            model.addAttribute("severUrl", severUrl);
+        }
 
         LostItemVO item = lostViewMapper.selectLostItemDetail(lostIdx);
 
         model.addAttribute("item", item);
         model.addAttribute("loginEmail", email);
+        System.out.println(filePath);
+        // =============== 조회수 증가 로직 추가 ===============
+        // 로그인한 사용자인 경우 && 중복조회 방지
+        if (email != null && !email.equals("anonymousUser")) {
+            @SuppressWarnings("unchecked")
+            Set<String> viewedLostSet = (Set<String>) session.getAttribute("alreadyViewedLost");
+            if (viewedLostSet == null) {
+                viewedLostSet = new HashSet<>();
+            }
+            // 만약 현재 lostIdx가 세션에 없다면
+            if (!viewedLostSet.contains(lostIdx)) {
+                // DB 조회수 + 1
+                lostViewMapper.updateLostViews(lostIdx);
+                // 세션 Set에 추가
+                viewedLostSet.add(lostIdx);
+                session.setAttribute("alreadyViewedLost", viewedLostSet);
+
+                // 최신 조회수 반영 위해 다시 select (선택사항)
+                // LostItemVO updatedItem = lostViewMapper.selectLostItemDetail(lostIdx);
+                // model.addAttribute("item", updatedItem);
+            }
+        }
+
+
+
+
 
         return "lost/view";
         // 예: /WEB-INF/views/lost/view.jsp (View Resolver 설정에 따라 달라질 수 있음)
@@ -135,54 +177,9 @@ public class LostViewController {
         return "lost/update";
     }
 
-
-    // 찾음 버튼
-    @PostMapping("/complete")
-    @Transactional
-    public String markAsFound(@RequestParam("lostIdx") String lostIdx, @RequestParam("email") String email, HttpServletRequest request) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String loginEmail = null;
-
-        if (authentication != null && authentication.isAuthenticated()) {
-            Object principal = authentication.getPrincipal();
-            if (principal instanceof UserDetails) {
-                loginEmail = ((UserDetails) principal).getUsername();
-            } else if (principal instanceof String) {
-                loginEmail = (String) principal;
-            }
-        }
-
-        if (loginEmail != null && loginEmail.equals(email)) {
-            lostViewMapper.updateLostState(lostIdx, 1); // 상태를 1로 변경
-        }
-        return "redirect:/lost/view?lostIdx=" + lostIdx;
-    }
-
-    // 찾음 취소
-    @PostMapping("/cancel")
-    @Transactional
-    public String cancelFound(@RequestParam("lostIdx") String lostIdx, @RequestParam("email") String email) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String loginEmail = null;
-
-        if (authentication != null && authentication.isAuthenticated()) {
-            Object principal = authentication.getPrincipal();
-            if (principal instanceof UserDetails) {
-                loginEmail = ((UserDetails) principal).getUsername();
-            } else if (principal instanceof String) {
-                loginEmail = (String) principal;
-            }
-        }
-
-        if (loginEmail != null && loginEmail.equals(email)) {
-            lostViewMapper.updateLostState(lostIdx, 2); // 상태를 "찾는 중(2)"으로 변경
-        }
-        return "redirect:/lost/view?lostIdx=" + lostIdx;
-    }
-
-
-
-
+    /**
+     * 습득물 수정 처리
+     */
     @PostMapping("/update")
     @Transactional
     public String lostUpdateSubmit(LostItemVO vo, Principal principal) {
@@ -204,14 +201,6 @@ public class LostViewController {
 
         // 수정 후 상세보기 페이지로 이동
         return "redirect:/lost/view?lostIdx=" + vo.getLostIdx();
-    }
-
-
-    // 분실물 처리 절차
-    @GetMapping("/process")
-    public String lostProcess() {
-        // 뷰(JSP) 파일: src/main/webapp/WEB-INF/views/lost/process.jsp 로 이동
-        return "lost/process";
     }
 
 
