@@ -2,6 +2,9 @@
 package com.get.android.member;
 
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,14 +24,20 @@ public class AppMemberController {
      * Body(JSON): MemberDTO
      */
     @PostMapping("/Join")
-    public String join(@RequestBody MemberDTO dto) {
-        // 이메일 중복
-        if(service.emailExists(dto.getEmail())) {
-            return "이미 존재하는 이메일입니다.";
+    public ResponseEntity<Map<String, Object>>  join(@RequestBody MemberDTO dto) {
+    	System.out.println("join:"+dto.getAddress1());
+    	Map<String, Object> response = new HashMap<>();
+    	// 이메일 중복 체크
+        if (service.emailExists(dto.getEmail())) {
+            response.put("success", false);
         }
-        // 가입
-        service.join(dto);
-        return "가입 성공";
+        else {
+        	// 가입 처리
+            service.join(dto);
+            response.put("success", true);
+		}
+        
+        return ResponseEntity.ok(response);
     }
 
     /**

@@ -26,7 +26,7 @@ public class LostViewController {
 
     @Autowired
     private LostViewMapper lostViewMapper;
-    
+
     @Value("${server.img.url}")
     private String severUrl;
 
@@ -177,9 +177,54 @@ public class LostViewController {
         return "lost/update";
     }
 
-    /**
-     * 습득물 수정 처리
-     */
+
+    // 찾음 버튼
+    @PostMapping("/complete")
+    @Transactional
+    public String markAsFound(@RequestParam("lostIdx") String lostIdx, @RequestParam("email") String email, HttpServletRequest request) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String loginEmail = null;
+
+        if (authentication != null && authentication.isAuthenticated()) {
+            Object principal = authentication.getPrincipal();
+            if (principal instanceof UserDetails) {
+                loginEmail = ((UserDetails) principal).getUsername();
+            } else if (principal instanceof String) {
+                loginEmail = (String) principal;
+            }
+        }
+
+        if (loginEmail != null && loginEmail.equals(email)) {
+            lostViewMapper.updateLostState(lostIdx, 1); // 상태를 1로 변경
+        }
+        return "redirect:/lost/view?lostIdx=" + lostIdx;
+    }
+
+    // 찾음 취소
+    @PostMapping("/cancel")
+    @Transactional
+    public String cancelFound(@RequestParam("lostIdx") String lostIdx, @RequestParam("email") String email) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String loginEmail = null;
+
+        if (authentication != null && authentication.isAuthenticated()) {
+            Object principal = authentication.getPrincipal();
+            if (principal instanceof UserDetails) {
+                loginEmail = ((UserDetails) principal).getUsername();
+            } else if (principal instanceof String) {
+                loginEmail = (String) principal;
+            }
+        }
+
+        if (loginEmail != null && loginEmail.equals(email)) {
+            lostViewMapper.updateLostState(lostIdx, 2); // 상태를 "찾는 중(2)"으로 변경
+        }
+        return "redirect:/lost/view?lostIdx=" + lostIdx;
+    }
+
+
+
+
     @PostMapping("/update")
     @Transactional
     public String lostUpdateSubmit(LostItemVO vo, Principal principal) {
@@ -201,6 +246,14 @@ public class LostViewController {
 
         // 수정 후 상세보기 페이지로 이동
         return "redirect:/lost/view?lostIdx=" + vo.getLostIdx();
+    }
+
+
+    // 분실물 처리 절차
+    @GetMapping("/process")
+    public String lostProcess() {
+        // 뷰(JSP) 파일: src/main/webapp/WEB-INF/views/lost/process.jsp 로 이동
+        return "lost/process";
     }
 
 

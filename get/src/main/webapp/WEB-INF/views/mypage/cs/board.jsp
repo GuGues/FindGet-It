@@ -9,7 +9,7 @@
 </head>
 <style>
 main {
-	margin-left: 20%;
+	margin-left: 25%;
 }
 
 table td, table th {
@@ -136,6 +136,6 @@ a:hover {
 
 </script>
 	</main>
-	<%@include file="/WEB-INF/include/pagefab.jsp"%>
+	<%@include file="/WEB-INF/include/fab.jsp"%>
 </body>
 </html>

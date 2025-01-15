@@ -9,7 +9,7 @@
 </head>
 <style>
 main {
-	margin-left: 20%;
+	margin-left: 25%;
 }
 
 table td, table th {
@@ -84,7 +84,7 @@ a:hover {
 								<tr onclick="markAsVisited(this)">
 									<!-- 클릭 시 해당 행에 visited 클래스 추가 -->
 									<td><a href="#">${l_status.index + 1}</a></td>
-									<td><a href="/Mypage/Lost/View/${ lost.lost_idx }">${lost.lost_title}</a></td>
+									<td><a href="/lost/view?lostIdx=${ lost.lost_idx }">${lost.lost_title}</a></td>
 									<td><a href="#">${lost.l_reg_date}</a></td>
 									<td><a>${lost.l_views}</a></td>
 									<td><input type="checkbox" value="${lost.lost_idx}" /></td>
@@ -137,6 +137,6 @@ a:hover {
     });
 </script>
 	</main>
-	<%@include file="/WEB-INF/include/pagefab.jsp"%>
+	<%@include file="/WEB-INF/include/fab.jsp"%>
 </body>
 </html>

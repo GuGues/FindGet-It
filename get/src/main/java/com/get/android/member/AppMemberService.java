@@ -39,6 +39,11 @@ public class AppMemberService {
         mem.setPostnumber(dto.getPostnumber());
         // 비밀번호 BCrypt 해시
         mem.setPassword(passwordEncoder.encode(dto.getPassword()));
+        
+        System.out.println("mem: "+mem);
+        //mem: Member(email=example111, nickname=Bo, password=$2a$10$T6A/Ds9T5OvP7aoKVDurP.RQB8mWirHV7LYojk3m07bFMWhwjVc5e,
+        //username=보, birth=2000-04-22, phone=010-1234-5678, memIdx=null, address1=1231, address2=23, postnumber=123, comDate=null)
+        
         // 가입일(comDate)은 DB에서 SYSDATE로 자동
         // mem_idx는 insertMember() 쿼리에서 생성
         memberMapper.insertMember(mem);

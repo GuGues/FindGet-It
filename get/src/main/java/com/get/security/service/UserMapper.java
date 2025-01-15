@@ -1,9 +1,11 @@
 package com.get.security.service;
 
-import java.sql.Date;
+//import java.sql.Date;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Date;
 
 @Mapper
 public interface UserMapper {
@@ -26,8 +28,6 @@ public interface UserMapper {
 
 	UserDetails loadUserByUsername(String email);
 
-	Account findUserByUserNamePhoneEmail(String username, String phone, String email);
 
-	void changePw(Account reg);
-	
+
 }
