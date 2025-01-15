@@ -5,60 +5,57 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-class Lost {
-  final String lostIdx;
+class Found {
+  final String foundIdx;
   final String email;
-  final String lostTitle;
-  final String lostContent;
-  final String lostDate;
+  final String foundTitle;
+  final String foundContent;
+  final String foundDate;
   final String regDate;
   final int views;
   final int locationCode;
   final String locationDetail;
   final int itemCode;
   final String itemDetail;
-  final int reward;
   final int colorCode;
-  final int lostState;
+  final int foundState;
   final String location;
   int page = 1;
 
-  Lost({
-    required this.lostIdx,
+  Found({
+    required this.foundIdx,
     required this.email,
-    required this.lostTitle,
-    required this.lostContent,
-    required this.lostDate,
+    required this.foundTitle,
+    required this.foundContent,
+    required this.foundDate,
     required this.regDate,
     required this.views,
     required this.locationCode,
     required this.locationDetail,
     required this.itemCode,
     required this.itemDetail,
-    required this.reward,
     required this.colorCode,
-    required this.lostState,
+    required this.foundState,
     required this.location,
     required this.page,
   });
 
   // JSON to Dart object
-  factory Lost.fromJson(Map<String, dynamic> json) {
-    return Lost(
-      lostIdx: json['lost_idx'] ?? '',
+  factory Found.fromJson(Map<String, dynamic> json) {
+    return Found(
+      foundIdx: json['found_idx'] ?? '',
       email: json['email'] ?? '',
-      lostTitle: json['lost_title'] ?? '',
-      lostContent: json['lost_content'] ?? '',
-      lostDate: json['lost_date'] ?? '',
-      regDate: json['l_reg_date'] ?? '',
-      views: json['l_views'] ?? 0,
+      foundTitle: json['found_title'] ?? '',
+      foundContent: json['found_content'] ?? '',
+      foundDate: json['found_date'] ?? '',
+      regDate: json['f_reg_date'] ?? '',
+      views: json['f_views'] ?? 0,
       locationCode: json['location_code'] ?? 0,
-      locationDetail: json['l_location_detail'] ?? '',
+      locationDetail: json['f_location_detail'] ?? '',
       itemCode: json['item_code'] ?? 0,
-      itemDetail: json['l_item_detail'] ?? '',
-      reward: json['reward'] ?? 0,
+      itemDetail: json['f_item_detail'] ?? '',
       colorCode: json['color_code'] ?? 0,
-      lostState: json['lost_state'] ?? 0,
+      foundState: json['found_state'] ?? 0,
       location: json['location'] ?? '',
       page: json['page'] ?? 0,
     );
@@ -125,95 +122,55 @@ class color {
   }
 }
 
-// Fetch items based on page number and filters
-Future<List<Lost>> fetchItems(int page) async {
-  final response =
-  await http.get(Uri.parse('${appConfig.url}/app/lostList?page=$page'));
-
-  if (response.statusCode == 200) {
-    List<dynamic> data = json.decode(utf8.decode(response.bodyBytes));
-    return data.map((json) => Lost.fromJson(json)).toList();
-  } else {
-    throw Exception('Failed to load items');
-  }
-}
-
-Future<List<Lost>> searchFetchItems(int page, Map<String, dynamic> map) async {
-  print(map);
-  final response = await http
-      .get(Uri.parse('${appConfig.url}/app/getLostSearch?page=$page&map=$map'));
-  if (response.statusCode == 200) {
-    List<dynamic> data = json.decode(utf8.decode(response.bodyBytes));
-    print(data);
-    return data.map((json) => Lost.fromJson(json)).toList();
-  } else {
-    throw Exception('Failed to load items');
-  }
-}
-
-class LostPage extends StatefulWidget {
-  const LostPage({super.key});
+class FoundPage extends StatefulWidget {
+  const FoundPage({super.key});
 
   @override
   _LostPageState createState() => _LostPageState();
 }
 
-class _LostPageState extends State<LostPage> {
+class _LostPageState extends State<FoundPage> {
   bool _isLoading = false;
   int page = 1;
   late int pageCnt;
   TextEditingController startDateController = TextEditingController();
   TextEditingController endDateController = TextEditingController();
   TextEditingController titleController = TextEditingController();
-  List<Lost> lostList = List.empty();
+  List<Found> foundList =List.empty();
   String selectedCategory = '물품 카테고리';
   String selectedLocation = '장소';
   String selectedColor = '색상';
   String selectedStartDate = '시작일';
   String selectedEndDate = '종료일';
-  var lost_title = '';
-  var item_code = 0;
-  var location_code = 0;
-  var start_date = '';
-  var end_date = '';
-  var color_code = 0;
 
   searchItems(int page) async {
     var params = '';
-    if (lost_title != null && lost_title.length != 0) {
-      params += '&lost_title=$lost_title';
-    }
-    if (item_code != null && item_code != 0) {
+    if(found_title!=null && found_title.length!=0){
+      params += '&found_title=$found_title';
+    }if(item_code!=null && item_code!=0){
       params += '&item_code=$item_code';
-    }
-    if (location_code != null && location_code != 0) {
+    }if(location_code!=null && location_code!=0){
       params += '&location_code=$location_code';
-    }
-    if (color_code != null && color_code != 0) {
+    }if(color_code!=null && color_code!=0){
       params += '&color_code=$color_code';
-    }
-    if (start_date != null && start_date.length != 0) {
+    }if(start_date!=null && start_date.length!=0){
       params += '&start_date=$start_date';
-    }
-    if (end_date != null && end_date.length != 0) {
+    }if(end_date!=null && end_date.length!=0){
       params += '&end_date=$end_date';
     }
     final response = await http.get(
-        Uri.parse('${appConfig.url}/app/getLostSearch?page=$page$params'));
+        Uri.parse('${appConfig.url}/app/getFoundSearch?page=$page$params'));
     if (response.statusCode == 200) {
       Map<String, dynamic> data = json.decode(utf8.decode(response.bodyBytes));
-      List<dynamic> searchLostList = data["searchLost"];
+      List<dynamic> searchFoundList = data["searchFound"];
       print(data);
       setState(() {
         pageCnt = data["pageCnt"];
-        lostList = searchLostList.map((json) => Lost.fromJson(json)).toList();
+        foundList = searchFoundList.map((json) => Found.fromJson(json)).toList();
       });
     } else {
       throw Exception('Failed to load items');
     }
-    setState(() {
-      _isLoading = false;
-    });
   }
 
   fetchItem(int page) async {
@@ -221,14 +178,15 @@ class _LostPageState extends State<LostPage> {
       _isLoading = true;
     });
     final response =
-    await http.get(Uri.parse('${appConfig.url}/app/lostList?page=$page'));
+    await http.get(Uri.parse('${appConfig.url}/app/foundList?page=$page'));
 
     if (response.statusCode == 200) {
       Map<String, dynamic> data = json.decode(utf8.decode(response.bodyBytes));
-      List<dynamic> getLostList = data["lostList"];
+      print(data);
+      List<dynamic> getFoundList = data["foundList"];
       setState(() {
         pageCnt = data["pageCnt"];
-        lostList = getLostList.map((json) => Lost.fromJson(json)).toList();
+        foundList= getFoundList.map((json) => Found.fromJson(json)).toList();
       });
     } else {
       throw Exception('Failed to load items');
@@ -244,9 +202,16 @@ class _LostPageState extends State<LostPage> {
     fetchItem(1);
   }
 
+  var found_title = '';
+  var item_code = 0;
+  var location_code = 0;
+  var start_date = '';
+  var end_date = '';
+  var color_code = 0;
+
   // Date picker method
-  Future<void> _selectStartDate(BuildContext context,
-      TextEditingController controller) async {
+  Future<void> _selectStartDate(
+      BuildContext context, TextEditingController controller) async {
     final DateTime? selectedDate = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
@@ -257,15 +222,14 @@ class _LostPageState extends State<LostPage> {
     if (selectedDate != null) {
       setState(() {
         controller.text =
-        "${selectedDate.year}-${selectedDate.month.toString().padLeft(
-            2, '0')}-${selectedDate.day.toString().padLeft(2, '0')}";
+        "${selectedDate.year}-${selectedDate.month.toString().padLeft(2, '0')}-${selectedDate.day.toString().padLeft(2, '0')}";
       });
       start_date = controller.text;
     }
   }
 
-  Future<void> _selectEndDate(BuildContext context,
-      TextEditingController controller) async {
+  Future<void> _selectEndDate(
+      BuildContext context, TextEditingController controller) async {
     final DateTime? selectedDate = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
@@ -276,8 +240,7 @@ class _LostPageState extends State<LostPage> {
     if (selectedDate != null) {
       setState(() {
         controller.text =
-        "${selectedDate.year}-${selectedDate.month.toString().padLeft(
-            2, '0')}-${selectedDate.day.toString().padLeft(2, '0')}";
+        "${selectedDate.year}-${selectedDate.month.toString().padLeft(2, '0')}-${selectedDate.day.toString().padLeft(2, '0')}";
       });
       end_date = controller.text;
     }
@@ -297,7 +260,7 @@ class _LostPageState extends State<LostPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          '분실물 게시판',
+          '습득물 게시판',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         backgroundColor: Color(0xFFFFA042),
@@ -308,15 +271,11 @@ class _LostPageState extends State<LostPage> {
                 case 1:
                   Navigator.pushNamed(context, '/lost');
                   break;
-                case 2:
-                  Navigator.pushNamed(context, '/found');
-                  break;
                 default:
                   print("Menu item $item selected");
               }
             },
-            itemBuilder: (BuildContext context) =>
-            [
+            itemBuilder: (BuildContext context) => [
               PopupMenuItem<int>(value: 1, child: Text("분실물 게시판")),
               PopupMenuItem<int>(value: 2, child: Text("습득물 게시판")),
               PopupMenuItem<int>(value: 3, child: Text("FAQ")),
@@ -415,9 +374,7 @@ class _LostPageState extends State<LostPage> {
                                                 print(bigCate.item_code);
                                                 final response = await http.get(
                                                     Uri.parse(
-                                                        '${appConfig
-                                                            .url}/getCate?item_code=${bigCate
-                                                            .item_code}'));
+                                                        '${appConfig.url}/getCate?item_code=${bigCate.item_code}'));
                                                 final List<dynamic>
                                                 jsonResponse =
                                                 jsonDecode(utf8.decode(
@@ -442,13 +399,11 @@ class _LostPageState extends State<LostPage> {
                                                                 onTap: () {
                                                                   print(cate
                                                                       .item_code);
-                                                                  item_code =
-                                                                      cate
-                                                                          .item_code;
+                                                                  item_code = cate
+                                                                      .item_code;
                                                                   setState(() {
                                                                     selectedCategory =
-                                                                        cate
-                                                                            .item;
+                                                                        cate.item;
                                                                   });
                                                                   Navigator.pop(
                                                                       context); //소분류닫기
@@ -474,8 +429,7 @@ class _LostPageState extends State<LostPage> {
                                 backgroundColor: Colors.orangeAccent,
                                 padding: EdgeInsets.symmetric(
                                     vertical: 12, horizontal: 20),
-                                textStyle: TextStyle(
-                                  fontSize: 14, fontWeight: FontWeight.bold,),
+                                textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                               ),
                             ),
                           ],
@@ -528,18 +482,15 @@ class _LostPageState extends State<LostPage> {
                                                     bigLocation.sido_name;
                                                 final response = await http.get(
                                                     Uri.parse(
-                                                        '${appConfig
-                                                            .url}/getLocationMiddle?location_code=${bigLocation
-                                                            .location_code}'));
+                                                        '${appConfig.url}/getLocationMiddle?location_code=${bigLocation.location_code}'));
                                                 final List<dynamic>
                                                 jsonResponse =
                                                 jsonDecode(utf8.decode(
                                                     response.bodyBytes));
                                                 final locationList =
                                                 jsonResponse
-                                                    .map((item) =>
-                                                    location
-                                                        .fromJson(item))
+                                                    .map((item) => location
+                                                    .fromJson(item))
                                                     .toList();
 
                                                 showModalBottomSheet(
@@ -552,9 +503,8 @@ class _LostPageState extends State<LostPage> {
                                                             for (var location
                                                             in locationList)
                                                               ListTile(
-                                                                title: Text(
-                                                                    location
-                                                                        .gugun_name),
+                                                                title: Text(location
+                                                                    .gugun_name),
                                                                 onTap: () {
                                                                   print(location
                                                                       .location_code);
@@ -562,10 +512,9 @@ class _LostPageState extends State<LostPage> {
                                                                       location
                                                                           .location_code;
                                                                   setState(() {
-                                                                    selectedLocation +=
-                                                                        ' ' +
-                                                                            location
-                                                                                .gugun_name;
+                                                                    selectedLocation += ' ' +
+                                                                        location
+                                                                            .gugun_name;
                                                                   });
                                                                   Navigator.pop(
                                                                       context); //소분류닫기
@@ -591,8 +540,7 @@ class _LostPageState extends State<LostPage> {
                                 backgroundColor: Colors.orangeAccent,
                                 padding: EdgeInsets.symmetric(
                                     vertical: 12, horizontal: 20),
-                                textStyle: TextStyle(
-                                    fontSize: 14, fontWeight: FontWeight.bold),
+                                textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                               ),
                             ),
                           ],
@@ -618,6 +566,7 @@ class _LostPageState extends State<LostPage> {
                                 final colorList = jsonResponse
                                     .map((item) => color.fromJson(item))
                                     .toList();
+
                                 // 모달 바텀 시트 호출
                                 showModalBottomSheet(
                                   context: context,
@@ -654,8 +603,7 @@ class _LostPageState extends State<LostPage> {
                                 backgroundColor: Colors.orangeAccent,
                                 padding: EdgeInsets.symmetric(
                                     vertical: 12, horizontal: 20),
-                                textStyle: TextStyle(
-                                    fontSize: 14, fontWeight: FontWeight.bold),
+                                textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                               ),
                             ),
                           ],
@@ -666,7 +614,7 @@ class _LostPageState extends State<LostPage> {
                         Row(
                           children: [
                             Text(
-                              '분실일',
+                              '습득일',
                               style: TextStyle(
                                   fontSize: 14, fontWeight: FontWeight.bold),
                             ),
@@ -676,7 +624,7 @@ class _LostPageState extends State<LostPage> {
                                 controller: startDateController,
                                 readOnly: true, // 텍스트 입력 방지
                                 decoration: InputDecoration(
-                                  hintText: selectedStartDate,
+                                  hintText: '시작일',
                                   border: OutlineInputBorder(),
                                   suffixIcon: Icon(Icons.calendar_today),
                                 ),
@@ -694,7 +642,7 @@ class _LostPageState extends State<LostPage> {
                                 controller: endDateController,
                                 readOnly: true, // 텍스트 입력 방지
                                 decoration: InputDecoration(
-                                  hintText: selectedEndDate,
+                                  hintText: '종료일',
                                   border: OutlineInputBorder(),
                                   suffixIcon: Icon(Icons.calendar_today),
                                 ),
@@ -715,7 +663,7 @@ class _LostPageState extends State<LostPage> {
                                 ElevatedButton.icon(
                                   onPressed: () async {
                                     setState(() {
-                                      lost_title = '';
+                                      found_title = '';
                                       titleController.clear();
                                       item_code = 0;
                                       location_code = 0;
@@ -738,14 +686,13 @@ class _LostPageState extends State<LostPage> {
                                     padding: EdgeInsets.symmetric(
                                         horizontal: 15, vertical: 10),
                                     backgroundColor: Colors.grey,
-                                    textStyle: TextStyle(color: Colors.black,
-                                      fontWeight: FontWeight.w800,),
+                                    textStyle: TextStyle(color: Colors.black, fontWeight: FontWeight.w800,),
                                   ),
                                 ),
                                 ElevatedButton.icon(
                                   onPressed: () async {
-                                    lost_title = titleController.text;
-                                    page = 1;
+                                    found_title = titleController.text;
+                                    page=1;
                                     searchItems(page);
                                   },
                                   icon: Icon(Icons.search),
@@ -755,8 +702,7 @@ class _LostPageState extends State<LostPage> {
                                     padding: EdgeInsets.symmetric(
                                         horizontal: 20, vertical: 12),
                                     backgroundColor: Colors.orange,
-                                    textStyle: TextStyle(color: Colors.black,
-                                      fontWeight: FontWeight.w800,),
+                                    textStyle: TextStyle(color: Colors.black, fontWeight: FontWeight.w800,),
                                   ),
                                 ),
                               ],
@@ -766,18 +712,18 @@ class _LostPageState extends State<LostPage> {
                     )),
                 SizedBox(height: 12), // Add spacing between filters and list
                 ListView.builder(
-                  itemCount: lostList.length,
+                  itemCount: foundList.length,
                   shrinkWrap: true,
                   // Important: Allow ListView to shrink and not take full height
                   itemBuilder: (context, index) {
-                    final item = lostList[index];
+                    final item = foundList[index];
                     return Card(
                       margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       child: ListTile(
-                        title: Text(item.lostTitle),
+                        title: Text(item.foundTitle),
                         subtitle: Text(item.location),
                         onTap: () {
-                          print('Item tapped: ${item.lostIdx}');
+
                         },
                       ),
                     );
@@ -819,7 +765,7 @@ class _LostPageState extends State<LostPage> {
                       });
                       searchItems(page);
                     }
-                        : null, // page가 pageCnt와 같을 경우 버튼을 비활성화
+                        : null,  // page가 pageCnt와 같을 경우 버튼을 비활성화
                     child: Icon(Icons.arrow_forward),
                   ),
                 ],

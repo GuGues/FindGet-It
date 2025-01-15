@@ -1,5 +1,8 @@
 package com.get.search;
 
+import lombok.ToString;
+
+@ToString
 public class FoundItemVo {
     private String foundIdx;
     private String email;

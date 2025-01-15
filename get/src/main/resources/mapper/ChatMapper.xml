@@ -29,8 +29,11 @@
         INSERT INTO CHATTING_ROOM
         VALUES ( null
                , SYSDATE
-               , #{param2}
-               , #{param1})
+               , #{open_member}
+               , #{participant})
+        <selectKey keyProperty="chatting_no" resultType="java.lang.String" order="AFTER">
+                   SELECT ROOM_SEQ.currval  FROM dual
+               </selectKey>
     </insert>
     <select id="findRoomListByEmail">
         SELECT *
@@ -76,4 +79,41 @@
         WHERE CHATTING_NO = #{chatting_no}
         ORDER BY SEND_TIME DESC
     </select>
+
+    <update id="updateOpenerLocation">
+        UPDATE CHATTING_LOCATION
+        SET OPEN_MEMBER_PERMISSION=#{openMemberPermission},
+            OPEN_MEMBER=#{openMember},
+            OPEN_MEMBER_LAT=#{openMemberLat},
+            OPEN_MEMBER_LNG=#{openMemberLng}
+        WHERE CHATTING_NO=#{chatting_no}
+    </update>
+    <update id="updateParticipantLocation">
+        UPDATE CHATTING_LOCATION
+        SET PARTICIPANT_PERMISSION=#{participantPermission},
+            PARTICIPANT=#{participant},
+            PARTICIPANT_LAT=#{participantLat},
+            PARTICIPANT_LNG=#{participantLng}
+        WHERE CHATTING_NO=#{chatting_no}
+    </update>
+    <select id="getLocation">
+        SELECT *
+        FROM CHATTING_LOCATION
+        WHERE CHATTING_NO=#{chattingNo}
+    </select>
+    <insert id="createChattingLocation">
+        INSERT INTO CHATTING_LOCATION
+        VALUES (
+                   null,
+                   #{chatting_no},
+                   'N',
+                   null,
+                   null,
+                   'N',
+                   null,
+                   null,
+                   #{open_member},
+                   #{participant}
+               )
+    </insert>
 </mapper>
