@@ -115,12 +115,9 @@
 	   <if test="item_code != null and item_code != ''">
 	     AND ITEM_CODE = TO_NUMBER(#{item_code})
 	   </if>
-      <if test="location_code != null and location_code != '' and (location_code%100)==99 ">
-          AND TRUNC(location_code/100)=TRUNC(#{location_code}/100)
-      </if>
-      <if test=" location_code != null and location_code != '' and (location_code%100)!=99">
-          AND LOCATION_CODE = TO_NUMBER(#{ location_code })
-      </if>
+	   <if test="location_code != null and location_code != ''">
+	     AND LOCATION_CODE = TO_NUMBER(#{ location_code })
+	   </if>
 	   <if test="start_date != null and start_date != ''">
 	     AND LOST_DATE &gt;= TO_DATE(#{start_date}, 'YYYY-MM-DD')
 	   </if>

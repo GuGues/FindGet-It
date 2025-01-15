@@ -5,10 +5,6 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.get.vo.colorVo;
-import com.get.vo.itemVo;
-import com.get.vo.locationVo;
-
 @Mapper
 public interface LostMapper {
 
