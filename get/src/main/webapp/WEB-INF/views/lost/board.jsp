@@ -344,7 +344,7 @@
     </c:if>
     </table>
     <div class="pagingDiv">
-      <%@include file="/WEB-INF/include/paging.jsp" %>
+      <%@include file="/WEB-INF/include/searchPaging.jsp" %>
     </div>
     </div>
     <c:if test="${ sessionScope.grant eq 'USER' }">
@@ -358,26 +358,6 @@
     	let modal = document.querySelector('.modal.cate');
     	modal.style.display = 'block';
 
-    	//확인버튼
-    	const ok = document.querySelector('.cateOk');
-    	ok.addEventListener('click', function(){
-    		let cate = document.querySelector('.itemCate.checked');
-    		//console.log(cate.innerHTML);
-    		const cateText = document.querySelector('.cateText');
-    		if(cate){
-    			cateText.value = cate.innerHTML;
-        		cateText.id = cate.id;
-        		cate.classList.remove('checked');
-        		modal.style.display = 'none';
-    		}
-    		else{
-    			const warning = document.querySelector('.warning');
-    			warning.style.display = 'block';
-    			setTimeout(function() {
-    				warning.style.display = 'none';
-    			  }, 1800);
-    		}
-    	});
     	//닫기버튼
     	const close = document.querySelector('.cateClose');
     	close.addEventListener('click', function(){
@@ -400,6 +380,26 @@
     		bigCate.innerHTML = html;
     	});
     });
+
+    	//확인버튼
+    	const ok1 = document.querySelector('.cateOk');
+    	ok1.addEventListener('click', function(e){
+    		let cate = document.querySelector('.itemCate.checked');
+    		const cateText = document.querySelector('.cateText');
+    		if(cate){
+    			cateText.value = cate.innerHTML;
+        		cateText.id = cate.id;
+        		cate.classList.remove('checked');
+        		document.querySelector('.modal.cate').style.display = 'none';
+    		}
+    		else{
+    			const warning = document.querySelector('.warning');
+    			warning.style.display = 'block';
+    			setTimeout(function() {
+    				warning.style.display = 'none';
+    			  }, 1800);
+    		}
+    	});
 
     //선택 카테고리 소분류 출력
     const bigCate = document.querySelector('.bigCate');
@@ -448,28 +448,7 @@
     	let modal = document.querySelector('.modal.color');
     	modal.style.display = 'block';
 
-    	//확인버튼
-    	const ok = document.querySelector('.colorOk');
-    	//console.log(ok);
-    	ok.addEventListener('click', function(){
-    		let color = null;
-    		color = document.querySelectorAll('.colorList.checked')[0];
-    		const colorText = document.querySelector('.colorText');
-    		console.log(color);
-    		if(color){
-    			colorText.value = color.innerHTML;
-    			colorText.id = color.id;
-    			color.classList.remove('checked');
-        		modal.style.display = 'none';
-    		}
-    		else{
-    			const warning = document.querySelector('.warning');
-    			warning.style.display = 'block';
-    			setTimeout(function() {
-    				warning.style.display = 'none';
-    			  }, 1800);
-    		}
-    	});
+
     	//닫기버튼
     	const close = document.querySelector('.colorClose');
     	close.addEventListener('click', function(){
@@ -503,25 +482,19 @@
     	});
     });
 
-    const addBtn = document.querySelector('#addBtn');
-    //모달 주소 대분류
-    addBtn.addEventListener('click', function(){
-    	let modal = document.querySelector('.modal.addrSearch');
-    	modal.style.display = 'block';
-
-    	//확인버튼
-    	const ok = document.querySelector('.locationOk');
-    	ok.addEventListener('click', function(){
-    		let locationBig = document.querySelector('.bigLocations.checked');
-    		let locationMiddle = document.querySelector('.middleLocations.checked');
-    		//console.log(cate.innerHTML);
-    		const addr = document.querySelector('.addr');
-    		if(locationMiddle){
-    			addr.value = locationBig.innerHTML+' '+locationMiddle.innerHTML;
-    			addr.id = locationMiddle.id;
-    			locationBig.classList.remove('checked');
-    			locationMiddle.classList.remove('checked');
-        		modal.style.display = 'none';
+    //확인버튼
+    	const ok2 = document.querySelector('.colorOk');
+    	//console.log(ok);
+    	ok2.addEventListener('click', function(){
+    		let color = null;
+    		color = document.querySelectorAll('.colorList.checked')[0];
+    		const colorText = document.querySelector('.colorText');
+    		console.log(color);
+    		if(color){
+    			colorText.value = color.innerHTML;
+    			colorText.id = color.id;
+    			color.classList.remove('checked');
+        		document.querySelector('.modal.color').style.display = 'none';
     		}
     		else{
     			const warning = document.querySelector('.warning');
@@ -531,6 +504,14 @@
     			  }, 1800);
     		}
     	});
+
+    const addBtn = document.querySelector('#addBtn');
+    //모달 주소 대분류
+    addBtn.addEventListener('click', function(){
+    	let modal = document.querySelector('.modal.addrSearch');
+    	modal.style.display = 'block';
+
+
     	//닫기버튼
     	const close = document.querySelector('.locationClose');
     	close.addEventListener('click', function(){
@@ -553,7 +534,28 @@
     		locationBig.innerHTML = html;
     	});
     });
-
+//확인버튼
+    	const ok3 = document.querySelector('.locationOk');
+    	ok3.addEventListener('click', function(){
+    		let locationBig = document.querySelector('.bigLocations.checked');
+    		let locationMiddle = document.querySelector('.middleLocations.checked');
+    		//console.log(cate.innerHTML);
+    		const addr = document.querySelector('.addr');
+    		if(locationMiddle){
+    			addr.value = locationBig.innerHTML+' '+locationMiddle.innerHTML;
+    			addr.id = locationMiddle.id;
+    			locationBig.classList.remove('checked');
+    			locationMiddle.classList.remove('checked');
+        		document.querySelector('.modal.addrSearch').style.display = 'none';
+    		}
+    		else{
+    			const warning = document.querySelector('.warning');
+    			warning.style.display = 'block';
+    			setTimeout(function() {
+    				warning.style.display = 'none';
+    			  }, 1800);
+    		}
+    	});
     const locationContent = document.querySelector('.locationContent');
     locationContent.addEventListener('click', function(e){
     	//console.log(e.target);

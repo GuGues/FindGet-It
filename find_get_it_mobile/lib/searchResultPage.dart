@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
+import 'appConfig.dart';
+
 /* ================== (1) VO 클래스들 ================== */
 
 /// 분실물 VO
@@ -124,7 +126,7 @@ class _SearchResultPageState extends State<SearchResultPage>
 
     try {
       final url = Uri.parse(
-          'http://192.168.100.18:9090/appSearch/result'
+          appConfig.url+'/appSearch/result'
               '?keyword=$_keyword'
               '&lostPage=$_lostPage'
               '&foundPage=$_foundPage'

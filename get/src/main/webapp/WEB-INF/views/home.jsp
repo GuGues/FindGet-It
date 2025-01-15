@@ -8,6 +8,7 @@
   <meta charset="UTF-8">
   <title>홈 화면</title>
   <link rel="stylesheet" href="/css/common.css" />
+  <link rel="icon" type="image/png" href="/img/favicon.ico" />
   <style>
     .home-background {
       background: url('/img/homebackground.jpg') no-repeat center center;

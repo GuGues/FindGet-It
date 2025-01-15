@@ -33,7 +33,7 @@ public class AlarmController {
     }
 
     @GetMapping("/delete/{alarm_idx}")
-    public String deleteAlarm(@PathVariable String alarm_idx) {
+    public String deleteAlarm(@PathVariable("alarm_idx") String alarm_idx) {
         int count = alarmMapper.deleteAlarm(alarm_idx);
         if (count > 0) {
             return "OK";
@@ -42,7 +42,7 @@ public class AlarmController {
     }
 
     @GetMapping("/viewed/{alarm_idx}")
-    public String viewedAlarm(@PathVariable String alarm_idx) {
+    public String viewedAlarm(@PathVariable("alarm_idx") String alarm_idx) {
         int count = alarmMapper.updateView(alarm_idx);
         if (count > 0) {
             return "OK";
@@ -51,13 +51,13 @@ public class AlarmController {
     }
 
     @GetMapping("/open/{email}")
-    public String openedAlarm(@PathVariable String email) {
+    public String openedAlarm(@PathVariable("email") String email) {
         int count = alarmMapper.updateOpen(email);
         return "OK";
     }
 
     @GetMapping("/message/{email}")
-    public String alarmMessage(@PathVariable String email) {
+    public String alarmMessage(@PathVariable("email") String email) {
         AlarmVo alarm = new AlarmVo();
         alarm.setAlarm_content("MESSAGE");
         alarm.setEmail(email);
@@ -66,11 +66,11 @@ public class AlarmController {
     }
 
     @GetMapping("/get-chat/{email}")
-    public int alarmGetChat(@PathVariable String email) {
+    public int alarmGetChat(@PathVariable("email") String email) {
         return alarmMapper.getChatAlarmCount(email);
     }
     @GetMapping("/delete-message/{email}")
-    public void deleteMessage(@PathVariable String email) {
+    public void deleteMessage(@PathVariable("email") String email) {
         alarmMapper.deleteMessageAlarm(email);
     }
 }

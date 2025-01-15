@@ -46,7 +46,7 @@
     <select id="findOpenedRoom">
         SELECT *
         FROM CHATTING_ROOM
-        WHERE (OPEN_MEMBER=#{email} AND PARTICIPANT=#{openerEmail}) OR (OPEN_MEMBER=#{openerEmail} AND PARTICIPANT=#{email})
+        WHERE (OPEN_MEMBER=#{param1} AND PARTICIPANT=#{param2}) OR (OPEN_MEMBER=#{param2} AND PARTICIPANT=#{param1})
     </select>
     <select id="findChatLastest">
         SELECT *
@@ -70,4 +70,10 @@
         INSERT INTO CHATTING_REPORT
         VALUES(null,#{reporter_email},#{receiver_email},#{report_room},#{chat_report_content},SYSDATE)
     </insert>
+    <select id="findAllChatReverse">
+        SELECT *
+        FROM MESSAGE
+        WHERE CHATTING_NO = #{chatting_no}
+        ORDER BY SEND_TIME DESC
+    </select>
 </mapper>

@@ -172,7 +172,7 @@
     </div>
     <div class="modal">
       <div class="modal_content">
-        <form method="POST" class="submit">
+        <form method="POST" action="/faq/update" class="submit">
         <h3>자주묻는질문 수정</h3>
         <div class="content">
           <input type="hidden" name="faq_idx" class="idx">

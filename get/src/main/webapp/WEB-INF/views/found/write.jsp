@@ -6,6 +6,7 @@
 <head>
   <meta charset="UTF-8">
   <title>분실물 작성</title>
+  <link rel="icon" type="image/png" href="/img/favicon.ico" />
   <style>
     /* 기존 스타일 유지 */
     body { font-family: Arial, sans-serif; padding: 20px; }
@@ -101,6 +102,7 @@
     main{
       margin-left: 20%;
     }
+    a{ color: black; }
   </style>
 </head>
 <body>
