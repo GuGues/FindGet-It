@@ -16,7 +16,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Account implements UserDetails {
-
    private String email;
    private String nickname;
    private String password;

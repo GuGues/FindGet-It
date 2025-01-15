@@ -3,19 +3,19 @@ package com.get.login;
 import com.get.security.service.Account;
 import com.get.security.service.AccountService;
 import com.get.security.service.UserMapper;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 public class logincontroller {
@@ -77,5 +77,26 @@ public class logincontroller {
         else{
             return ResponseEntity.ok("true");
         }
+    }
+    @GetMapping("/findId")
+    public String findId(){
+        return "login/findId";
+    }
+    @PostMapping("/findId/check")
+    public ResponseEntity<Map<String, Object>> findIdCheck(@RequestBody Map<String,Object> map){
+        String username = String.valueOf(map.get("username"));
+        String phone = String.valueOf(map.get("phone"));
+        Map<String,Object> result = new HashMap<>();
+
+        Account member = userMapper.findUserByUserNamePhone(username,phone);
+        if(member!=null){
+            result.put("status",HttpStatus.OK);
+            result.put("result",member.getEmail());
+        }
+        else{
+            result.put("status",HttpStatus.BAD_REQUEST);
+            result.put("result","일치하는 정보가 없습니다.");
+        }
+        return ResponseEntity.ok().body(result);
     }
 }

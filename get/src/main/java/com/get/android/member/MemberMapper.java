@@ -11,11 +11,10 @@ public interface MemberMapper {
 
     @Insert({
             "INSERT INTO MEMBERS (",
-            "    EMAIL, NICKNAME, PASSWORD, USERNAME, BIRTH, PHONE, MEM_IDX, ADDRESS1, ADDRESS2, POSTNUMBER, COM_DATE",
+            "    EMAIL, NICKNAME, PASSWORD, USERNAME, BIRTH, PHONE, ADDRESS1, ADDRESS2, POSTNUMBER, USER_GRANT",
             ") VALUES (",
             "    #{email}, #{nickname}, #{password}, #{username}, #{birth}, #{phone}, ",
-            "    (SELECT 'MB' || LPAD(NVL(MAX(SUBSTR(mem_idx, 3)), '0')+1, 7, '0') FROM MEMBERS),",
-            "    #{address1}, #{address2}, #{postnumber}, SYSDATE",
+            "    #{address1}, #{address2}, #{postnumber}, 'USER'",
             ")"
     })
     void insertMember(Member mem);

@@ -22,6 +22,14 @@
  ,SYSDATE
  ,'USER'
 ,0
+,null
                                   )
-    </insert>
+        <selectKey keyProperty="mem_idx" resultType="java.lang.String" order="AFTER">
+            SELECT 'ME' || LPAD(MEMBERS_SEQ.CURRVAL, 8, '0')  FROM dual
+        </selectKey></insert>
+    <select id="findUserByUserNamePhone">
+        SELECT *
+        FROM MEMBERS
+        WHERE USERNAME=#{username} AND PHONE=#{phone}
+    </select>
 </mapper>

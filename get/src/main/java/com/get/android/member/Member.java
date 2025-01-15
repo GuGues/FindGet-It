@@ -1,6 +1,7 @@
 // └─ com/get/android/member/Member.java
 package com.get.android.member;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,8 +10,7 @@ import java.time.LocalDate;
 /**
  * MEMBERS 테이블에 대응하는 VO
  */
-@Getter
-@Setter
+@Data
 public class Member {
     private String email;       // EMAIL
     private String nickname;    // NICKNAME
