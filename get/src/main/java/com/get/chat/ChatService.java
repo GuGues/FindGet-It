@@ -1,10 +1,9 @@
 package com.get.chat;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.get.security.service.Account;
 import com.get.security.service.UserMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -141,5 +140,13 @@ public class ChatService {
         System.out.println("reportVo = " + reportVo);
         chatMapper.report(reportVo);
 
+    }
+
+    public List<Chat> findAllChatReverse(String chattingNo) {
+        List<Chat> chatList = chatMapper.findAllChatReverse(chattingNo);
+               for(Chat chat : chatList){
+                   chat.setSend_time(LocalDateTime.parse(chat.getSend_time(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).format(DateTimeFormatter.ofPattern("HH:mm")));
+               }
+               return chatList;
     }
 }

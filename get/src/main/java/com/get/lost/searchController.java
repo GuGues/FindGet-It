@@ -14,6 +14,9 @@ import org.springframework.web.servlet.ModelAndView;
 import com.get.found.FoundMapper;
 import com.get.found.foundCustomVo;
 import com.get.paging.pagingHelper;
+import com.get.vo.colorVo;
+import com.get.vo.itemVo;
+import com.get.vo.locationVo;
 
 @RestController
 public class searchController {

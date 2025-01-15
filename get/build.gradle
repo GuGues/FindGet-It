@@ -22,9 +22,13 @@ configurations {
 
 repositories {
 	mavenCentral()
+	maven {
+		url "https://maven.oracle.com"
+	}
 }
 
 dependencies {
+
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.4'
 	compileOnly 'org.projectlombok:lombok'
@@ -60,11 +64,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-websocket' //웹소켓
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.security:spring-security-taglibs'
-	
-	implementation 'org.springframework.boot:spring-boot-starter-mail' // Spring Boot 메일 스타터
-	implementation 'jakarta.mail:jakarta.mail:2.0.0' // Jakarta Mail 최신 버전
-	implementation 'org.hibernate.validator:hibernate-validator:6.2.0.Final' // Hibernate Validator
-	
+
 }
 
 tasks.named('test') {

@@ -84,6 +84,8 @@
                 <td>${member.username }</td>
                 <th>아이디</th>
                 <td>${member.email }</td>
+                <th>닉네임</th>
+                <td>${member.nickname }</td>
                 <th>작성일</th>
                 <td>${cs.cs_reg_date }</td>
             </tr>
@@ -101,6 +103,6 @@
             <p>관리자가 답변을 작성할 공간입니다.</p>
         </div>
     </main>
-    	<%@include file="/WEB-INF/include/pagefab.jsp"%>
+    	<%@include file="/WEB-INF/include/fab.jsp"%>
 </body>
 </html>

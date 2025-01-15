@@ -5,6 +5,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Login</title>
+    <link rel="icon" type="image/png" href="/img/favicon.ico" />
 </head>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <style>
@@ -92,7 +93,6 @@
     }
 </style>
 <body>
-
 <div id="headImage">
     <img src="/img/loginHeader.png" alt="img">
 </div>
@@ -108,6 +108,7 @@
                 <input type="password" name="password" placeholder="비밀번호"/>
                 </div>
                 <button type="submit" id="submit">로그인</button>
+                    <div id = "errorMessage" style="font-size: 13px; color: tomato">${errorMessage}</div>
             </div>
         </form>
 
