@@ -84,5 +84,18 @@ public class AccountService implements UserDetailsService {
     public void upJoinCount(String email) {
         userMapper.upJoinCount(email);
     }
+    
+    @Transactional
+    public boolean changePw(Account reg,String email, String passwd) {
+        Account checkUser = new Account();
+        checkUser.setEmail(email);
+
+        if (userMapper.findUser(checkUser) == null){
+            return false;
+        }
+        reg.setPassword(encoder.encode(passwd));
+        userMapper.changePw(reg);
+        return true;
+    }
 
 }

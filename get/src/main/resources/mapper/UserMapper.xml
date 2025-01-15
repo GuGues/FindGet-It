@@ -54,4 +54,16 @@
 		SET LAST_LOGIN_DATE = SYSDATE
 		WHERE EMAIL = #{email}
 	</update>
+	
+	<select id="findUserByUserNamePhoneEmail">
+        SELECT *
+        FROM MEMBERS
+        WHERE USERNAME=#{param1} AND PHONE=#{param2} AND EMAIL=#{param3}
+    </select>
+    
+    <update id="changePw">
+		UPDATE MEMBERS SET
+		PASSWORD = #{password}
+		WHERE EMAIL = #{email}
+	</update>
 </mapper>

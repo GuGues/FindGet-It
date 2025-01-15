@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,9 +24,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class logincontroller {
+	
     @Autowired
     private UserMapper userMapper;
 
@@ -113,6 +116,36 @@ public class logincontroller {
     @GetMapping("/findPw")
     public String findPw(){
         return "login/findPw";
+    }
+    @PostMapping("/findPw/check")
+    public ResponseEntity<Map<String, Object>> findPwCheck(@RequestBody Map<String,Object> map){
+    	System.out.println(map);
+        String username = String.valueOf(map.get("username"));
+        String phone = String.valueOf(map.get("phone"));
+        String email = String.valueOf(map.get("email"));
+        
+        Map<String,Object> result = new HashMap<>();
+
+        Account member = userMapper.findUserByUserNamePhoneEmail(username,phone,email);
+        System.out.println("member: "+member);
+        if(member!=null){
+            result.put("status",HttpStatus.OK);
+            result.put("result",member.getEmail());
+        }
+        else{
+            result.put("status",HttpStatus.BAD_REQUEST);
+            result.put("result","일치하는 정보가 없습니다.");
+        }
+        return ResponseEntity.ok().body(result);
+    }
+    
+    @PostMapping("/changePw")
+    public String changePw(Account account) {
+    	System.out.println("==============account: "+account);
+    	if(accountService.changePw(account,account.getEmail(),account.getPassword())) {
+    		return "login/loginpage";
+    	}
+    	else return "redirect:/error-page/403";
     }
 }
 
