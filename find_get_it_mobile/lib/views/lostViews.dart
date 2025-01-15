@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../appConfig.dart';
-import '../models.dart'; // 위의 models.dart 임포트
+import '../models.dart'; // LostItem 모델
 
 class LostViewsPage extends StatefulWidget {
   final String lostIdx;
@@ -13,8 +13,13 @@ class LostViewsPage extends StatefulWidget {
 }
 
 class _LostViewsPageState extends State<LostViewsPage> {
-  late Future<LostItem> _futureLost;
+  late Future<Map<String, dynamic>> _futureLost;
+
+  /// 데이터 API 호출용 서버 주소
   final String serverUrl = appConfig.url;
+
+  /// 이미지 표시용 서버 주소
+  final String imageServerUrl = "http://192.168.0.214:9090";
 
   @override
   void initState() {
@@ -22,23 +27,31 @@ class _LostViewsPageState extends State<LostViewsPage> {
     _futureLost = fetchLost(widget.lostIdx);
   }
 
-  Future<LostItem> fetchLost(String idx) async {
+  /// 분실물 상세 데이터 가져오기
+  Future<Map<String, dynamic>> fetchLost(String idx) async {
     final uri = Uri.parse('$serverUrl/app/getLostItem/$idx');
     final response = await http.get(uri);
+
     if (response.statusCode == 200) {
-      final data = json.decode(utf8.decode(response.bodyBytes));
-      return LostItem.fromJson(data);
+      final rootJson = json.decode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>;
+      // Debugging JSON 전체 확인
+      print('===== LostItem JSON Debug =====');
+      print(rootJson);
+      print('================================');
+      return rootJson; // 전체 JSON 반환
     } else {
-      throw Exception('Failed to load LostItem');
+      throw Exception('Failed to load LostItem (status=${response.statusCode})');
     }
   }
 
+  /// 공통 버튼 스타일
   ButtonStyle _buttonStyle() {
     return ElevatedButton.styleFrom(
-      backgroundColor: const Color(0xFFFF914B), // 예시 색상
+      backgroundColor: const Color(0xFFFF914B),
     );
   }
 
+  /// 라벨+값 형태로 표시
   Widget _buildInfoRow(String label, String value) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0),
@@ -54,108 +67,121 @@ class _LostViewsPageState extends State<LostViewsPage> {
     );
   }
 
+  /// 이미지 섹션
+  Widget _buildImageSection(String? filePath) {
+    if (filePath == null || filePath.isEmpty || filePath.contains("img02_no_img.gif")) {
+      return Image.asset(
+        'assets/icon/noimg.png',
+        height: 400,
+        width: double.infinity,
+        fit: BoxFit.cover,
+      );
+    }
+
+    final fullUrl = '$imageServerUrl/imgView?filePath=$filePath';
+
+    return Image.network(
+      fullUrl,
+      height: 400,
+      width: double.infinity,
+      fit: BoxFit.cover,
+      errorBuilder: (context, error, stackTrace) {
+        return Image.asset(
+          'assets/icon/noimg.png',
+          height: 400,
+          width: double.infinity,
+          fit: BoxFit.cover,
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final bool isAuthor = true;
-    final bool isAdmin = false;
-
     return Scaffold(
       appBar: AppBar(
         title: const Text("분실물 상세"),
         backgroundColor: Colors.orange,
       ),
-      body: FutureBuilder<LostItem>(
+      body: FutureBuilder<Map<String, dynamic>>(
         future: _futureLost,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            // 로딩중
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            // 에러
             return Center(child: Text('에러 발생: ${snapshot.error}'));
           } else if (!snapshot.hasData) {
-            // 데이터 없음
             return const Center(child: Text('데이터가 없습니다.'));
           } else {
-            // 데이터 정상
-            final item = snapshot.data!;
+            final data = snapshot.data!;
+            final lostItemJson = data['lostItem'] as Map<String, dynamic>;
+            final filePath = data['filePath'] as String?;
+            final item = LostItem.fromJson(lostItemJson);
+
             return SingleChildScrollView(
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // 제목/작성자
                   Text(
                     "제목: ${item.lostTitle}",
                     style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    "작성자: ${item.nickname}",
-                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                    "작성자 닉네임: ${item.nickname}",
+                    style: const TextStyle(fontSize: 16),
                   ),
                   const SizedBox(height: 16),
-
-                  // 이미지
-                  if (item.filePath != null && item.filePath!.isNotEmpty)
-                    Image.network(
-                      '$serverUrl/imgView?filePath=${item.filePath}',
-                      height: 200,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                    )
-                  else
-                    Image.asset(
-                      'assets/images/noimg.png',
-                      height: 200,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                    ),
+                  _buildImageSection(filePath),
                   const SizedBox(height: 16),
-
-                  // 정보
                   _buildInfoRow("분실일", item.lostDate),
                   _buildInfoRow("물품분류", item.itemName),
                   _buildInfoRow("물품세부분류", item.lItemDetail),
                   _buildInfoRow("물품색상", item.colorName),
-                  _buildInfoRow("지역",
-                      "${item.sidoName} ${item.gugunName} ${item.lLocationDetail}"),
+                  _buildInfoRow(
+                    "지역",
+                    "${item.sidoName} ${item.gugunName} ${item.lLocationDetail}",
+                  ),
                   _buildInfoRow("사례금", "${item.reward}원"),
                   _buildInfoRow("조회수", "${item.lViews}회"),
                   const SizedBox(height: 16),
-
-                  // 본문 내용
-                  const Text("내용:", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  const Text(
+                    "내용:",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
                   const SizedBox(height: 8),
                   Text(item.lostContent, style: const TextStyle(fontSize: 16)),
                   const SizedBox(height: 24),
-
-                  // 세로 버튼 (1:1 채팅, 처리현황, 지도)
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       ElevatedButton(
                         style: _buttonStyle(),
-                        onPressed: () {},
+                        onPressed: () {
+                          // TODO: 채팅
+                        },
                         child: const Text("1대1 채팅 보내기"),
                       ),
                       const SizedBox(height: 8),
                       ElevatedButton(
                         style: _buttonStyle(),
-                        onPressed: () {},
+                        onPressed: () {
+                          // TODO: 처리현황
+                        },
                         child: const Text("분실물 처리현황"),
                       ),
                       const SizedBox(height: 8),
                       ElevatedButton(
                         style: _buttonStyle(),
-                        onPressed: () {},
+                        onPressed: () {
+                          // TODO: 지도보기
+                        },
                         child: const Text("지도에 분실위치 보기"),
                       ),
                     ],
                   ),
                   const SizedBox(height: 16),
-
-                  // 목록/수정/블라인드
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -163,21 +189,6 @@ class _LostViewsPageState extends State<LostViewsPage> {
                         onPressed: () => Navigator.pop(context),
                         child: const Text("목록"),
                       ),
-                      if (isAuthor)
-                        ElevatedButton(
-                          onPressed: () {
-                            // 수정 페이지 이동
-                          },
-                          child: const Text("수정"),
-                        ),
-                      if (isAdmin)
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                          onPressed: () {
-                            // 블라인드 로직
-                          },
-                          child: const Text("블라인드"),
-                        ),
                     ],
                   ),
                 ],

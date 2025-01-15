@@ -211,7 +211,7 @@ class _SearchResultPageState extends State<SearchResultPage>
             itemBuilder: (context, index) {
               final item = _lostData!.items[index];
               return Card(
-                margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
@@ -259,7 +259,7 @@ class _SearchResultPageState extends State<SearchResultPage>
             itemBuilder: (context, index) {
               final item = _foundData!.items[index];
               return Card(
-                margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
@@ -313,7 +313,7 @@ class _SearchResultPageState extends State<SearchResultPage>
               // fdPrdtNm, fdSbjt, depPlace 등을 파싱함
 
               return Card(
-                margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),

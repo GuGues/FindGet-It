@@ -13,6 +13,7 @@ int parseInt(dynamic value, {int defaultValue = 0}) {
   return defaultValue;
 }
 
+
 /// ================== (1) 분실물 VO ==================
 class LostItem {
   final String lostIdx;
@@ -60,26 +61,34 @@ class LostItem {
   });
 
   factory LostItem.fromJson(Map<String, dynamic> json) {
+    // 디버깅용 출력
+    print('===== LostItem JSON Debug =====');
+    json.forEach((key, value) {
+      print('key=$key, value=$value');
+    });
+    print('=================================');
+
+
     return LostItem(
-      lostIdx: parseString(json['lostIdx']),
-      email: parseString(json['email']),
-      lostTitle: parseString(json['lostTitle']),
-      lostContent: parseString(json['lostContent']),
-      lostDate: parseString(json['lostDate']),
-      lRegDate: parseString(json['lRegDate']),
-      lViews: parseInt(json['lViews']),
-      locationCode: parseString(json['locationCode']),
-      lLocationDetail: parseString(json['lLocationDetail']),
-      itemCode: parseString(json['itemCode']),
-      lItemDetail: parseString(json['lItemDetail']),
-      reward: parseInt(json['reward']),
-      colorCode: parseString(json['colorCode']),
-      lostState: parseInt(json['lostState']),
-      itemName: parseString(json['itemName']),
-      colorName: parseString(json['colorName']),
-      sidoName: parseString(json['sidoName']),
-      gugunName: parseString(json['gugunName']),
-      nickname: parseString(json['nickname']),
+      lostIdx: parseString(json['lostIdx']??json['LOSTIDX']),
+      email: parseString(json['email']??json['EMAIL']),
+      lostTitle: parseString(json['lostTitle']??json['LOSTTITLE']),
+      lostContent: parseString(json['lostContent']??json['LOSTCONTENT']),
+      lostDate: parseString(json['lostDate']??json['LOSTDATE']),
+      lRegDate: parseString(json['lRegDate']??json['LREGDATE']),
+      lViews: parseInt(json['lViews']??json['LVIEWS']),
+      locationCode: parseString(json['locationCode']??json['LOCATIONCODE']),
+      lLocationDetail: parseString(json['lLocationDetail']??json['LLOCATIONDETAIL']),
+      itemCode: parseString(json['itemCode']??json['ITEMCODE']),
+      lItemDetail: parseString(json['lItemDetail']??json['LITEMDETAIL']),
+      reward: parseInt(json['reward']??json['REWARD']),
+      colorCode: parseString(json['colorCode']??json['COLORCODE']),
+      lostState: parseInt(json['lostState']??json['LOSTSTATE']),
+      itemName: parseString(json['itemName']??json['ITEMNAME']),
+      colorName: parseString(json['colorName']??json['COLORNAME']),
+      sidoName: parseString(json['sidoName']??json['SIDONAME']),
+      gugunName: parseString(json['gugunName']??json['GUGUNNAME']),
+      nickname: parseString(json['nickname']??json['NICKNAME']),
       filePath: json['filePath'] != null ? parseString(json['filePath']) : null,
     );
   }
@@ -132,26 +141,34 @@ class FoundItem {
   });
 
   factory FoundItem.fromJson(Map<String, dynamic> json) {
+    // 디버깅용 출력
+    print('===== LostItem JSON Debug =====');
+    json.forEach((key, value) {
+      print('key=$key, value=$value');
+    });
+    print('=================================');
+
+
     return FoundItem(
-      foundIdx: parseString(json['foundIdx']),
-      email: parseString(json['email']),
-      foundTitle: parseString(json['foundTitle']),
-      foundContent: parseString(json['foundContent']),
-      foundDate: parseString(json['foundDate']),
-      fRegDate: parseString(json['fRegDate']),
-      fViews: parseInt(json['fViews']),
-      itemState: parseString(json['itemState']),
-      locationCode: parseString(json['locationCode']),
-      fLocationDetail: parseString(json['fLocationDetail']),
-      itemCode: parseString(json['itemCode']),
-      fItemDetail: parseString(json['fItemDetail']),
-      colorCode: parseString(json['colorCode']),
-      foundState: parseInt(json['foundState']),
-      itemName: parseString(json['itemName']),
-      colorName: parseString(json['colorName']),
-      sidoName: parseString(json['sidoName']),
-      gugunName: parseString(json['gugunName']),
-      nickname: parseString(json['nickname']),
+      foundIdx: parseString(json['foundIdx']??json['FOUNDIDX']),
+      email: parseString(json['email']??json['EMAIL']),
+      foundTitle: parseString(json['foundTitle']??json['FOUNDTITLE']),
+      foundContent: parseString(json['foundContent']??json['FOUNDCONTENT']),
+      foundDate: parseString(json['foundDate']??json['FOUNDDATE']),
+      fRegDate: parseString(json['fRegDate']??json['FREGDATE']),
+      fViews: parseInt(json['fViews']??json['FVIEWS']),
+      itemState: parseString(json['itemState']??json['ITEMSTATE']),
+      locationCode: parseString(json['locationCode']??json['LOCATIONCODE']),
+      fLocationDetail: parseString(json['fLocationDetail']??json['FLOCATIONDETAIL']),
+      itemCode: parseString(json['itemCode']??json['ITEMCODE']),
+      fItemDetail: parseString(json['fItemDetail']??json['FITEMDETAIL']),
+      colorCode: parseString(json['colorCode']??json['COLORCODE']),
+      foundState: parseInt(json['foundState']??json['FOUNDSTATE']),
+      itemName: parseString(json['itemName']??json['ITEMNAME']),
+      colorName: parseString(json['colorName']??json['COLORNAME']),
+      sidoName: parseString(json['sidoName']??json['SIDONAME']),
+      gugunName: parseString(json['gugunName']??json['GUGUNNAME']),
+      nickname: parseString(json['nickname']??json['NICKNAME']),
       filePath: json['filePath'] != null ? parseString(json['filePath']) : null,
     );
   }
@@ -198,16 +215,16 @@ class PoliceItem {
     });
     print('=================================');
 
-    final atcId         = json['atcid']         ?? json['ATCID'];
-    final depPlace      = json['depplace']      ?? json['DEPPLACE'];
-    final fdFilePathImg = json['fdfilepathimg'] ?? json['FDFILEPATHIMG'];
-    final fdPrdtNm      = json['fdprdtnm']      ?? json['FDPRDTNM'];
+    final atcId         = json['atcId']         ?? json['ATCID'];
+    final depPlace      = json['depPlace']      ?? json['DEPPLACE'];
+    final fdFilePathImg = json['fdFilePathImg'] ?? json['FDFILEPATHIMG'];
+    final fdPrdtNm      = json['fdPrdtNm']      ?? json['FDPRDTNM'];
     final fdsn          = json['fdsn']          ?? json['FDSN'];
-    final fdSbjt        = json['fdsbjt']        ?? json['FDSBJT'];
-    final fdYmd         = json['fdymd']         ?? json['FDYMD'];
-    final prdtClNm      = json['prdtclnm']      ?? json['PRDTCLNM'];
-    final clrNm         = json['clrnm']         ?? json['CLRNM'];
-    final regDate       = json['regdate']       ??
+    final fdSbjt        = json['fdSbjt']        ?? json['FDSBJT'];
+    final fdYmd         = json['fdYmd']         ?? json['FDYMD'];
+    final prdtClNm      = json['prdtClNm']      ?? json['PRDTCLNM'];
+    final clrNm         = json['clrNm']         ?? json['CLRNM'];
+    final regDate       = json['regDate']       ??
         json['reg_date']      ??
         json['REG_DATE'];
 

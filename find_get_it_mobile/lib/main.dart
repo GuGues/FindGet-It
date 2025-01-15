@@ -1,17 +1,32 @@
 // lib/main.dart
 
+import 'package:find_get_it_mobile/views/Bottom.dart';
+import 'package:find_get_it_mobile/views/lostViews.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'chatting_room.dart';
 import 'chatting.dart';
+import 'foundPage.dart';
+import 'foundinsert.dart';
+import 'foundupdate.dart';
+import 'join_page.dart';
 import 'lostPage.dart';
+import 'lostinsert.dart';
+import 'lostupdate.dart';
+import 'mypage/myCs.dart';
+import 'mypage/mypage.dart';
+import 'mypage/myFound.dart';
+import 'mypage/myLost.dart';
 import 'searchResultPage.dart';
 import 'login_page.dart';
 import 'global.dart';
 import 'faqPage.dart';
 import 'noticePage.dart';
-import 'views/lostViews.dart';
+import 'map.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await NaverMapSdk.instance.initialize(clientId: '3ca5s7fu3g');
   runApp(const MyApp());
 }
 
@@ -33,8 +48,7 @@ class MyApp extends StatelessWidget {
         //'/join': (context) => const JoinPage(),
         '/main': (context) => const HomePage(),
         '/lost': (context) => const LostPage(),
-// 분실물 상세 페이지
-        '/lostViews': (context) => const LostViewsPage(lostIdx: '',),
+        '/found': (context) => const FoundPage(),
         // 습득물, FAQ, CS, Police, GetTalk 등은 필요 시 구현
         // '/found': (context) => const FoundPage(),
          '/faq': (context) => const FaqPage(),
@@ -43,11 +57,21 @@ class MyApp extends StatelessWidget {
         // '/policeFound': (context) => const PoliceFoundPage(),
         '/getTalk': (context) => const GetTalkPage(),
         '/getTalkDetail': (context) => const GetTalkDetailPage(),
-        // 검색결과 페이지
         '/searchResult': (context) => const SearchResultPage(),
+        '/lostInsert': (context) => const LostInsertPage(),
+        '/lostUpdate': (context) => const LostUpdatePage(lostIdx:"LO00000001",),
+        '/foundUpdate': (context) => const FoundUpdatePage(foundIdx:"FD00000417",),
+        '/mypage': (context) => const MyPage(),
+        '/myFound':(context) => const MyFoundPage(),
+        '/myLost':(context) => const MyLostPage(),
+        '/myCs':(context) => const MyCsPage(),
+        '/foundInsert': (context) => const FoundInsertPage(),
+         '/map': (context) => const MapPage(),
+        '/lostViews': (context) => const LostViewsPage(lostIdx: '',),
+    //회원가입 페이지
+    '/join' : (context) => const JoinPage(),
 
-        // 로그인 페이지
-        '/login': (context) => const LoginPage(),
+
       },
     );
   }
@@ -83,7 +107,7 @@ class _HomePageState extends State<HomePage> {
     },
     {
       "label": "경찰청 습득물",
-      "route": "/policeFound",
+      "route": "/mypage",
       "image": "assets/icon/lost112_orange.png"
     },
     {
@@ -141,15 +165,6 @@ class _HomePageState extends State<HomePage> {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-
-              //
-
-              //
-
-              //
-
-              //
-
               // 검색창
               Row(
                 children: [

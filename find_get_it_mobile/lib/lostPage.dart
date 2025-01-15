@@ -128,7 +128,7 @@ class color {
 // Fetch items based on page number and filters
 Future<List<Lost>> fetchItems(int page) async {
   final response =
-      await http.get(Uri.parse('${appConfig.url}/app/lostList?page=$page'));
+  await http.get(Uri.parse('${appConfig.url}/app/lostList?page=$page'));
 
   if (response.statusCode == 200) {
     List<dynamic> data = json.decode(utf8.decode(response.bodyBytes));
@@ -159,42 +159,83 @@ class LostPage extends StatefulWidget {
 }
 
 class _LostPageState extends State<LostPage> {
+  bool _isLoading = false;
   int page = 1;
+  late int pageCnt;
   TextEditingController startDateController = TextEditingController();
   TextEditingController endDateController = TextEditingController();
   TextEditingController titleController = TextEditingController();
-  List<Lost> lostList =List.empty();
+  List<Lost> lostList = List.empty();
   String selectedCategory = '물품 카테고리';
   String selectedLocation = '장소';
   String selectedColor = '색상';
+  String selectedStartDate = '시작일';
+  String selectedEndDate = '종료일';
+  var lost_title = '';
+  var item_code = 0;
+  var location_code = 0;
+  var start_date = '';
+  var end_date = '';
+  var color_code = 0;
 
-  searchItems(int page, Map<String, dynamic> map) async {
-    print(map);
+  searchItems(int page) async {
+    var params = '';
+    if (lost_title != null && lost_title.length != 0) {
+      params += '&lost_title=$lost_title';
+    }
+    if (item_code != null && item_code != 0) {
+      params += '&item_code=$item_code';
+    }
+    if (location_code != null && location_code != 0) {
+      params += '&location_code=$location_code';
+    }
+    if (color_code != null && color_code != 0) {
+      params += '&color_code=$color_code';
+    }
+    if (start_date != null && start_date.length != 0) {
+      params += '&start_date=$start_date';
+    }
+    if (end_date != null && end_date.length != 0) {
+      params += '&end_date=$end_date';
+    }
     final response = await http.get(
-        Uri.parse('${appConfig.url}/app/getLostSearch?page=$page&lost_title=$lost_title'));
+        Uri.parse('${appConfig.url}/app/getLostSearch?page=$page$params'));
     if (response.statusCode == 200) {
-      List<dynamic> data = json.decode(utf8.decode(response.bodyBytes));
+      Map<String, dynamic> data = json.decode(utf8.decode(response.bodyBytes));
+      List<dynamic> searchLostList = data["searchLost"];
       print(data);
       setState(() {
-        lostList = data.map((json) => Lost.fromJson(json)).toList();
+        pageCnt = data["pageCnt"];
+        lostList = searchLostList.map((json) => Lost.fromJson(json)).toList();
       });
     } else {
       throw Exception('Failed to load items');
     }
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   fetchItem(int page) async {
+    setState(() {
+      _isLoading = true;
+    });
     final response =
     await http.get(Uri.parse('${appConfig.url}/app/lostList?page=$page'));
 
     if (response.statusCode == 200) {
-      List<dynamic> data = json.decode(utf8.decode(response.bodyBytes));
+      Map<String, dynamic> data = json.decode(utf8.decode(response.bodyBytes));
+      List<dynamic> getLostList = data["lostList"];
       setState(() {
-      lostList= data.map((json) => Lost.fromJson(json)).toList();
+        pageCnt = data["pageCnt"];
+        lostList = getLostList.map((json) => Lost.fromJson(json)).toList();
       });
     } else {
       throw Exception('Failed to load items');
     }
+    setState(() {
+      _isLoading = false;
+    });
   }
 
 
@@ -203,16 +244,9 @@ class _LostPageState extends State<LostPage> {
     fetchItem(1);
   }
 
-  var lost_title = '';
-  var item_code = 0;
-  var location_code = 0;
-  var start_date = '';
-  var end_date = '';
-  var color_code = 0;
-
   // Date picker method
-  Future<void> _selectStartDate(
-      BuildContext context, TextEditingController controller) async {
+  Future<void> _selectStartDate(BuildContext context,
+      TextEditingController controller) async {
     final DateTime? selectedDate = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
@@ -223,14 +257,15 @@ class _LostPageState extends State<LostPage> {
     if (selectedDate != null) {
       setState(() {
         controller.text =
-            "${selectedDate.year}-${selectedDate.month.toString().padLeft(2, '0')}-${selectedDate.day.toString().padLeft(2, '0')}";
+        "${selectedDate.year}-${selectedDate.month.toString().padLeft(
+            2, '0')}-${selectedDate.day.toString().padLeft(2, '0')}";
       });
       start_date = controller.text;
     }
   }
 
-  Future<void> _selectEndDate(
-      BuildContext context, TextEditingController controller) async {
+  Future<void> _selectEndDate(BuildContext context,
+      TextEditingController controller) async {
     final DateTime? selectedDate = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
@@ -241,7 +276,8 @@ class _LostPageState extends State<LostPage> {
     if (selectedDate != null) {
       setState(() {
         controller.text =
-            "${selectedDate.year}-${selectedDate.month.toString().padLeft(2, '0')}-${selectedDate.day.toString().padLeft(2, '0')}";
+        "${selectedDate.year}-${selectedDate.month.toString().padLeft(
+            2, '0')}-${selectedDate.day.toString().padLeft(2, '0')}";
       });
       end_date = controller.text;
     }
@@ -249,6 +285,15 @@ class _LostPageState extends State<LostPage> {
 
   @override
   Widget build(BuildContext context) {
+    // 로딩중
+    if (_isLoading) {
+      return Scaffold(
+        appBar:
+        AppBar(title: Text(""), backgroundColor: Colors.orange),
+        body: const Center(child: CircularProgressIndicator()),
+      );
+    }
+    // 정상
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -263,11 +308,15 @@ class _LostPageState extends State<LostPage> {
                 case 1:
                   Navigator.pushNamed(context, '/lost');
                   break;
+                case 2:
+                  Navigator.pushNamed(context, '/found');
+                  break;
                 default:
                   print("Menu item $item selected");
               }
             },
-            itemBuilder: (BuildContext context) => [
+            itemBuilder: (BuildContext context) =>
+            [
               PopupMenuItem<int>(value: 1, child: Text("분실물 게시판")),
               PopupMenuItem<int>(value: 2, child: Text("습득물 게시판")),
               PopupMenuItem<int>(value: 3, child: Text("FAQ")),
@@ -286,10 +335,9 @@ class _LostPageState extends State<LostPage> {
               children: [
                 Container(
                     width: double.infinity,
-                    padding: const EdgeInsets.all(6.0),
-                    // padding 줄이기
+                    padding: EdgeInsets.all(30.0),
                     margin: const EdgeInsets.symmetric(
-                        horizontal: 16.0, vertical: 4.0),
+                        horizontal: 16.0, vertical: 15.0),
                     // margin 줄이기
                     decoration: BoxDecoration(
                       color: Colors.white,
@@ -344,7 +392,7 @@ class _LostPageState extends State<LostPage> {
                                 final response = await http.get(
                                     Uri.parse('${appConfig.url}/getBigCate'));
                                 final List<dynamic> jsonResponse =
-                                    jsonDecode(utf8.decode(response.bodyBytes));
+                                jsonDecode(utf8.decode(response.bodyBytes));
                                 final bigCateList = jsonResponse
                                     .map((item) => cate.fromJson(item))
                                     .toList();
@@ -367,14 +415,16 @@ class _LostPageState extends State<LostPage> {
                                                 print(bigCate.item_code);
                                                 final response = await http.get(
                                                     Uri.parse(
-                                                        '${appConfig.url}/getCate?item_code=${bigCate.item_code}'));
+                                                        '${appConfig
+                                                            .url}/getCate?item_code=${bigCate
+                                                            .item_code}'));
                                                 final List<dynamic>
-                                                    jsonResponse =
-                                                    jsonDecode(utf8.decode(
-                                                        response.bodyBytes));
+                                                jsonResponse =
+                                                jsonDecode(utf8.decode(
+                                                    response.bodyBytes));
                                                 final cateList = jsonResponse
                                                     .map((item) =>
-                                                        cate.fromJson(item))
+                                                    cate.fromJson(item))
                                                     .toList();
 
                                                 showModalBottomSheet(
@@ -385,18 +435,20 @@ class _LostPageState extends State<LostPage> {
                                                         child: Column(
                                                           children: [
                                                             for (var cate
-                                                                in cateList)
+                                                            in cateList)
                                                               ListTile(
                                                                 title: Text(
                                                                     cate.item),
                                                                 onTap: () {
                                                                   print(cate
                                                                       .item_code);
-                                                                  item_code = cate
-                                                                      .item_code;
+                                                                  item_code =
+                                                                      cate
+                                                                          .item_code;
                                                                   setState(() {
                                                                     selectedCategory =
-                                                                        cate.item;
+                                                                        cate
+                                                                            .item;
                                                                   });
                                                                   Navigator.pop(
                                                                       context); //소분류닫기
@@ -418,9 +470,12 @@ class _LostPageState extends State<LostPage> {
                               },
                               child: Text(selectedCategory),
                               style: ElevatedButton.styleFrom(
+                                foregroundColor: Colors.black54,
+                                backgroundColor: Colors.orangeAccent,
                                 padding: EdgeInsets.symmetric(
                                     vertical: 12, horizontal: 20),
-                                textStyle: TextStyle(fontSize: 14),
+                                textStyle: TextStyle(
+                                  fontSize: 14, fontWeight: FontWeight.bold,),
                               ),
                             ),
                           ],
@@ -440,7 +495,7 @@ class _LostPageState extends State<LostPage> {
                                 final response = await http.get(Uri.parse(
                                     '${appConfig.url}/getLocationBig'));
                                 final List<dynamic> jsonResponse =
-                                    jsonDecode(utf8.decode(response.bodyBytes));
+                                jsonDecode(utf8.decode(response.bodyBytes));
                                 final bigLocationList = jsonResponse
                                     .map((item) => bigLocation.fromJson(item))
                                     .toList();
@@ -458,10 +513,10 @@ class _LostPageState extends State<LostPage> {
                                       child: Column(
                                         children: [
                                           for (var bigLocation
-                                              in bigLocationList)
+                                          in bigLocationList)
                                             ListTile(
                                               title:
-                                                  Text(bigLocation.sido_name),
+                                              Text(bigLocation.sido_name),
                                               onTap: () async {
                                                 setState(() {
                                                   selectedLocation =
@@ -473,16 +528,19 @@ class _LostPageState extends State<LostPage> {
                                                     bigLocation.sido_name;
                                                 final response = await http.get(
                                                     Uri.parse(
-                                                        '${appConfig.url}/getLocationMiddle?location_code=${bigLocation.location_code}'));
+                                                        '${appConfig
+                                                            .url}/getLocationMiddle?location_code=${bigLocation
+                                                            .location_code}'));
                                                 final List<dynamic>
-                                                    jsonResponse =
-                                                    jsonDecode(utf8.decode(
-                                                        response.bodyBytes));
+                                                jsonResponse =
+                                                jsonDecode(utf8.decode(
+                                                    response.bodyBytes));
                                                 final locationList =
-                                                    jsonResponse
-                                                        .map((item) => location
-                                                            .fromJson(item))
-                                                        .toList();
+                                                jsonResponse
+                                                    .map((item) =>
+                                                    location
+                                                        .fromJson(item))
+                                                    .toList();
 
                                                 showModalBottomSheet(
                                                     context: context,
@@ -492,10 +550,11 @@ class _LostPageState extends State<LostPage> {
                                                         child: Column(
                                                           children: [
                                                             for (var location
-                                                                in locationList)
+                                                            in locationList)
                                                               ListTile(
-                                                                title: Text(location
-                                                                    .gugun_name),
+                                                                title: Text(
+                                                                    location
+                                                                        .gugun_name),
                                                                 onTap: () {
                                                                   print(location
                                                                       .location_code);
@@ -503,9 +562,10 @@ class _LostPageState extends State<LostPage> {
                                                                       location
                                                                           .location_code;
                                                                   setState(() {
-                                                                    selectedLocation += ' ' +
-                                                                        location
-                                                                            .gugun_name;
+                                                                    selectedLocation +=
+                                                                        ' ' +
+                                                                            location
+                                                                                .gugun_name;
                                                                   });
                                                                   Navigator.pop(
                                                                       context); //소분류닫기
@@ -527,9 +587,12 @@ class _LostPageState extends State<LostPage> {
                               },
                               child: Text(selectedLocation),
                               style: ElevatedButton.styleFrom(
+                                foregroundColor: Colors.black54,
+                                backgroundColor: Colors.orangeAccent,
                                 padding: EdgeInsets.symmetric(
                                     vertical: 12, horizontal: 20),
-                                textStyle: TextStyle(fontSize: 14),
+                                textStyle: TextStyle(
+                                    fontSize: 14, fontWeight: FontWeight.bold),
                               ),
                             ),
                           ],
@@ -551,18 +614,10 @@ class _LostPageState extends State<LostPage> {
                                 final response = await http.get(
                                     Uri.parse('${appConfig.url}/getColor'));
                                 final List<dynamic> jsonResponse =
-                                    jsonDecode(utf8.decode(response.bodyBytes));
+                                jsonDecode(utf8.decode(response.bodyBytes));
                                 final colorList = jsonResponse
                                     .map((item) => color.fromJson(item))
                                     .toList();
-
-                                //var lost_title = '';
-                                //var item_code = '';
-                                //var location_code = '';
-                                //var start_date = '';
-                                //var end_date = '';
-                                //var color_code = '';
-
                                 // 모달 바텀 시트 호출
                                 showModalBottomSheet(
                                   context: context,
@@ -595,9 +650,12 @@ class _LostPageState extends State<LostPage> {
                               },
                               child: Text(selectedColor),
                               style: ElevatedButton.styleFrom(
+                                foregroundColor: Colors.black54,
+                                backgroundColor: Colors.orangeAccent,
                                 padding: EdgeInsets.symmetric(
                                     vertical: 12, horizontal: 20),
-                                textStyle: TextStyle(fontSize: 14),
+                                textStyle: TextStyle(
+                                    fontSize: 14, fontWeight: FontWeight.bold),
                               ),
                             ),
                           ],
@@ -618,7 +676,7 @@ class _LostPageState extends State<LostPage> {
                                 controller: startDateController,
                                 readOnly: true, // 텍스트 입력 방지
                                 decoration: InputDecoration(
-                                  hintText: '시작일',
+                                  hintText: selectedStartDate,
                                   border: OutlineInputBorder(),
                                   suffixIcon: Icon(Icons.calendar_today),
                                 ),
@@ -636,7 +694,7 @@ class _LostPageState extends State<LostPage> {
                                 controller: endDateController,
                                 readOnly: true, // 텍스트 입력 방지
                                 decoration: InputDecoration(
-                                  hintText: '종료일',
+                                  hintText: selectedEndDate,
                                   border: OutlineInputBorder(),
                                   suffixIcon: Icon(Icons.calendar_today),
                                 ),
@@ -651,33 +709,58 @@ class _LostPageState extends State<LostPage> {
 
                         // 검색 버튼
                         Center(
-                          child: ElevatedButton.icon(
-                            onPressed: () async {
-                              lost_title = titleController.text;
-
-                              Map<String, dynamic> map = {
-                                'lost_title': lost_title,
-                                'item_code': item_code,
-                                'location_code': location_code,
-                                'color_code': color_code,
-                                'start_date': start_date,
-                                'end_date': end_date,
-                              };
-                              print(map);
-                              searchItems(page, map);
-                              print("+++++++++++++++++++++++++++++");
-                              print(lostList[0].lostTitle);
-                              print("+++++++++++++++++++++++++++++");
-                            },
-                            icon: Icon(Icons.search),
-                            label: Text('검색'),
-                            style: ElevatedButton.styleFrom(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 20, vertical: 12),
-                              backgroundColor: Colors.orange,
-                              textStyle: TextStyle(color: Colors.black),
-                            ),
-                          ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                ElevatedButton.icon(
+                                  onPressed: () async {
+                                    setState(() {
+                                      lost_title = '';
+                                      titleController.clear();
+                                      item_code = 0;
+                                      location_code = 0;
+                                      start_date = '';
+                                      end_date = '';
+                                      startDateController.clear();
+                                      endDateController.clear();
+                                      color_code = 0;
+                                      selectedCategory = '물품 카테고리';
+                                      selectedLocation = '장소';
+                                      selectedColor = '색상';
+                                      selectedStartDate = '시작일';
+                                      selectedEndDate = '종료일';
+                                    });
+                                  },
+                                  icon: Icon(Icons.refresh),
+                                  label: Text('초기화'),
+                                  style: ElevatedButton.styleFrom(
+                                    foregroundColor: Colors.black54,
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 15, vertical: 10),
+                                    backgroundColor: Colors.grey,
+                                    textStyle: TextStyle(color: Colors.black,
+                                      fontWeight: FontWeight.w800,),
+                                  ),
+                                ),
+                                ElevatedButton.icon(
+                                  onPressed: () async {
+                                    lost_title = titleController.text;
+                                    page = 1;
+                                    searchItems(page);
+                                  },
+                                  icon: Icon(Icons.search),
+                                  label: Text('검색'),
+                                  style: ElevatedButton.styleFrom(
+                                    foregroundColor: Colors.white,
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 20, vertical: 12),
+                                    backgroundColor: Colors.orange,
+                                    textStyle: TextStyle(color: Colors.black,
+                                      fontWeight: FontWeight.w800,),
+                                  ),
+                                ),
+                              ],
+                            )
                         ),
                       ],
                     )),
@@ -720,17 +803,23 @@ class _LostPageState extends State<LostPage> {
                         setState(() {
                           page--;
                         });
+                        searchItems(page);
                       }
                     },
                     child: Icon(Icons.arrow_back),
                   ),
                   SizedBox(width: 16),
+                  Text("$page"),
+                  SizedBox(width: 16),
                   ElevatedButton(
-                    onPressed: () {
+                    onPressed: (page < pageCnt)
+                        ? () {
                       setState(() {
                         page++;
                       });
-                    },
+                      searchItems(page);
+                    }
+                        : null, // page가 pageCnt와 같을 경우 버튼을 비활성화
                     child: Icon(Icons.arrow_forward),
                   ),
                 ],
@@ -739,85 +828,6 @@ class _LostPageState extends State<LostPage> {
           ),
         ],
       ),
-    );
-  }
-
-  Widget buildSearchRow(String label, String value, BuildContext context) {
-    return Row(
-      children: [
-        Text(
-          label,
-          style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-        ),
-        SizedBox(width: 16),
-        Expanded(
-          child: TextField(
-            style: TextStyle(fontSize: 14),
-            decoration: InputDecoration(
-              contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-              border: OutlineInputBorder(),
-              hintText: value,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget buildSearchRowWithColor(String label, String value, Color color) {
-    return Row(
-      children: [
-        Text(
-          label,
-          style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-        ),
-        SizedBox(width: 16),
-        Container(
-          width: 20,
-          height: 20,
-          color: color,
-        ),
-        SizedBox(width: 8),
-        Text(value, style: TextStyle(fontSize: 14)),
-      ],
-    );
-  }
-
-  Widget buildTableHeader() {
-    return Row(
-      children: [
-        Expanded(
-            flex: 2,
-            child: Text('물품명', style: TextStyle(fontWeight: FontWeight.bold))),
-        Expanded(
-            flex: 1,
-            child: Text('게시일', style: TextStyle(fontWeight: FontWeight.bold))),
-        Expanded(
-            flex: 1,
-            child: Text('닉네임', style: TextStyle(fontWeight: FontWeight.bold))),
-      ],
-    );
-  }
-
-  Widget buildTableRow(
-      String itemName, String date, String nickname, String location) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Expanded(flex: 2, child: Text(itemName)),
-            Expanded(flex: 1, child: Text(date)),
-            Expanded(flex: 1, child: Text(nickname)),
-          ],
-        ),
-        Padding(
-          padding: const EdgeInsets.only(left: 8.0),
-          child: Text('분실 날짜: $date, $location',
-              style: TextStyle(color: Colors.grey, fontSize: 12)),
-        ),
-        Divider(),
-      ],
     );
   }
 }

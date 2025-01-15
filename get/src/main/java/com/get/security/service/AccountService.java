@@ -48,6 +48,7 @@ public class AccountService implements UserDetailsService {
         }
         reg.setPassword(encoder.encode(passwd));
         userMapper.save(reg);
+        System.out.println(reg.getMem_idx());
         return true;
     }
 

@@ -13,8 +13,13 @@ class FoundViewsPage extends StatefulWidget {
 }
 
 class _FoundViewsPageState extends State<FoundViewsPage> {
-  late Future<FoundItem> _futureFound;
+  late Future<Map<String, dynamic>> _futureFound;
+
+  /// 데이터 서버 주소
   final String serverUrl = appConfig.url;
+
+  /// 이미지 표시용 서버 주소
+  final String imageServerUrl = "http://192.168.0.214:9090";
 
   @override
   void initState() {
@@ -22,23 +27,33 @@ class _FoundViewsPageState extends State<FoundViewsPage> {
     _futureFound = fetchFound(widget.foundIdx);
   }
 
-  Future<FoundItem> fetchFound(String idx) async {
+  /// 습득물 상세 데이터 가져오기
+  Future<Map<String, dynamic>> fetchFound(String idx) async {
     final uri = Uri.parse('$serverUrl/app/getFoundItem/$idx');
     final response = await http.get(uri);
+
     if (response.statusCode == 200) {
-      final data = json.decode(utf8.decode(response.bodyBytes));
-      return FoundItem.fromJson(data);
+      final rootJson = json.decode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>;
+      if (rootJson.isEmpty) {
+        throw Exception('Response is empty');
+      }
+      print('===== FoundItem JSON Debug =====');
+      print(rootJson);
+      print('================================');
+      return rootJson;
     } else {
-      throw Exception('Failed to load FoundItem');
+      throw Exception('Failed to load FoundItem (status=${response.statusCode})');
     }
   }
 
+  /// 공통 버튼 스타일
   ButtonStyle _buttonStyle() {
     return ElevatedButton.styleFrom(
       backgroundColor: const Color(0xFFFF914B),
     );
   }
 
+  /// 라벨 + 값 형태로 표시
   Widget _buildInfoRow(String label, String value) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0),
@@ -54,33 +69,67 @@ class _FoundViewsPageState extends State<FoundViewsPage> {
     );
   }
 
+  /// 이미지 섹션
+  Widget _buildImageSection(String? filePath) {
+    if (filePath == null || filePath.isEmpty || filePath.contains("img02_no_img.gif")) {
+      return Image.asset(
+        'assets/icon/noimg.png',
+        height: 400,
+        width: double.infinity,
+        fit: BoxFit.cover,
+      );
+    }
+
+    final fullUrl = '$imageServerUrl/imgView?filePath=$filePath';
+
+    return Image.network(
+      fullUrl,
+      height: 400,
+      width: double.infinity,
+      fit: BoxFit.cover,
+      errorBuilder: (context, error, stackTrace) {
+        return Image.asset(
+          'assets/icon/noimg.png',
+          height: 400,
+          width: double.infinity,
+          fit: BoxFit.cover,
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final bool isAuthor = true;
-    final bool isAdmin = false;
-
     return Scaffold(
       appBar: AppBar(
         title: const Text("습득물 상세"),
         backgroundColor: Colors.orange,
       ),
-      body: FutureBuilder<FoundItem>(
+      body: FutureBuilder<Map<String, dynamic>>(
         future: _futureFound,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('에러 발생: ${snapshot.error}'));
-          } else if (!snapshot.hasData) {
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return const Center(child: Text('데이터가 없습니다.'));
           } else {
-            final item = snapshot.data!;
+            final data = snapshot.data!;
+            final foundItemJson = data['foundItem'] as Map<String, dynamic>? ?? {};
+            final filePath = data['filePath'] as String? ?? '';
+
+            if (foundItemJson.isEmpty) {
+              return const Center(child: Text('데이터를 찾을 수 없습니다.'));
+            }
+
+            final item = FoundItem.fromJson(foundItemJson);
+
             return SingleChildScrollView(
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // 제목/작성자
                   Text(
                     "제목: ${item.foundTitle}",
                     style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
@@ -91,28 +140,13 @@ class _FoundViewsPageState extends State<FoundViewsPage> {
                     style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                   ),
                   const SizedBox(height: 16),
-
-                  // 이미지
-                  if (item.filePath != null && item.filePath!.isNotEmpty)
-                    Image.network(
-                      '$serverUrl/imgView?filePath=${item.filePath}',
-                      height: 200,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                    )
-                  else
-                    Image.asset(
-                      'assets/images/noimg.png',
-                      height: 200,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                    ),
+                  _buildImageSection(filePath),
                   const SizedBox(height: 16),
 
                   // 정보
                   _buildInfoRow("습득일", item.foundDate),
                   _buildInfoRow("물품분류", item.itemName),
-                  _buildInfoRow("물품세부분류", item.fItemDetail),
+                  _buildInfoRow("물품세부분류", item.fItemDetail ?? "없음"),
                   _buildInfoRow("물품색상", item.colorName),
                   _buildInfoRow(
                       "지역", "${item.sidoName} ${item.gugunName} ${item.fLocationDetail}"),
@@ -150,28 +184,10 @@ class _FoundViewsPageState extends State<FoundViewsPage> {
                   ),
                   const SizedBox(height: 16),
 
-                  // 목록/수정/블라인드
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () => Navigator.pop(context),
-                        child: const Text("목록"),
-                      ),
-                      if (isAuthor)
-                        ElevatedButton(
-                          onPressed: () {
-                            // 수정 페이지
-                          },
-                          child: const Text("수정"),
-                        ),
-                      if (isAdmin)
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                          onPressed: () {},
-                          child: const Text("블라인드"),
-                        ),
-                    ],
+                  // 목록 버튼
+                  ElevatedButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text("목록"),
                   ),
                 ],
               ),
