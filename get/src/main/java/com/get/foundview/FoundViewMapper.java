@@ -30,11 +30,15 @@ public interface FoundViewMapper {
     // ======= (새로 추가) 습득물 수정 =======
     void updateFoundItem(FoundItemVO vo);
 
-    //이미지 경로 조회
-	String getFilePath(String foundIdx);
+    // 이미지 경로 조회
+    String getFilePath(String foundIdx);
 
-	String getFoundFilePath(String foundIdx);
+    // 습득물 이미지 경로 조회
+    String getFoundFilePath(@Param("foundIdx") String foundIdx);
 
     // ========= (추가) 조회수 증가 =========
     void updateFoundViews(@Param("foundIdx") String foundIdx);
+
+    // 습득물 상태 업데이트
+    void updateFoundState(@Param("foundIdx") String foundIdx, @Param("foundState") int foundState);
 }

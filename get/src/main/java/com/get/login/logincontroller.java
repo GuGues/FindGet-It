@@ -15,7 +15,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+<<<<<<< HEAD
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+=======
+>>>>>>> d4032ee16fce93ac50b05fcc4db0c5b9fe7ac6bd
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,7 +27,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+<<<<<<< HEAD
 import org.springframework.web.servlet.ModelAndView;
+=======
+>>>>>>> d4032ee16fce93ac50b05fcc4db0c5b9fe7ac6bd
 
 @Controller
 public class logincontroller {
@@ -117,6 +123,7 @@ public class logincontroller {
     public String findPw(){
         return "login/findPw";
     }
+<<<<<<< HEAD
     @PostMapping("/findPw/check")
     public ResponseEntity<Map<String, Object>> findPwCheck(@RequestBody Map<String,Object> map){
     	System.out.println(map);
@@ -147,5 +154,7 @@ public class logincontroller {
     	}
     	else return "redirect:/error-page/403";
     }
+=======
+>>>>>>> d4032ee16fce93ac50b05fcc4db0c5b9fe7ac6bd
 }
 

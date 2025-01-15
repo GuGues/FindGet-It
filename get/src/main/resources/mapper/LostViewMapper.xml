@@ -126,6 +126,14 @@
        WHERE USING_TABLE_IDX = #{ lostIdx }
     </select>
 
+
+    <!-- ★ 완료 버튼(찾음) ★ -->
+    <update id="updateLostState">
+        UPDATE LOST_ITEMS
+        SET LOST_STATE = #{lostState}
+        WHERE LOST_IDX = #{lostIdx}
+    </update>
+
     <!-- ★ 추가: 조회수 증가 쿼리 ★ -->
     <update id="updateLostViews">
 

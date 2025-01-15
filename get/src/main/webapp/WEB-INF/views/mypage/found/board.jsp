@@ -9,7 +9,7 @@
 </head>
 <style>
 main {
-	margin-left: 20%;
+	margin-left: 25%;
 }
 
 table td, table th {
@@ -50,7 +50,7 @@ a:hover {
 				<div>
 					<a href="/">Home</a>><a href="#">Mypage</a>
 				</div>
-				<h2>나의 문의글</h2>
+				<h2>나의 습득물</h2>
 				<hr>
 				<h4>내가 쓴 글${count3}개</h4>
 				<div>
@@ -60,7 +60,7 @@ a:hover {
 					<table>
 						<colgroup>
 							<col style="width: 10%;">
-							<col style="width: 70%;">
+							<col style="width: 50%;">
 							<col style="width: 10%;">
 							<col style="width: 10%;">
 						</colgroup>
@@ -83,7 +83,7 @@ a:hover {
 								varStatus="f_status">
 								<tr onclick="markAsVisited(this)">
 									<td><a href="#">${f_status.index + 1}</a></td>
-									<td><a href="/Mypage/Found/View/${ found.found_idx }">${found.found_title}</a></td>
+									<td><a href="/found/view?foundIdx=${ found.found_idx }">${found.found_title}</a></td>
 									<td><a href="#">${found.f_reg_date}</a></td>
 									<td><a href="#">${found.f_views}</a></td>
 									<td><input type="checkbox" value="${found.found_idx}" />
@@ -135,6 +135,6 @@ a:hover {
     });
 </script>
 	</main>
-	<%@include file="/WEB-INF/include/pagefab.jsp"%>
+	<%@include file="/WEB-INF/include/fab.jsp"%>
 </body>
 </html>

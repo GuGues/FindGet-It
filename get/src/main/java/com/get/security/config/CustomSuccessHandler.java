@@ -1,6 +1,7 @@
 package com.get.security.config;
 
 import com.get.security.service.Account;
+import com.get.security.service.AccountService;
 import com.get.security.service.UserMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,6 +25,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
+	private final AccountService accountService;
     private final UserMapper userMapper;
     private RequestCache requestCache = new HttpSessionRequestCache();
 
@@ -51,6 +53,9 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
             session.setAttribute("nickname", account.getNickname());
 
         }
+        
+        
+        accountService.updateJoinCountIfNewDay(email);
 
         SavedRequest savedRequest = this.requestCache.getRequest(request, response);
         if (savedRequest == null) {
