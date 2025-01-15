@@ -83,13 +83,36 @@
             border-radius: 5px;
             background-color: white;
         }
-        .find-modal-content>.btn:hover{
-            background-color: #E67E22;
-            color: white;
-        }
         .keyText{
           color: green;
           margin: 10px;
+        }
+        #result-text{
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+        }
+        .keyBtn{
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+        .find-modal-content .btn{
+           display: flex;
+          justify-content: center;
+          align-items: center;
+            width: 100%;;
+            height: 60px;
+            font-size: large;
+            text-align: center;
+            vertical-align: center;
+            margin-top: 10px;
+        }
+        input:not(.inputLine input){
+          margin-top: 20px;
+        }
+        .message{
+          color: red;
         }
     </style>
 </head>
@@ -122,8 +145,8 @@
               <input type="text" class='form-control'  id='newPwCheck' placeholder="비밀번호 확인">
             </div>
             <div class="message"></div>
-            <div class="btn changePwBtn">변경</div>
-            <div class="btn find-close-modal">닫기</div>
+            <div class="btn btn-light changePwBtn">변경</div>
+            <div class="btn btn-light find-close-modal">닫기</div>
         </div>
     </div>
 </form>
@@ -183,7 +206,7 @@
         			    "<input type='text' class='form-control keyInput' name='key' id='floatingTel' placeholder='인증번호'>" +
         			    "<label for='floatingTel'>인증번호</label>" +
         			    "</div>" +
-        			    "<div class='btn btn-primary keyBtn' style='margin-top: 10px;' onclick='yourFunction()'>인증번호 확인</div>";
+        			    "<div class='btn btn-light keyBtn' style='margin-top: 10px;' onclick='yourFunction()'>인증번호 확인</div>";
         		}
         		else{
                     //이메일 인증번호 발송 실패했을경우
@@ -206,8 +229,12 @@
         	    			document.querySelector('.changePwBtn').onclick=()=>{
         	    				let newPw = document.querySelector('#newPw');
         	    				let newPwCheck = document.querySelector('#newPwCheck');
-        	    				if(newPw.value != newPwCheck.value){
-        	    					document.querySelector('.message').innerHTML = "* 비밀번호가 일치하지 않습니다."
+        	    				if(newPw.value == "" || newPw.value == null){
+        	    					document.querySelector('.message').innerHTML = "* 비밀번호를 입력해주세요"
+        	    					newPw.focus();
+        	    				}
+        	    				else if(newPw.value != newPwCheck.value){
+        	    					document.querySelector('.message').innerHTML = "* 비밀번호가 일치하지 않습니다"
         	    					newPwCheck.focus();
         	    				}
         	    				else{

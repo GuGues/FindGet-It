@@ -111,9 +111,6 @@
       </h1>
     </div>
 
-    <!-- 주황색 가로 구분선 -->
-    <hr style="border: none; border-top: 1px solid #FF914B; margin: 20px 0;" />
-
     <div class="image-container">
       <img src="/img/getprocess.png" alt="분실물 처리절차" style="max-width:100%; height:auto;" />
     </div>
