@@ -362,7 +362,12 @@
 
   <!-- 버튼 영역 -->
   <div class="btn-container">
-    <button type="button" onclick="openChat()">1대1 채팅 보내기</button>
+    <c:if test="${ sessionScope.grant ne 'ADMIN' && not empty sessionScope.grant }">
+      <button type="button" onclick="openChat()">1대1 채팅 보내기</button>
+    </c:if>
+    <c:if test="${ empty sessionScope.grant }">
+      <button type="button" onclick="location.href='/login'">1대1 채팅 보내기</button>
+    </c:if>
     <a href="/lost/process">처리절차안내</a>
     <!-- 버튼 클릭 -> 지도 보이기 + 스크롤 이동 -->
     <button onclick="scrollToMap()">지도에 분실위치 보기</button>  </div>
@@ -413,10 +418,10 @@
 
 
         </c:when>
-        <c:otherwise>
+        <c:when test="${ sessionScope.grant ne 'ADMIN' && not empty sessionScope.grant }">
           <!-- 작성자가 아니면 신고하기 버튼 -->
           <button type="button" onclick="openReportModal()">신고하기</button>
-        </c:otherwise>
+        </c:when>
       </c:choose>
     </div>
   </div>

@@ -83,9 +83,36 @@
             border-radius: 5px;
             background-color: white;
         }
-        .find-modal-content>button:hover{
-            background-color: #E67E22;
-            color: white;
+        .keyText{
+          color: green;
+          margin: 10px;
+        }
+        #result-text{
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+        }
+        .keyBtn{
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+        .find-modal-content .btn{
+           display: flex;
+          justify-content: center;
+          align-items: center;
+            width: 100%;;
+            height: 60px;
+            font-size: large;
+            text-align: center;
+            vertical-align: center;
+            margin-top: 10px;
+        }
+        input:not(.inputLine input){
+          margin-top: 20px;
+        }
+        .message{
+          color: red;
         }
     </style>
 </head>
@@ -113,7 +140,9 @@
         <div class="find-modal-content">
             <div class="find-modal-detail">
             </div>
-            <button id="find-close-modal">닫기</button>
+            <div class="message"></div>
+            <div class="btn btn-light changePwBtn">변경</div>
+            <div class="btn btn-light find-close-modal">닫기</div>
         </div>
     </div>
 </main>
@@ -144,8 +173,66 @@
         }).then(result=>result.json())
     .then(result=>{
         if(result.status=="OK"){
-            document.getElementsByClassName("find-modal-detail")[0].innerHTML=result.result;
-            document.getElementsByClassName("find-modal")[0].classList.remove("hidden");
+        	//console.log(result.result);
+        	fetch("/email/check", {
+        		method: "POST",
+        		headers:{
+        			"Content-type":"application/json"
+        		},
+        		body:JSON.stringify({
+        			"email":email,
+        		})
+        	}).then(result=>result.json())
+        	.then(result=>{
+        		console.log(result);
+        		if(result.status=="OK"){
+        			//이메일 인증번호 발송 성공했을경우
+        			key = result.key;
+        			document.getElementById("result-text").innerHTML = 
+        			    "<div class='form-floating' style='margin: 20px 0;'>" +
+        			    "<input type='text' class='form-control keyInput' name='key' id='floatingTel' placeholder='인증번호'>" +
+        			    "<label for='floatingTel'>인증번호</label>" +
+        			    "</div>" +
+        			    "<div class='btn btn-light keyBtn' style='margin-top: 10px;' onclick='yourFunction()'>인증번호 확인</div>";
+        		}
+        		else{
+                    //이메일 인증번호 발송 실패했을경우
+        			document.getElementById("result-text").innerHTML = result.result;
+                }
+
+        	    const keyBtn = document.querySelector('.keyBtn')
+        	    if(keyBtn!=null){
+        	    	keyBtn.onclick= function() {
+        	    		const keyInput = document.querySelector('.keyInput').value;
+        	    		if(keyInput == key){
+        	    			//console.log("hi")
+        	    			document.getElementsByClassName('find-modal')[0].classList.remove("hidden");
+        	    			//변경할 비번 창 닫기 버튼
+        	    			document.getElementsByClassName('find-close-modal')[0].onclick=function(){
+                	            document.getElementsByClassName("find-modal")[0].classList.add("hidden");
+                	            document.querySelector('.btn-close').click();
+                	        }
+        	    			//비밀번호 변경 버튼
+        	    			document.querySelector('.changePwBtn').onclick=()=>{
+        	    				let newPw = document.querySelector('#newPw');
+        	    				let newPwCheck = document.querySelector('#newPwCheck');
+        	    				if(newPw.value == "" || newPw.value == null){
+        	    					document.querySelector('.message').innerHTML = "* 비밀번호를 입력해주세요"
+        	    					newPw.focus();
+        	    				}
+        	    				else if(newPw.value != newPwCheck.value){
+        	    					document.querySelector('.message').innerHTML = "* 비밀번호가 일치하지 않습니다"
+        	    					newPwCheck.focus();
+        	    				}
+        	    				else{
+        	    					document.querySelector('#changePwEmail').value = email;
+        	    					document.querySelector('.changePw').submit();
+        	    				}
+        	    			}
+        	    		}
+            	    }
+        	    }
+        	})
         }
         else{
             document.getElementById("result-text").innerHTML = result.result;
