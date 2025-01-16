@@ -82,4 +82,8 @@ public class ChatRoomController {
     public void report( @RequestBody ChattingReportVo reportVo, Model model) {
         chatService.report(reportVo);
     }
+
+
+
+
 }

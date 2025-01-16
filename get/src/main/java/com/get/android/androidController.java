@@ -1,11 +1,14 @@
 package com.get.android;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletionService;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.get.android.member.Member;
 import com.get.android.member.MemberMapper;
 import com.get.chat.Chat;
@@ -30,13 +33,12 @@ import com.get.search.LostItemVo;
 import com.get.search.PoliceFoundVo;
 import com.get.vo.faqVo;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.ui.Model;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -68,31 +70,33 @@ public class androidController {
     @Autowired
     private FlutterMapper flutterMapper;
 
-       @Value("${server.img.url}")
-       private String serverUrl;
+    @Value("${server.img.url}")
+    private String serverUrl;
 
-      @Autowired
-       private FoundViewMapper foundViewMapper;
-       @Autowired
-       private PoliceMapper policeMapper;
+    @Autowired
+    private FoundViewMapper foundViewMapper;
+    @Autowired
+    private PoliceMapper policeMapper;
 
     private static final int PAGE_SIZE = 5;
 
     @GetMapping("/app/lostList")
-    public ResponseEntity<Map<String,Object>> appLostList(@RequestParam(value = "page", defaultValue = "1") int page){
-    	int recordsPerPage = 5;  // 페이지당 보여줄 게시글 수
+    public ResponseEntity<Map<String, Object>> appLostList(@RequestParam(value = "page", defaultValue = "1") int page) {
+        int recordsPerPage = 5;  // 페이지당 보여줄 게시글 수
         int arg0 = (page - 1) * recordsPerPage;  // 오프셋 계산
 
-		//분실물 전체 리스트
-		List<lostCustomVo> lostList = lostMapper.getLostList(arg0, recordsPerPage);
-		int lostTotal = lostMapper.getTotalLostCount();
-		int pageCnt = lostTotal/recordsPerPage;
-		if(lostTotal%recordsPerPage!=0) { pageCnt += 1; }
+        //분실물 전체 리스트
+        List<lostCustomVo> lostList = lostMapper.getLostList(arg0, recordsPerPage);
+        int lostTotal = lostMapper.getTotalLostCount();
+        int pageCnt = lostTotal / recordsPerPage;
+        if (lostTotal % recordsPerPage != 0) {
+            pageCnt += 1;
+        }
 
-		Map<String, Object> result = new HashMap<>();
-		result.put("lostList", lostList);
-		result.put("pageCnt", pageCnt);
-		return ResponseEntity.ok(result);
+        Map<String, Object> result = new HashMap<>();
+        result.put("lostList", lostList);
+        result.put("pageCnt", pageCnt);
+        return ResponseEntity.ok(result);
     }
 
     @GetMapping("/app/chatting-roomList/{email}")
@@ -148,8 +152,6 @@ public class androidController {
 
     @PostMapping("/app/chatting/get-location")
     public ResponseEntity<Map<String, Double>> getLocation(@RequestBody HashMap<String, Object> params) {
-        System.out.println("getLocation!!!!!!!!!");
-
         String email = String.valueOf(params.get("email"));
         String chatting_no = String.valueOf(params.get("chatting_no"));
         Map<String, Double> result = chatService.getLocation(email, chatting_no);
@@ -191,6 +193,7 @@ public class androidController {
         System.out.println("==============" + member);
         return ResponseEntity.ok(member);
     }
+
     @GetMapping("/app/foundInsert/{email}")
     public ResponseEntity<Member> appFoundInsert(@PathVariable(name = "email") String email) {
         Member member = memberMapper.findByEmail(email);
@@ -202,13 +205,15 @@ public class androidController {
     @PostMapping("/app/lostInsert/insert")
     public ResponseEntity<LostItemVO> appLostInsertPost(@RequestParam Map<String, String> map, @RequestParam(value = "image", required = false) MultipartFile[] image) throws IOException {
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-        ByteArrayResource contentsAsResource = new ByteArrayResource(image[0].getBytes()) {
-            @Override
-            public String getFilename() {
-                return image[0].getOriginalFilename();
-            }
-        };
-        body.add("uploadFile", contentsAsResource);
+        if (image != null) {
+            ByteArrayResource contentsAsResource = new ByteArrayResource(image[0].getBytes()) {
+                @Override
+                public String getFilename() {
+                    return image[0].getOriginalFilename();
+                }
+            };
+            body.add("uploadFile", contentsAsResource);
+        }
         map.forEach(body::add);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
@@ -216,23 +221,25 @@ public class androidController {
 
         RestTemplate restTemplate = new RestTemplate();
         try {
-                      restTemplate.postForEntity(serverUrl+"/lost/insert", requestEntity, Void.class);
-                  } catch (Exception e) {
+            restTemplate.postForEntity(serverUrl + "/lost/insert", requestEntity, Void.class);
+        } catch (Exception e) {
             System.out.println(e);
-                  }
+        }
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/app/foundInsert/insert")
     public ResponseEntity<FoundItemVO> appFoundInsertPost(@RequestParam Map<String, String> map, @RequestParam(value = "image", required = false) MultipartFile[] image) throws IOException {
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-        ByteArrayResource contentsAsResource = new ByteArrayResource(image[0].getBytes()) {
-            @Override
-            public String getFilename() {
-                return image[0].getOriginalFilename();
-            }
-        };
-        body.add("uploadFile", contentsAsResource);
+        if (image != null) {
+            ByteArrayResource contentsAsResource = new ByteArrayResource(image[0].getBytes()) {
+                @Override
+                public String getFilename() {
+                    return image[0].getOriginalFilename();
+                }
+            };
+            body.add("uploadFile", contentsAsResource);
+        }
         map.forEach(body::add);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
@@ -240,10 +247,10 @@ public class androidController {
 
         RestTemplate restTemplate = new RestTemplate();
         try {
-                      restTemplate.postForEntity(serverUrl+"/found/insert", requestEntity, Void.class);
-                  } catch (Exception e) {
+            restTemplate.postForEntity(serverUrl + "/found/insert", requestEntity, Void.class);
+        } catch (Exception e) {
             System.out.println(e);
-                  }
+        }
         return ResponseEntity.ok().build();
     }
 
@@ -256,20 +263,22 @@ public class androidController {
     }
 
     @GetMapping("/app/lostUpdate/get-lost/{lostIdx}")
-    public ResponseEntity<Map<String,Object>> appLostGetUpdate(@PathVariable(name = "lostIdx") String lostIdx) {
-        Map<String,Object> map = flutterMapper.selectLostItem(lostIdx);
+    public ResponseEntity<Map<String, Object>> appLostGetUpdate(@PathVariable(name = "lostIdx") String lostIdx) {
+        Map<String, Object> map = flutterMapper.selectLostItem(lostIdx);
         System.out.println("==============" + map);
         return ResponseEntity.ok(map);
     }
+
     @GetMapping("/app/foundUpdate/{email}")
     public ResponseEntity<Member> appFoundUpdate(@PathVariable(name = "email") String email) {
         Member member = memberMapper.findByEmail(email);
         System.out.println("==============" + member);
         return ResponseEntity.ok(member);
     }
+
     @GetMapping("/app/foundUpdate/get-found/{foundIdx}")
-    public ResponseEntity<Map<String,Object>> appFoundGetUpdate(@PathVariable(name = "foundIdx") String foundIdx) {
-        Map<String,Object> map = flutterMapper.selectFoundItem(foundIdx);
+    public ResponseEntity<Map<String, Object>> appFoundGetUpdate(@PathVariable(name = "foundIdx") String foundIdx) {
+        Map<String, Object> map = flutterMapper.selectFoundItem(foundIdx);
         System.out.println("==============" + map);
         return ResponseEntity.ok(map);
     }
@@ -278,13 +287,15 @@ public class androidController {
     @PostMapping("/app/lostUpdate/update")
     public ResponseEntity<LostItemVO> appLostUpdatePost(@RequestParam Map<String, String> map, @RequestParam(value = "image", required = false) MultipartFile[] image) throws IOException {
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-        ByteArrayResource contentsAsResource = new ByteArrayResource(image[0].getBytes()) {
-            @Override
-            public String getFilename() {
-                return image[0].getOriginalFilename();
-            }
-        };
-        body.add("uploadFile", contentsAsResource);
+        if (image != null) {
+            ByteArrayResource contentsAsResource = new ByteArrayResource(image[0].getBytes()) {
+                @Override
+                public String getFilename() {
+                    return image[0].getOriginalFilename();
+                }
+            };
+            body.add("uploadFile", contentsAsResource);
+        }
         map.forEach(body::add);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
@@ -298,9 +309,11 @@ public class androidController {
         }
         return ResponseEntity.ok().build();
     }
+
     @PostMapping("/app/foundUpdate/update")
-        public ResponseEntity<LostItemVO> appFoundUpdatePost(@RequestParam Map<String, String> map, @RequestParam(value = "image", required = false) MultipartFile[] image) throws IOException {
-            MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+    public ResponseEntity<LostItemVO> appFoundUpdatePost(@RequestParam Map<String, String> map, @RequestParam(value = "image", required = false) MultipartFile[] image) throws IOException {
+        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+        if (image != null) {
             ByteArrayResource contentsAsResource = new ByteArrayResource(image[0].getBytes()) {
                 @Override
                 public String getFilename() {
@@ -308,159 +321,166 @@ public class androidController {
                 }
             };
             body.add("uploadFile", contentsAsResource);
-            map.forEach(body::add);
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-            HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
+        }
+        map.forEach(body::add);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
         System.out.println(map);
-            RestTemplate restTemplate = new RestTemplate();
-            try {
-                          restTemplate.postForEntity(serverUrl+"/found/update", requestEntity, Void.class);
-                      } catch (Exception e) {
-                System.out.println(e);
-                      }
-            return ResponseEntity.ok().build();
+        RestTemplate restTemplate = new RestTemplate();
+        try {
+            restTemplate.postForEntity(serverUrl + "/found/update", requestEntity, Void.class);
+        } catch (Exception e) {
+            System.out.println(e);
         }
+        return ResponseEntity.ok().build();
+    }
+
     /**
-         * (1) 분실물 상세 조회
-         *  GET /app/getLostItem/{lostIdx}
-         */
-        @GetMapping("/app/getLostItem/{lostIdx}")
-        public ResponseEntity<Map<String, Object>> getLostItem(@PathVariable("lostIdx") String lostIdx) {
+     * (1) 분실물 상세 조회
+     *  GET /app/getLostItem/{lostIdx}
+     */
+    @GetMapping("/app/getLostItem/{lostIdx}")
+    public ResponseEntity<Map<String, Object>> getLostItem(@PathVariable("lostIdx") String lostIdx) {
 
-            // (a) DB에서 filePath 가져오기 (분실물 이미지 경로 등)
-            String filePath = lostViewMapper.getFilePath(lostIdx);
-            String finalPath = "";
-            if (filePath != null && !filePath.isEmpty()) {
-                // Windows 경로라면 역슬래시(\) → 슬래시(/)
-                filePath = filePath.replace("\\", "/");
-                // 만약 Desktop/ 라는 경로가 포함되어 있다면 이후 부분만 자르기
-                if (filePath.contains("Desktop/")) {
-                    // 예: C:/Users/xxx/Desktop/upload/myImage.jpg
-                    filePath = filePath.split("Desktop/")[1];
-                    // 결과: upload/myImage.jpg
-                }
-                finalPath = filePath;
+        // (a) DB에서 filePath 가져오기 (분실물 이미지 경로 등)
+        String filePath = lostViewMapper.getFilePath(lostIdx);
+        String finalPath = "";
+        if (filePath != null && !filePath.isEmpty()) {
+            // Windows 경로라면 역슬래시(\) → 슬래시(/)
+            filePath = filePath.replace("\\", "/");
+            // 만약 Desktop/ 라는 경로가 포함되어 있다면 이후 부분만 자르기
+            if (filePath.contains("Desktop/")) {
+                // 예: C:/Users/xxx/Desktop/upload/myImage.jpg
+                filePath = filePath.split("Desktop/")[1];
+                // 결과: upload/myImage.jpg
             }
-
-            // (b) 분실물 상세 정보 얻기
-            LostItemVO vo = lostViewMapper.selectLostItemDetail(lostIdx);
-            if (vo == null) {
-                return ResponseEntity.notFound().build();
-            }
-
-            // (c) 결과 Map 구성
-            //     → JSON 응답 시 { "lostItem": {...}, "filePath": "...", "serverUrl": "..." }
-            Map<String, Object> result = new HashMap<>();
-            result.put("lostItem", vo);        // 실제 분실물 VO
-            result.put("filePath", finalPath); // 최종 파일 경로
-            result.put("serverUrl", serverUrl); // 서버의 이미지 경로 prefix (ex: http://192.168.0.214:9090)
-
-            return ResponseEntity.ok(result);
-        }
-        /**
-         * (2) 습득물 상세 조회
-         * 예) GET /app/getFoundItem/{foundIdx}
-         */
-        @GetMapping("/app/getFoundItem/{foundIdx}")
-        public ResponseEntity<Map<String, Object>> getFoundItem(@PathVariable("foundIdx") String foundIdx) {
-
-
-            // (a) DB에서 filePath 가져오기 (분실물 이미지 경로 등)
-            String filePath = foundViewMapper.getFoundFilePath(foundIdx);
-            String finalPath = "";
-            if (filePath != null && !filePath.isEmpty()) {
-                // Windows 경로라면 역슬래시(\) → 슬래시(/)
-                filePath = filePath.replace("\\", "/");
-                // 만약 Desktop/ 라는 경로가 포함되어 있다면 이후 부분만 자르기
-                if (filePath.contains("Desktop/")) {
-                    // 예: C:/Users/xxx/Desktop/upload/myImage.jpg
-                    filePath = filePath.split("Desktop/")[1];
-                    // 결과: upload/myImage.jpg
-                }
-                finalPath = filePath;
-            }
-
-
-            FoundItemVO vo = foundViewMapper.selectFoundItemDetail(foundIdx);
-            if (vo == null) {
-                return ResponseEntity.notFound().build();
-            }
-
-            Map<String, Object> result = new HashMap<>();
-            result.put("foundItem", vo);        // 실제 분실물 VO
-            result.put("filePath", finalPath); // 최종 파일 경로
-            result.put("serverUrl", serverUrl); // 서버의 이미지 경로 prefix (ex: http://192.168.0.214:9090)
-
-            return ResponseEntity.ok(result);
+            finalPath = filePath;
         }
 
-        /**
-         * (3) 경찰 습득물 상세 조회
-         * 예) GET /app/getPoliceItem/{atcId}
-         */
-        @GetMapping("/app/getPoliceItem/{atcId}/{fdsn}")
-        public ResponseEntity<PoliceVo> getPoliceItem(
-                @PathVariable("atcId") String atcId,
-                @PathVariable("fdsn") String fdsn
-        ) {
-            PoliceVo param = new PoliceVo();
-            param.setAtcid(atcId);
-            param.setFdsn(fdsn);
-
-            PoliceVo vo = policeMapper.selectView(param);
-            if (vo == null) {
-                return ResponseEntity.notFound().build();
-            }
-            return ResponseEntity.ok(vo);
+        // (b) 분실물 상세 정보 얻기
+        LostItemVO vo = lostViewMapper.selectLostItemDetail(lostIdx);
+        if (vo == null) {
+            return ResponseEntity.notFound().build();
         }
 
+        // (c) 결과 Map 구성
+        //     → JSON 응답 시 { "lostItem": {...}, "filePath": "...", "serverUrl": "..." }
+        Map<String, Object> result = new HashMap<>();
+        result.put("lostItem", vo);        // 실제 분실물 VO
+        result.put("filePath", finalPath); // 최종 파일 경로
+        result.put("serverUrl", serverUrl); // 서버의 이미지 경로 prefix (ex: http://192.168.0.214:9090)
+
+        return ResponseEntity.ok(result);
+    }
+
+    /**
+     * (2) 습득물 상세 조회
+     * 예) GET /app/getFoundItem/{foundIdx}
+     */
+    @GetMapping("/app/getFoundItem/{foundIdx}")
+    public ResponseEntity<Map<String, Object>> getFoundItem(@PathVariable("foundIdx") String foundIdx) {
+
+
+        // (a) DB에서 filePath 가져오기 (분실물 이미지 경로 등)
+        String filePath = foundViewMapper.getFoundFilePath(foundIdx);
+        String finalPath = "";
+        if (filePath != null && !filePath.isEmpty()) {
+            // Windows 경로라면 역슬래시(\) → 슬래시(/)
+            filePath = filePath.replace("\\", "/");
+            // 만약 Desktop/ 라는 경로가 포함되어 있다면 이후 부분만 자르기
+            if (filePath.contains("Desktop/")) {
+                // 예: C:/Users/xxx/Desktop/upload/myImage.jpg
+                filePath = filePath.split("Desktop/")[1];
+                // 결과: upload/myImage.jpg
+            }
+            finalPath = filePath;
+        }
+
+
+        FoundItemVO vo = foundViewMapper.selectFoundItemDetail(foundIdx);
+        if (vo == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("foundItem", vo);        // 실제 분실물 VO
+        result.put("filePath", finalPath); // 최종 파일 경로
+        result.put("serverUrl", serverUrl); // 서버의 이미지 경로 prefix (ex: http://192.168.0.214:9090)
+
+        return ResponseEntity.ok(result);
+    }
+
+    /**
+     * (3) 경찰 습득물 상세 조회
+     * 예) GET /app/getPoliceItem/{atcId}
+     */
+    @GetMapping("/app/getPoliceItem/{atcId}/{fdsn}")
+    public ResponseEntity<PoliceVo> getPoliceItem(
+            @PathVariable("atcId") String atcId,
+            @PathVariable("fdsn") String fdsn
+    ) {
+        PoliceVo param = new PoliceVo();
+        param.setAtcid(atcId);
+        param.setFdsn(fdsn);
+
+        PoliceVo vo = policeMapper.selectView(param);
+        if (vo == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(vo);
+    }
 
 
     @GetMapping("/app/foundList")
-        public ResponseEntity<Map<String,Object>> appFoundList(@RequestParam(value = "page", defaultValue = "1") int page){
-        	int recordsPerPage = 5;  // 페이지당 보여줄 게시글 수
-            int arg0 = (page - 1) * recordsPerPage;  // 오프셋 계산
+    public ResponseEntity<Map<String, Object>> appFoundList(@RequestParam(value = "page", defaultValue = "1") int page) {
+        int recordsPerPage = 5;  // 페이지당 보여줄 게시글 수
+        int arg0 = (page - 1) * recordsPerPage;  // 오프셋 계산
 
-    		//분실물 전체 리스트
-    		List<foundCustomVo> foundList = foundMapper.getFoundList(arg0, recordsPerPage);
-    		int foundTotal = foundMapper.getTotalFoundCount();
-    		int pageCnt = foundTotal/recordsPerPage;
-    		if(foundTotal%recordsPerPage!=0) { pageCnt += 1; }
-
-    		Map<String, Object> result = new HashMap<>();
-    		result.put("foundList", foundList);
-    		result.put("pageCnt", pageCnt);
-    		return ResponseEntity.ok(result);
+        //분실물 전체 리스트
+        List<foundCustomVo> foundList = foundMapper.getFoundList(arg0, recordsPerPage);
+        int foundTotal = foundMapper.getTotalFoundCount();
+        int pageCnt = foundTotal / recordsPerPage;
+        if (foundTotal % recordsPerPage != 0) {
+            pageCnt += 1;
         }
-        @GetMapping("/app/getFoundSearch")
-    	public ResponseEntity<Map<String,Object>> getFoundSearch(@RequestParam Map<String, String> map, @RequestParam(value = "page", defaultValue = "1") int page){
-    		System.out.println("searchLost map : "+map);
 
-    		int recordsPerPage = 5;  // 페이지당 보여줄 게시글 수
-            int arg0 = (page - 1) * recordsPerPage;  // 오프셋 계산
-    		map.put("arg0", String.valueOf(arg0));
-    		map.put("arg1", String.valueOf(recordsPerPage));
+        Map<String, Object> result = new HashMap<>();
+        result.put("foundList", foundList);
+        result.put("pageCnt", pageCnt);
+        return ResponseEntity.ok(result);
+    }
 
-    		//{lost_title=sdsd, item_code=201205, location_code=100699, start_date=2024-12-10, end_date=2024-12-18, color_code=6}
-    		List<foundCustomVo> searchFound = foundMapper.getSearchFound(map);
-    		int foundTotal = foundMapper.getTotalSearchFoundCount(map);
-    		int pageCnt = foundTotal/recordsPerPage;
-    		if(foundTotal%recordsPerPage!=0) { pageCnt += 1; }
+    @GetMapping("/app/getFoundSearch")
+    public ResponseEntity<Map<String, Object>> getFoundSearch(@RequestParam Map<String, String> map, @RequestParam(value = "page", defaultValue = "1") int page) {
+        System.out.println("searchLost map : " + map);
 
-    		Map<String, Object> result = new HashMap<>();
-    		result.put("searchFound", searchFound);
-    		result.put("pageCnt", pageCnt);
-    		return ResponseEntity.ok(result);
-    	}
+        int recordsPerPage = 5;  // 페이지당 보여줄 게시글 수
+        int arg0 = (page - 1) * recordsPerPage;  // 오프셋 계산
+        map.put("arg0", String.valueOf(arg0));
+        map.put("arg1", String.valueOf(recordsPerPage));
 
-        //==============================MYPAGE=======================
+        //{lost_title=sdsd, item_code=201205, location_code=100699, start_date=2024-12-10, end_date=2024-12-18, color_code=6}
+        List<foundCustomVo> searchFound = foundMapper.getSearchFound(map);
+        int foundTotal = foundMapper.getTotalSearchFoundCount(map);
+        int pageCnt = foundTotal / recordsPerPage;
+        if (foundTotal % recordsPerPage != 0) {
+            pageCnt += 1;
+        }
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("searchFound", searchFound);
+        result.put("pageCnt", pageCnt);
+        return ResponseEntity.ok(result);
+    }
+
+    //==============================MYPAGE=======================
     @GetMapping("/app/myFound")
     public Map<String, Object> getMyFound(
             @RequestParam("email") String email,
-            @RequestParam(value="findingPage", defaultValue="1") int findingPage,
-            @RequestParam(value="foundPage", defaultValue="1") int foundPage,
-            @RequestParam(value="reportPage", defaultValue="1") int reportPage
+            @RequestParam(value = "findingPage", defaultValue = "1") int findingPage,
+            @RequestParam(value = "foundPage", defaultValue = "1") int foundPage,
+            @RequestParam(value = "reportPage", defaultValue = "1") int reportPage
     ) {
         // ------ 찾는중 ------
         int findingTotal = flutterMapper.countMyFindingFoundItems(email);
@@ -514,66 +534,73 @@ public class androidController {
 
 
     @GetMapping("/app/myLost")
-        public Map<String, Object> getMyLost(
-                @RequestParam("email") String email,
-                @RequestParam(value="findingPage", defaultValue="1") int findingPage,
-                @RequestParam(value="getPage", defaultValue="1") int getPage,
-                @RequestParam(value="reportPage", defaultValue="1") int reportPage
-        ) {
-            // ------ 찾는중 ------
-            int findingTotal = flutterMapper.countMyFindingLostItems(email);
-            int findingTotalPages = (int) Math.ceil((double) findingTotal / PAGE_SIZE);
-            int findingOffset = (findingPage - 1) * PAGE_SIZE;
-            List<LostItemVo> findingItems = flutterMapper.selectMyFindingLostItems(email, findingOffset, PAGE_SIZE);
+    public Map<String, Object> getMyLost(
+            @RequestParam("email") String email,
+            @RequestParam(value = "findingPage", defaultValue = "1") int findingPage,
+            @RequestParam(value = "getPage", defaultValue = "1") int getPage,
+            @RequestParam(value = "reportPage", defaultValue = "1") int reportPage
+    ) {
+        // ------ 찾는중 ------
+        int findingTotal = flutterMapper.countMyFindingLostItems(email);
+        int findingTotalPages = (int) Math.ceil((double) findingTotal / PAGE_SIZE);
+        int findingOffset = (findingPage - 1) * PAGE_SIZE;
+        List<LostItemVo> findingItems = flutterMapper.selectMyFindingLostItems(email, findingOffset, PAGE_SIZE);
 
-            // ------ FOUND! ------
-            int getTotal = flutterMapper.countMyGetItems(email);
-            int getTotalPages = (int) Math.ceil((double) getTotal / PAGE_SIZE);
-            int getOffset = (getPage - 1) * PAGE_SIZE;
-            List<LostItemVo> getItems = flutterMapper.selectMyGetItems(email, getOffset, PAGE_SIZE);
+        // ------ FOUND! ------
+        int getTotal = flutterMapper.countMyGetItems(email);
+        int getTotalPages = (int) Math.ceil((double) getTotal / PAGE_SIZE);
+        int getOffset = (getPage - 1) * PAGE_SIZE;
+        List<LostItemVo> getItems = flutterMapper.selectMyGetItems(email, getOffset, PAGE_SIZE);
 
-            // ------ 신고글 ------
-            int reportTotal = flutterMapper.countMyLostReportItems(email);
-            int reportTotalPages = (int) Math.ceil((double) reportTotal / PAGE_SIZE);
-            int reportOffset = (reportPage - 1) * PAGE_SIZE;
-            List<LostItemVo> reportItems = flutterMapper.selectMyLostReportItems(email, reportOffset, PAGE_SIZE);
+        // ------ 신고글 ------
+        int reportTotal = flutterMapper.countMyLostReportItems(email);
+        int reportTotalPages = (int) Math.ceil((double) reportTotal / PAGE_SIZE);
+        int reportOffset = (reportPage - 1) * PAGE_SIZE;
+        List<LostItemVo> reportItems = flutterMapper.selectMyLostReportItems(email, reportOffset, PAGE_SIZE);
 
-            // JSON으로 반환할 최상위 Map
-            Map<String, Object> result = new HashMap<>();
+        // JSON으로 반환할 최상위 Map
+        Map<String, Object> result = new HashMap<>();
 
-            // (1) 찾는중
-            Map<String, Object> findingData = new HashMap<>();
-            findingData.put("items", findingItems);
-            findingData.put("currentPage", findingPage);
-            findingData.put("totalPages", findingTotalPages);
-            findingData.put("totalRecords", findingTotal);
-            result.put("findingPageData", findingData);
+        // (1) 찾는중
+        Map<String, Object> findingData = new HashMap<>();
+        findingData.put("items", findingItems);
+        findingData.put("currentPage", findingPage);
+        findingData.put("totalPages", findingTotalPages);
+        findingData.put("totalRecords", findingTotal);
+        result.put("findingPageData", findingData);
 
-            // (2) FOUND!
-            Map<String, Object> getData = new HashMap<>();
-            getData.put("items", getItems);
-            getData.put("currentPage", getPage);
-            getData.put("totalPages", getTotalPages);
-            getData.put("totalRecords", getTotal);
-            result.put("getPageData", getData);
+        // (2) FOUND!
+        Map<String, Object> getData = new HashMap<>();
+        getData.put("items", getItems);
+        getData.put("currentPage", getPage);
+        getData.put("totalPages", getTotalPages);
+        getData.put("totalRecords", getTotal);
+        result.put("getPageData", getData);
 
-            // (3) 신고글
-            Map<String, Object> reportData = new HashMap<>();
-            reportData.put("items", reportItems);
-            reportData.put("currentPage", reportPage);
-            reportData.put("totalPages", reportTotalPages);
-            reportData.put("totalRecords", reportTotal);
-            result.put("reportPageData", reportData);
+        // (3) 신고글
+        Map<String, Object> reportData = new HashMap<>();
+        reportData.put("items", reportItems);
+        reportData.put("currentPage", reportPage);
+        reportData.put("totalPages", reportTotalPages);
+        reportData.put("totalRecords", reportTotal);
+        result.put("reportPageData", reportData);
 
-            return result;
-        }
+        return result;
+    }
 
-        @GetMapping("/app/myCs/{email}")
-        public List<csVo> getMyCs(@PathVariable("email") String email) {
-                List<csVo> csList = flutterMapper.getMyCs(email);
-            System.out.println(csList);
-            return csList;
-        }
+    @GetMapping("/app/myCs/{email}")
+    public List<csVo> getMyCs(@PathVariable("email") String email) {
+        List<csVo> csList = flutterMapper.getMyCs(email);
+        System.out.println(csList);
+        return csList;
+    }
+
+    @PostMapping("/app/chatting/open")
+    public String roomOpen(@RequestBody Map<String,Object> map) {
+        String openerEmail = String.valueOf(map.get("open_member"));
+        String email = String.valueOf(map.get("participant"));
+        return chatService.appCreateRoom(openerEmail, email);
+    }
 
 
 }

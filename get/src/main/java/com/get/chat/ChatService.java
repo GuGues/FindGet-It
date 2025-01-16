@@ -19,9 +19,9 @@ public class ChatService {
     @Autowired
     private UserMapper userMapper;
 
-    public  Chat createChat(String chatting_no,Chat chat){
+    public Chat createChat(String chatting_no, Chat chat) {
         ChatRoom room = chatMapper.findByRoomId(chatting_no);
-        if(room == null){
+        if (room == null) {
             return null;
         }
         chatMapper.saveChat(chat);
@@ -33,40 +33,50 @@ public class ChatService {
     }
 
     public String createRoom(String email, String openerEmail) {
-        ChatRoom room = chatMapper.findOpenedRoom(openerEmail,email);
-        if(room == null) {
+        ChatRoom room = chatMapper.findOpenedRoom(openerEmail, email);
+        if (room == null) {
             room = new ChatRoom();
             room.setOpen_member(openerEmail);
             room.setParticipant(email);
             chatMapper.createRoom(room);
             chatMapper.createChattingLocation(room);
-            return "redirect:/chatting/room/"+room.getChatting_no();
-        }
-        else return "redirect:/chatting/room/"+room.getChatting_no();
+            return "redirect:/chatting/room/" + room.getChatting_no();
+        } else return "redirect:/chatting/room/" + room.getChatting_no();
+    }
+    public String appCreateRoom(String email, String openerEmail) {
+        ChatRoom room = chatMapper.findOpenedRoom(openerEmail, email);
+        if (room == null) {
+            room = new ChatRoom();
+            room.setOpen_member(openerEmail);
+            room.setParticipant(email);
+            chatMapper.createRoom(room);
+            chatMapper.createChattingLocation(room);
+            return room.getChatting_no();
+        } else return  room.getChatting_no();
     }
 
-    public Map<String,Object> findRoomByEmail(String email) {
-       List<ChatRoom> roomList = chatMapper.findRoomListByEmail(email);
-       List<ChatRoom> tempRoomList = new ArrayList<>();
-         tempRoomList.addAll(roomList);
+
+    public Map<String, Object> findRoomByEmail(String email) {
+        List<ChatRoom> roomList = chatMapper.findRoomListByEmail(email);
+        List<ChatRoom> tempRoomList = new ArrayList<>();
+        tempRoomList.addAll(roomList);
         List<Chat> chatList = new ArrayList<>();
         List<ChatRoom> emptyRoomList = new ArrayList<>();
 
         int count = 0;
 
-       for(ChatRoom room : tempRoomList){
-           Chat chat = chatMapper.findChatLastest(room.getChatting_no());
-           if(chat != null){
-           chatList.add(chat);
-           }
-           else{
-               emptyRoomList.add(room);
-               roomList.remove(count);
-               continue;
-           }
-           System.out.println(count);
-           count++;
-       }
+        for (ChatRoom room : tempRoomList) {
+            Chat chat = chatMapper.findChatLastest(room.getChatting_no());
+            if (chat != null) {
+                chatList.add(chat);
+            } else {
+                emptyRoomList.add(room);
+                roomList.remove(count);
+                continue;
+            }
+            System.out.println(count);
+            count++;
+        }
 
 
         Collections.sort(chatList, new Comparator<Chat>() {
@@ -77,9 +87,9 @@ public class ChatService {
         });
         List<ChatRoom> sortedRoomList = new ArrayList<>();
         List<Integer> viewList = new ArrayList<>();
-        for(Chat chat : chatList){
-            for(ChatRoom room : roomList){
-                if(room.getChatting_no().equals(chat.getChatting_no())){
+        for (Chat chat : chatList) {
+            for (ChatRoom room : roomList) {
+                if (room.getChatting_no().equals(chat.getChatting_no())) {
                     sortedRoomList.add(room);
                 }
             }
@@ -87,44 +97,41 @@ public class ChatService {
             LocalDate send_time = LocalDateTime.parse(chat.getSend_time(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).toLocalDate();
             LocalDate today = LocalDate.now();
 
-            if(ChronoUnit.DAYS.between(send_time,today)>1){
+            if (ChronoUnit.DAYS.between(send_time, today) > 1) {
                 chat.setSend_time(send_time.format(DateTimeFormatter.ofPattern("MM월 dd일")));
-            }
-            else if(ChronoUnit.DAYS.between(send_time,today)==1){
+            } else if (ChronoUnit.DAYS.between(send_time, today) == 1) {
                 chat.setSend_time("어제");
-            }
-            else{
+            } else {
                 chat.setSend_time(LocalDateTime.parse(chat.getSend_time(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).format(DateTimeFormatter.ofPattern("HH:mm")));
             }
 
-            int chatCount = chatMapper.countChatStack(chat.getChatting_no(),email);
+            int chatCount = chatMapper.countChatStack(chat.getChatting_no(), email);
             viewList.add(chatCount);
         }
 
 
         sortedRoomList.addAll(emptyRoomList);
-        Map<String,Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         List<Account> memberList = new ArrayList<>();
-        for(ChatRoom room : sortedRoomList){
-            if(room.getOpen_member().equals(email)){
+        for (ChatRoom room : sortedRoomList) {
+            if (room.getOpen_member().equals(email)) {
                 memberList.add(userMapper.findUserByEmail(room.getParticipant()));
-            }
-            else{
+            } else {
                 memberList.add(userMapper.findUserByEmail(room.getOpen_member()));
             }
         }
 
-        map.put("roomList",sortedRoomList);
-        map.put("chatList",chatList);
-        map.put("memberList",memberList);
-        map.put("viewList",viewList);
+        map.put("roomList", sortedRoomList);
+        map.put("chatList", chatList);
+        map.put("memberList", memberList);
+        map.put("viewList", viewList);
         return map;
 
     }
 
     public List<Chat> findAllChat(String chattingNo) {
         List<Chat> chatList = chatMapper.findAllChat(chattingNo);
-        for(Chat chat : chatList){
+        for (Chat chat : chatList) {
             chat.setSend_time(LocalDateTime.parse(chat.getSend_time(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).format(DateTimeFormatter.ofPattern("HH:mm")));
         }
         return chatList;
@@ -135,7 +142,7 @@ public class ChatService {
     }
 
     public void updateMessageViewed(String chattingNo, String email) {
-        chatMapper.updateMessageViewed(chattingNo,email);
+        chatMapper.updateMessageViewed(chattingNo, email);
     }
 
     public void report(ChattingReportVo reportVo) {
@@ -146,23 +153,30 @@ public class ChatService {
 
     public List<Chat> findAllChatReverse(String chattingNo) {
         List<Chat> chatList = chatMapper.findAllChatReverse(chattingNo);
-               for(Chat chat : chatList){
-                   chat.setSend_time(LocalDateTime.parse(chat.getSend_time(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).format(DateTimeFormatter.ofPattern("HH:mm")));
-               }
-               return chatList;
+        for (Chat chat : chatList) {
+            chat.setSend_time(LocalDateTime.parse(chat.getSend_time(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).format(DateTimeFormatter.ofPattern("HH:mm")));
+        }
+        return chatList;
     }
 
     public Map<String, Double> getLocation(String email, String chattingNo) {
-        Map<String,String> location = chatMapper.getLocation(email,chattingNo);
+        Map<String, String> location = chatMapper.getLocation(email, chattingNo);
         System.out.println("location = " + location);
+        System.out.println(location.get("OPEN_MEMBER"));
+        System.out.println(location.get("PARTICIPANT"));
         Map<String, Double> result = new HashMap<>();
-        if(location.get("open_member")==email){
-            result.put("lng", Double.parseDouble(String.valueOf(location.get("PARTICIPANT_LAT"))));
-            result.put("lat", Double.parseDouble(String.valueOf(location.get("PARTICIPANT_LNG"))));
-        }else{
-            result.put("lng", Double.parseDouble(String.valueOf(location.get("OPEN_MEMBER_LAT"))));
-            result.put("lat", Double.parseDouble(String.valueOf(location.get("OPEN_MEMBER_LNG"))));
-        }
+        if (location.get("OPEN_MEMBER_PERMISSION").equals("Y") && location.get("PARTICIPANT_PERMISSION").equals("Y")) {
+            if (location.get("OPEN_MEMBER") == email) {
+                result.put("lat", Double.parseDouble(String.valueOf(location.get("PARTICIPANT_LAT"))));
+                result.put("lng", Double.parseDouble(String.valueOf(location.get("PARTICIPANT_LNG"))));
+            } else {
+                result.put("lat", Double.parseDouble(String.valueOf(location.get("OPEN_MEMBER_LAT"))));
+                result.put("lng", Double.parseDouble(String.valueOf(location.get("OPEN_MEMBER_LNG"))));
+            }
+            result.put("permission", 1.0);
+        } else
+            result.put("permission", 0.0);
+        System.out.println(result);
         return result;
     }
 }
