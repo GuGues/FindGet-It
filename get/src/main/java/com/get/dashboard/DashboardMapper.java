@@ -21,4 +21,17 @@ public interface DashboardMapper {
     //    - 예: SELECT SIDO_NAME, COUNT(*) ...
     List<RegionStat> selectFoundRegionStats();
     List<RegionStat> selectLostRegionStats();
+
+    // 4) 월별 업로드 통계
+    List<MonthlyStat> selectFoundMonthlyStats();
+    List<MonthlyStat> selectLostMonthlyStats();
+
+    // 새로운 통계
+    int selectTotalUserCount();
+    int selectBannedUserCount();
+    int selectReportCount();
+    int selectSuccessfulChatCount();
+
+
+
 }

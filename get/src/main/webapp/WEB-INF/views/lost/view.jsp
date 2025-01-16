@@ -1,13 +1,11 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
   <title>분실물 상세 페이지</title>
   <link rel="stylesheet" href="/css/common.css" />
-  <link rel="icon" type="image/png" href="/img/favicon.ico" />
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -16,10 +14,18 @@
       padding: 0;
     }
 
+    .title {
+      font-weight: normal;
+    }
+
     .detail-container {
       max-width: 1000px;
       height: 100%;
+<<<<<<< HEAD
+      margin-left: 100px;
+=======
       margin-left: 30%;
+>>>>>>> bfbeeb389cee9ca95aca9e742771f9d775195c6b
       margin-right: 100px;
       background: #fff;
       border: none;
@@ -279,14 +285,15 @@
   <div class="top-label">
     <h5>
       <a href="/">home</a> >
-      <a href="/lost">분실물</a> >
-      <a href="#">분실물 상세보기</a>
+      <a href="/">분실물</a> >
+      <a href="/">분실물 검색</a> >
+      <a href="/">분실물 상세보기</a>
     </h5>
   </div>
 
   <!-- 타이틀 영역 -->
   <div class="detail-header">
-    <h1>분실물 상세보기</h1>
+    <h1 class="title">분실물 상세보기</h1>
     <div class="detail-header-inside">
       <h4>
         소중한 물품을 분실하셨습니다.
@@ -329,11 +336,10 @@
         <c:out value="${item.colorName}"/>
       </div>
       <div class="info">
-        <span class="label">지역:</span>
-        <c:out value="${item.sidoName}"/>
-        <c:out value="${item.gugunName}"/>
-        <c:out value="${item.lLocationDetail}"/>
-      </div>
+    <span class="label">지역:</span>
+    <c:out value="${item.sidoName}"/>
+    <c:out value="${item.gugunName}"/>
+    </div>
       <div class="info">
         <span class="label">사례금:</span>
         <c:out value="${item.reward}"/>원
@@ -375,7 +381,7 @@
       <c:out value="${item.lostContent}"/>
     </div>
     <div class="btn-container2">
-      <button onclick="history.back()">목록</button>
+      <button onclick="location.href='/lost'">목록</button>
 
       <!-- 작성자/관리자 구분 -->
       <c:choose>
@@ -422,6 +428,7 @@
       <div id="pagination"></div>
     </div>
   </div>
+</div>
 
   <!-- 카카오 맵 API -->
   <script type="text/javascript"

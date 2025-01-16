@@ -40,8 +40,6 @@ dependencies {
 	testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.4'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
-
-
 	// jdk 17, jsp , jstl
 	implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
 	implementation 'jakarta.servlet:jakarta.servlet-api' //스프링부트 3.0 이상
@@ -66,12 +64,12 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-websocket' //웹소켓
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.security:spring-security-taglibs'
-	
-	implementation 'org.springframework.boot:spring-boot-starter-mail' // Spring Boot 메일 스타터
-	implementation 'org.hibernate.validator:hibernate-validator:6.2.0.Final' // Hibernate Validator
 
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+tasks.withType(JavaCompile) {
+    options.compilerArgs << "-parameters"
 }

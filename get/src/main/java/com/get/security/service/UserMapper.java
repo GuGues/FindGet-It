@@ -28,8 +28,6 @@ public interface UserMapper {
 
 	UserDetails loadUserByUsername(String email);
 
-	Account findUserByUserNamePhoneEmail(String username, String phone, String email);
 
-	void changePw(Account reg);
 
 }

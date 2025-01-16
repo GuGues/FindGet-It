@@ -33,37 +33,38 @@
 		,#{postnumber}
 		,SYSDATE
 		,'USER'
+		,0
+		,null
 		)
+		<selectKey keyProperty="mem_idx"
+			resultType="java.lang.String" order="AFTER">
+			SELECT 'ME' || LPAD(MEMBERS_SEQ.CURRVAL, 8, '0') FROM dual
+		</selectKey>
 	</insert>
-
-	<select id="getLastLoginDate" parameterType="String" resultType="java.util.Date" >
-		SELECT LAST_LOGIN_DATE
+	<select id="findUserByUserNamePhone">
+		SELECT *
 		FROM MEMBERS
-		WHERE EMAIL = #{email}
+		WHERE USERNAME=#{username} AND PHONE=#{phone}
 	</select>
 
-	<update id="updateLoginDateAndCount" parameterType="String">
-		UPDATE MEMBERS
-		SET JOIN_COUNT = JOIN_COUNT + 1,
-		LAST_LOGIN_DATE = SYSDATE
-		WHERE EMAIL = #{email}
-	</update>
 
-	<update id="updateLoginDate" parameterType="String">
-		UPDATE MEMBERS
-		SET LAST_LOGIN_DATE = SYSDATE
-		WHERE EMAIL = #{email}
-	</update>
-	
-	<select id="findUserByUserNamePhoneEmail">
-        SELECT *
-        FROM MEMBERS
-        WHERE USERNAME=#{param1} AND PHONE=#{param2} AND EMAIL=#{param3}
-    </select>
-    
-    <update id="changePw">
-		UPDATE MEMBERS SET
-		PASSWORD = #{password}
-		WHERE EMAIL = #{email}
-	</update>
+<select id="getLastLoginDate" parameterType="String"
+	resultType="java.util.Date">
+	SELECT LAST_LOGIN_DATE
+	FROM MEMBERS
+	WHERE EMAIL = #{email}
+</select>
+
+<update id="updateLoginDateAndCount" parameterType="String">
+	UPDATE MEMBERS
+	SET JOIN_COUNT = JOIN_COUNT + 1,
+	LAST_LOGIN_DATE = SYSDATE
+	WHERE EMAIL = #{email}
+</update>
+
+<update id="updateLoginDate" parameterType="String">
+	UPDATE MEMBERS
+	SET LAST_LOGIN_DATE = SYSDATE
+	WHERE EMAIL = #{email}
+</update>
 </mapper>

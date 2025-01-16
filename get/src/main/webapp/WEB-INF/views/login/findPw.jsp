@@ -120,7 +120,7 @@
 <main class="findIdModal">
 <%--    <img src="/img/banner.png" alt="Logo" style="width: 70%; margin-top: -15%; ">--%>
     <h2>비밀번호 찾기</h2>
-<form action="" method="post" class="findPwForm">
+<form action="" method="post">
     <div class='form-floating'>
         <input type="text" class='form-control' name="email"  id='floatingId' placeholder="아이디">
         <label for='floatingId'>아이디</label>
@@ -136,26 +136,18 @@
     <div id="result-text"></div>
     <input type="submit" class="btn btn-light" value="확인"/>
 </form>
-<form action="/changePw" method="post" class="changePw">
     <div class="find-modal hidden">
         <div class="find-modal-content">
             <div class="find-modal-detail">
-              <input type="hidden" name="email" value="" id="changePwEmail">
-              <input type="text" class='form-control' name="password"  id='newPw' placeholder="변경할 비밀번호">
-              <input type="text" class='form-control'  id='newPwCheck' placeholder="비밀번호 확인">
             </div>
             <div class="message"></div>
             <div class="btn btn-light changePwBtn">변경</div>
             <div class="btn btn-light find-close-modal">닫기</div>
         </div>
     </div>
-</form>
 </main>
 <script>
-    document.querySelector('.findPwForm').onsubmit=(e)=>{
-    	e.preventDefault();
-    	let key ="";
-    	let email ="";
+    document.getElementsByTagName('form')[1].onsubmit=()=>{
         if(document.getElementById('floatingId').value==null||document.getElementById('floatingId').value==''){
             alert("아이디을 입력해주세요.");
             return false;
@@ -168,10 +160,6 @@
             alert("전화번호를 입력해주세요.");
             return false;
         }
-        else{
-        	document.getElementById("result-text").innerHTML = 
-			    "<div class='keyText'>* 인증번호를 발송하였습니다</div>";
-        }
         fetch("/findPw/check",{
             method:"POST",
             headers:{
@@ -180,11 +168,10 @@
             body:JSON.stringify({
                 "email":document.getElementById('floatingId').value,
                 "username":document.getElementById('floatingName').value,
-                "phone":document.getElementById('floatingTel').value,
+                "phone":document.getElementById('floatingTel').value
             })
         }).then(result=>result.json())
     .then(result=>{
-    	email = result.result;
         if(result.status=="OK"){
         	//console.log(result.result);
         	fetch("/email/check", {
@@ -248,11 +235,14 @@
         	})
         }
         else{
-        	//이메일, 이름, 전화번호가 일치하지 않을경우
             document.getElementById("result-text").innerHTML = result.result;
         }
         })
     return false;
+    }
+    document.getElementById("find-close-modal").onclick=()=>{
+           document.getElementsByClassName("find-modal")[0].classList.add("hidden");
+           document.querySelector('.btn-close').click();
     }
 </script>
 

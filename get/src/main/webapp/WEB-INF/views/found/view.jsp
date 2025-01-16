@@ -31,6 +31,9 @@
       margin-bottom: 5%;
       border-bottom: solid #FF914B;
     }
+    .title {
+        font-weight: normal;
+    }
 
     .detail-header h1 {
       font-size: 28px;
@@ -344,16 +347,16 @@
         <span class="label">지역:</span>
         <c:out value="${item.sidoName}" /> <c:out value="${item.gugunName}" />
       </div>
-      <div class="found-state-message">
-        <c:choose>
-          <c:when test="${item.foundState == 2}">
-            보관중이며 주인을 찾고 있는 물건입니다.
-          </c:when>
-          <c:when test="${item.foundState == 1}">
-            주인의 품으로 돌아간 물건입니다.
-          </c:when>
-        </c:choose>
-      </div>
+<div class="found-state-message">
+    <c:choose>
+        <c:when test="${item.foundState == 2}">
+            <span style="color: red;">보관중이며 주인을 찾고 있는 물건입니다.</span>
+        </c:when>
+        <c:when test="${item.foundState == 1}">
+            <span style="color: green;">주인의 품으로 돌아간 물건입니다.</span>
+        </c:when>
+    </c:choose>
+</div>
     </div>
   </div>
 

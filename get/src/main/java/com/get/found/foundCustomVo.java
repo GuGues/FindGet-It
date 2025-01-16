@@ -22,6 +22,7 @@ public class foundCustomVo {
 	private String f_item_detail;
 	private int color_code;
 	private int found_state;
-	
+	private String nickname;
+
 	private String location;
 }

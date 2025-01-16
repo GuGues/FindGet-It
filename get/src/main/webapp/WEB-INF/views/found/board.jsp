@@ -171,7 +171,8 @@
      display: flex;
      flex-direction: column;
      justify-content: center;
-     align-items: center; 
+     align-items: center;
+     position: relative;
    }
    .listTable{ padding: 0; }
    .listTable tr:not(tr:first-child, tr:nth-child(2), tr:last-child){ border-top: solid 1px #DFD4D4; }
@@ -297,17 +298,14 @@
     </div>
     <div class="bigBox">
     <table class="list" style="border: none; padding: 20px 0;">
-    <!-- lostVo(lost_idx=LO00000001, email=user1@example.com, lost_title=강남에서 지갑 분실,
-    lost_content=강남구 역삼동에서 검은색 가죽 지갑을 잃어버렸어요. 연락주세요., lost_date=2024-01-15 00:00:00,
-    l_reg_date=2024-12-18 12:31:48, l_views=0, location_code=100101, l_location_detail=null, item_code=201301,
-    l_item_detail=여성용 지갑, 가죽 재질, 내부에 카드 5장과 현금 포함, reward=500000, color_code=10, lost_state=2) -->
       <tr class="listHead" style="padding:0;margin: 0;">
         <td>순번</td>
-        <td>분실번호</td>
+        <td>작성자</td>
         <td>분실품명</td>
         <td>분실장소</td>
         <td>분실일자</td>
         <td>조회수</td>
+
       </tr>
     </table>
     <table class="list listTable">
@@ -324,7 +322,7 @@
       <c:forEach items="${ foundList }" var="found" varStatus="i">
         <tr class="listItem" id="${ found.found_idx }">
           <td>${ (pagingHelper.nowPage - 1 )* 15 + i.index + 1 }</td>
-          <td>${ found.found_idx }</td>
+          <td>${ found.nickname }</td>
           <td>${ found.found_title }</td>
           <td>${ found.location }</td>
           <td>${ found.found_date }</td>
