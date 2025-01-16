@@ -7,6 +7,7 @@
     <title>내 정보수정</title>
     <link rel="icon" type="image/png" href="/image/favicon.ico" />
     <link rel="stylesheet" href="/css/common.css" />
+    <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
     <style>
 body {
     font-family: 'Arial', sans-serif;
@@ -171,19 +172,20 @@ a.back:hover {
 
             <!-- 주소 -->
             <div class="form-floating" style="flex: 1;">
-                <input type="text" id="address1" name="address1" value="${user.address1}" required placeholder=" ">
+                <input type="text" id="postnumber" name="postnumber" value="${user.postnumber}" required placeholder=" " onclick="execDaumPostcode()" >
+                <label for="postnumber">우편번호</label>
+            </div>
+
+            <div class="form-floating" style="flex: 1;">
+                <input type="text" id="address1" name="address1" value="${user.address1}" required placeholder=" " onclick="execDaumPostcode()" >
                 <label for="address1">주소</label>
             </div>
-                
+
             <div class="form-floating" style="flex: 1;">
                 <input type="text" id="address2" name="address2" value="${user.address2}" required placeholder=" ">
                 <label for="address2">상세주소</label>
             </div>
-                
-            <div class="form-floating" style="flex: 1;">
-                <input type="text" id="postnumber" name="postnumber" value="${user.postnumber}" required placeholder=" ">
-                <label for="postnumber">우편번호</label>
-            </div>
+
 
             <div class="submitdiv">
                 <button type="submit" class="submit-btn">수정하기</button>
@@ -245,6 +247,37 @@ a.back:hover {
             });
         });
     });
+
+    // Daum 우편번호 서비스를 실행하는 함수
+    function execDaumPostcode() {
+        new daum.Postcode({
+            oncomplete: function(data) {
+                // 선택된 주소 정보를 활용
+                var addr = ''; // 주소 변수
+
+                // 사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+                if (data.userSelectedType === 'R') { // 도로명 주소
+                    addr = data.roadAddress;
+                } else { // 지번 주소
+                    addr = data.jibunAddress;
+                }
+
+                // 우편번호와 주소 정보를 해당 필드에 넣는다.
+                document.getElementById('postnumber').value = data.zonecode;
+                document.getElementById('address1').value = addr;
+
+                // 상세주소 입력 필드로 커서를 이동한다.
+                document.getElementById('address2').focus();
+            },
+            theme: {
+                // 원하는 테마 설정 가능
+                searchBgColor: "#DEDB0A", // 검색창 배경색
+                queryTextColor: "#030202" // 검색창 글자색
+            },
+            autoClose: true // 주소 선택 후 팝업 자동 닫힘 설정
+        }).open();
+    }
+
 </script>
 
 </main>

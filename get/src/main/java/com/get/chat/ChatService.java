@@ -5,6 +5,8 @@ import com.get.security.service.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -35,12 +37,8 @@ public class ChatService {
     public String createRoom(String email, String openerEmail) {
         ChatRoom room = chatMapper.findOpenedRoom(openerEmail,email);
         if(room == null) {
-            room = new ChatRoom();
-            room.setOpen_member(openerEmail);
-            room.setParticipant(email);
-            chatMapper.createRoom(room);
-            chatMapper.createChattingLocation(room);
-            return "redirect:/chatting/room/"+room.getChatting_no();
+            chatMapper.createRoom(openerEmail, email);
+            return "redirect:/chatting/roomList";
         }
         else return "redirect:/chatting/room/"+room.getChatting_no();
     }
@@ -150,19 +148,5 @@ public class ChatService {
                    chat.setSend_time(LocalDateTime.parse(chat.getSend_time(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).format(DateTimeFormatter.ofPattern("HH:mm")));
                }
                return chatList;
-    }
-
-    public Map<String, Double> getLocation(String email, String chattingNo) {
-        Map<String,String> location = chatMapper.getLocation(email,chattingNo);
-        System.out.println("location = " + location);
-        Map<String, Double> result = new HashMap<>();
-        if(location.get("open_member")==email){
-            result.put("lng", Double.parseDouble(String.valueOf(location.get("PARTICIPANT_LAT"))));
-            result.put("lat", Double.parseDouble(String.valueOf(location.get("PARTICIPANT_LNG"))));
-        }else{
-            result.put("lng", Double.parseDouble(String.valueOf(location.get("OPEN_MEMBER_LAT"))));
-            result.put("lat", Double.parseDouble(String.valueOf(location.get("OPEN_MEMBER_LNG"))));
-        }
-        return result;
     }
 }

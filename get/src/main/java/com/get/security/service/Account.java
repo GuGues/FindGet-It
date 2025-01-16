@@ -16,18 +16,19 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Account implements UserDetails {
+
    private String email;
    private String nickname;
    private String password;
    private String username;
    private String birth;
    private String phone;
-   private String mem_idx;
    private String address1;
    private String address2;
    private int postnumber;
    private String com_date;
    private String user_grant;
+   private String mem_idx;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -45,7 +46,7 @@ public class Account implements UserDetails {
     public String getUsername() {
         return this.email;
     }
-
+    
     @Override
     public boolean isAccountNonExpired() { // 계정이 만료되었는지 여부를 리턴한다
         return true;

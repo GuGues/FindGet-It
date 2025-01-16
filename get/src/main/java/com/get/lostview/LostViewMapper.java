@@ -39,5 +39,5 @@ public interface LostViewMapper {
     void updateLostViews(@Param("lostIdx") String lostIdx);
 
 
-    void updateLostState(String lostIdx, int lostState);
+    void updateLostState(@Param("lostIdx") String lostIdx, @Param("lostState") int lostState);
 }

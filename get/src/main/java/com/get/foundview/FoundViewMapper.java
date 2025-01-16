@@ -7,8 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 @Mapper
-public interface
-FoundViewMapper {
+public interface FoundViewMapper {
 
     // 습득물 상세
     FoundItemVO selectFoundItemDetail(@Param("foundIdx") String foundIdx);

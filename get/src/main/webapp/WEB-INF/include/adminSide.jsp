@@ -1,7 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<<<<<<< HEAD
+=======
 <link rel="stylesheet" href="/css/common.css" />
+>>>>>>> bfbeeb389cee9ca95aca9e742771f9d775195c6b
 <!DOCTYPE html>
 <style>
   #side_menu {
@@ -127,8 +130,9 @@
      <li><a href="/admin/post">신고 게시글 목록</a></li>
      <li><a href="/admin/post/ban">차단 게시글 목록</a></li>
     </c:if>
-     <c:if test="${url.contains('/dashboard')}">
+     <c:if test="${url.contains('/dashboard') || url.contains('/number')}">
      <li><h3 class="side-title">데이터 관리</h3></li>
+     <li><a href="/dashboard">시각화 통계</a></li>
     </c:if>
     <c:if test="${url.contains('/faq') || url.contains('/cs')}">
      <li><h3 class="side-title">FAQ</h3></li>

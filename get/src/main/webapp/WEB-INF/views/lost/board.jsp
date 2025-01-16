@@ -307,7 +307,7 @@
     l_item_detail=여성용 지갑, 가죽 재질, 내부에 카드 5장과 현금 포함, reward=500000, color_code=10, lost_state=2) -->
       <tr class="listHead" style="padding:0;margin: 0;">
         <td>순번</td>
-        <td>분실번호</td>
+        <td>작성자</td>
         <td>분실품명</td>
         <td>분실장소</td>
         <td>분실일자</td>
@@ -328,7 +328,7 @@
       <c:forEach items="${ lostList }" var="lost" varStatus="i">
         <tr class="listItem" id="${ lost.lost_idx }">
           <td>${ (pagingHelper.nowPage - 1 )* 15 + i.index + 1 }</td>
-          <td>${ lost.lost_idx }</td>
+          <td>${ lost.nickname }</td>
           <td>${ lost.lost_title }</td>
           <td>${ lost.location }</td>
           <td>${ lost.lost_date }</td>

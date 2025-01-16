@@ -83,13 +83,9 @@
             border-radius: 5px;
             background-color: white;
         }
-        .find-modal-content>.btn:hover{
+        .find-modal-content>button:hover{
             background-color: #E67E22;
             color: white;
-        }
-        .keyText{
-          color: green;
-          margin: 10px;
         }
     </style>
 </head>
@@ -97,7 +93,7 @@
 <main class="findIdModal">
 <%--    <img src="/img/banner.png" alt="Logo" style="width: 70%; margin-top: -15%; ">--%>
     <h2>비밀번호 찾기</h2>
-<form action="" method="post" class="findPwForm">
+<form action="" method="post">
     <div class='form-floating'>
         <input type="text" class='form-control' name="email"  id='floatingId' placeholder="아이디">
         <label for='floatingId'>아이디</label>
@@ -113,26 +109,16 @@
     <div id="result-text"></div>
     <input type="submit" class="btn btn-light" value="확인"/>
 </form>
-<form action="/changePw" method="post" class="changePw">
     <div class="find-modal hidden">
         <div class="find-modal-content">
             <div class="find-modal-detail">
-              <input type="hidden" name="email" value="" id="changePwEmail">
-              <input type="text" class='form-control' name="password"  id='newPw' placeholder="변경할 비밀번호">
-              <input type="text" class='form-control'  id='newPwCheck' placeholder="비밀번호 확인">
             </div>
-            <div class="message"></div>
-            <div class="btn changePwBtn">변경</div>
-            <div class="btn find-close-modal">닫기</div>
+            <button id="find-close-modal">닫기</button>
         </div>
     </div>
-</form>
 </main>
 <script>
-    document.querySelector('.findPwForm').onsubmit=(e)=>{
-    	e.preventDefault();
-    	let key ="";
-    	let email ="";
+    document.getElementsByTagName('form')[1].onsubmit=()=>{
         if(document.getElementById('floatingId').value==null||document.getElementById('floatingId').value==''){
             alert("아이디을 입력해주세요.");
             return false;
@@ -145,10 +131,6 @@
             alert("전화번호를 입력해주세요.");
             return false;
         }
-        else{
-        	document.getElementById("result-text").innerHTML = 
-			    "<div class='keyText'>* 인증번호를 발송하였습니다</div>";
-        }
         fetch("/findPw/check",{
             method:"POST",
             headers:{
@@ -157,75 +139,23 @@
             body:JSON.stringify({
                 "email":document.getElementById('floatingId').value,
                 "username":document.getElementById('floatingName').value,
-                "phone":document.getElementById('floatingTel').value,
+                "phone":document.getElementById('floatingTel').value
             })
         }).then(result=>result.json())
     .then(result=>{
-    	email = result.result;
         if(result.status=="OK"){
-        	//console.log(result.result);
-        	fetch("/email/check", {
-        		method: "POST",
-        		headers:{
-        			"Content-type":"application/json"
-        		},
-        		body:JSON.stringify({
-        			"email":email,
-        		})
-        	}).then(result=>result.json())
-        	.then(result=>{
-        		console.log(result);
-        		if(result.status=="OK"){
-        			//이메일 인증번호 발송 성공했을경우
-        			key = result.key;
-        			document.getElementById("result-text").innerHTML = 
-        			    "<div class='form-floating' style='margin: 20px 0;'>" +
-        			    "<input type='text' class='form-control keyInput' name='key' id='floatingTel' placeholder='인증번호'>" +
-        			    "<label for='floatingTel'>인증번호</label>" +
-        			    "</div>" +
-        			    "<div class='btn btn-primary keyBtn' style='margin-top: 10px;' onclick='yourFunction()'>인증번호 확인</div>";
-        		}
-        		else{
-                    //이메일 인증번호 발송 실패했을경우
-        			document.getElementById("result-text").innerHTML = result.result;
-                }
-
-        	    const keyBtn = document.querySelector('.keyBtn')
-        	    if(keyBtn!=null){
-        	    	keyBtn.onclick= function() {
-        	    		const keyInput = document.querySelector('.keyInput').value;
-        	    		if(keyInput == key){
-        	    			//console.log("hi")
-        	    			document.getElementsByClassName('find-modal')[0].classList.remove("hidden");
-        	    			//변경할 비번 창 닫기 버튼
-        	    			document.getElementsByClassName('find-close-modal')[0].onclick=function(){
-                	            document.getElementsByClassName("find-modal")[0].classList.add("hidden");
-                	            document.querySelector('.btn-close').click();
-                	        }
-        	    			//비밀번호 변경 버튼
-        	    			document.querySelector('.changePwBtn').onclick=()=>{
-        	    				let newPw = document.querySelector('#newPw');
-        	    				let newPwCheck = document.querySelector('#newPwCheck');
-        	    				if(newPw.value != newPwCheck.value){
-        	    					document.querySelector('.message').innerHTML = "* 비밀번호가 일치하지 않습니다."
-        	    					newPwCheck.focus();
-        	    				}
-        	    				else{
-        	    					document.querySelector('#changePwEmail').value = email;
-        	    					document.querySelector('.changePw').submit();
-        	    				}
-        	    			}
-        	    		}
-            	    }
-        	    }
-        	})
+            document.getElementsByClassName("find-modal-detail")[0].innerHTML=result.result;
+            document.getElementsByClassName("find-modal")[0].classList.remove("hidden");
         }
         else{
-        	//이메일, 이름, 전화번호가 일치하지 않을경우
             document.getElementById("result-text").innerHTML = result.result;
         }
         })
     return false;
+    }
+    document.getElementById("find-close-modal").onclick=()=>{
+           document.getElementsByClassName("find-modal")[0].classList.add("hidden");
+           document.querySelector('.btn-close').click();
     }
 </script>
 

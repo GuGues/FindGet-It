@@ -164,11 +164,22 @@
       <p>공지사항</p>
     </a>
 
+    <c:choose>
+    <c:when test="${ sessionScope.grant eq 'ADMIN' }">
+    <a class="button" href="/dashboard">
+      <img src="/icon/adminicon_gray.png" class="icon default" alt="관리자 메뉴">
+      <img src="/icon/adminicon_orange.png" class="icon hover" alt="관리자 메뉴">
+      <p>관리자 메뉴</p>
+    </a>
+    </c:when>
+    <c:when test="${ sessionScope.grant ne 'ADMIN' || !sessionScope.grant }">
     <a class="button" href="/police/found">
       <img src="/icon/lost112_gray.png" class="icon default" alt="경찰청 신고">
       <img src="/icon/lost112_orange.png" class="icon hover" alt="경찰청 신고">
       <p>경찰청 분실물 게시판</p>
     </a>
+    </c:when>
+    </c:choose>
   </div>
 </div>
 <%@ include file="/WEB-INF/include/fab.jsp" %>

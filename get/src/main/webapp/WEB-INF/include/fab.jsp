@@ -309,9 +309,6 @@
             <div class="fab-alarm fab-alarm-chat hidden"></div>
         </c:if>
 
-        <a class="fab-option" href="">
-            TOP
-        </a>
         <c:if test="${not empty sessionScope.idx}">
         <div>
         <button class="fab-option" onclick="openAlarm()">알람

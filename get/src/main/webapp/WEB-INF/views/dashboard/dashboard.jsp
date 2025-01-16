@@ -69,15 +69,16 @@
         }
         .chart-container {
             flex: 1;
-            min-width: 200px;
-            max-width: 800px;
-            height: 300px;
+            width: 100%;
+            /*min-width: 200px;*/
+            /*max-width: 800px;*/
+            height: 100%;
+            /*
             border-right: #8C6C55 solid 3px;
+            */
         }
         @media (max-width: 900px) {
-            .stats {
-                width: 90%;
-            }
+
             .stats-content {
                 flex-direction: column;
                 align-items: center;
@@ -87,22 +88,52 @@
                 margin-bottom: 20px;
             }
         }
+
+
+
+        /* 추가 스타일 */
+        .section {
+            /* 기존 스타일 */
+            margin-bottom: 40px; /* 그래프 간 간격 추가 */
+            /*padding: 5%;*/
+            text-align: center;
+            gap: 20px;
+
+
+        }
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+
+
     </style>
 </head>
 <%@include file="/WEB-INF/include/adminSide.jsp" %>
 <body>
 <main>
 <!-- 습득물 통계 -->
-<div class="section">
-    <div class="stats">
-        <h2>습득물 완료 통계</h2>
-        <p>습득물 총: <strong><c:out value="${data.foundTotalCount}" /></strong>
-        찾아준: <strong><c:out value="${data.foundFinishedCount}" /></strong>
-        진행중: <strong><c:out value="${data.foundOngoingCount}" /></strong></p>
-        <div class="chart-container">
-            <canvas id="foundCompletionChart"></canvas>
+    <!-- [추가] 습득물 월별 업로드 통계 -->
+    <div class="section">
+        <div class="stats">
+            <h2>24년도 습득물 월별 업로드 통계</h2>
+            <div class="chart-container">
+                <canvas id="foundMonthlyChart"></canvas>
+            </div>
+        </div>
+
+
+    <!-- [추가] 분실물 월별 업로드 통계 -->
+
+        <div class="stats" style="margin-left: 5%;" >
+            <h2>24년도 분실물 월별 업로드 통계</h2>
+            <div class="chart-container">
+                <canvas id="lostMonthlyChart"></canvas>
+            </div>
         </div>
     </div>
+<div class="section">
     <div class="stats">
         <h2>습득물 지역 통계</h2>
         <div class="stats-content">
@@ -118,20 +149,7 @@
             </div>
         </div>
     </div>
-</div>
-
-<!-- 분실물 통계 -->
-<div class="section">
-    <div class="stats">
-        <h2>분실물 완료 통계</h2>
-        <p>분실물 총: <strong><c:out value="${data.lostTotalCount}" /></strong></p>
-        <p>찾은: <strong><c:out value="${data.lostFinishedCount}" /></strong></p>
-        <p>진행중: <strong><c:out value="${data.lostOngoingCount}" /></strong></p>
-        <div class="chart-container">
-            <canvas id="lostCompletionChart"></canvas>
-        </div>
-    </div>
-    <div class="stats">
+    <div class="stats" style="margin-left: 5%;">
         <h2>분실물 지역 통계</h2>
         <div class="stats-content">
             <div class="region-stats">
@@ -147,6 +165,29 @@
         </div>
     </div>
 </div>
+
+<!-- 분실물 통계 -->
+<div class="section">
+    <div class="stats">
+        <h2>습득물 완료 통계</h2>
+        <p>습득물 총: <strong><c:out value="${data.foundTotalCount}" /></strong>
+        찾아준: <strong><c:out value="${data.foundFinishedCount}" /></strong>
+        진행중: <strong><c:out value="${data.foundOngoingCount}" /></strong></p>
+        <div class="chart-container">
+            <canvas id="foundCompletionChart"></canvas>
+        </div>
+    </div>
+    <div class="stats">
+        <h2>분실물 완료 통계</h2>
+        <p>분실물 총: <strong><c:out value="${data.lostTotalCount}" /></strong>
+        찾은: <strong><c:out value="${data.lostFinishedCount}" /></strong>
+        진행중: <strong><c:out value="${data.lostOngoingCount}" /></strong></p>
+        <div class="chart-container">
+            <canvas id="lostCompletionChart"></canvas>
+        </div>
+    </div>
+</div>
+</main>
 </main>
 <script>
     // JSON 데이터 디버깅용: 콘솔에서 확인 가능
@@ -299,6 +340,78 @@
     } else {
         console.warn("분실물 지역 데이터가 비어있습니다.");
     }
+
+    // 습득물 월별 업로드 통계 데이터
+    var foundMonthlyData = [
+        <c:forEach var="stat" items="${data.foundMonthlyStats}" varStatus="status">
+        {
+            month: "<c:out value='${stat.month}' />",
+            count: ${stat.count}
+        }<c:if test="${!status.last}">,</c:if>
+        </c:forEach>
+    ];
+    console.log("습득물 월별 데이터: ", foundMonthlyData);
+
+    const foundMonthlyCtx = document.getElementById('foundMonthlyChart').getContext('2d');
+    const foundMonthlyLabels = foundMonthlyData.map(item => item.month);
+    const foundMonthlyCounts = foundMonthlyData.map(item => item.count);
+
+    new Chart(foundMonthlyCtx, {
+        type: 'line',
+        data: {
+            labels: foundMonthlyLabels,
+            datasets: [{
+                label: '습득물 월별 업로드',
+                data: foundMonthlyCounts,
+                fill: false,
+                borderColor: '#8C6C55',
+                tension: 0.1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
+
+    // 분실물 월별 업로드 통계 데이터
+    var lostMonthlyData = [
+        <c:forEach var="stat" items="${data.lostMonthlyStats}" varStatus="status">
+        {
+            month: "<c:out value='${stat.month}' />",
+            count: ${stat.count}
+        }<c:if test="${!status.last}">,</c:if>
+        </c:forEach>
+    ];
+    console.log("분실물 월별 데이터: ", lostMonthlyData);
+
+    const lostMonthlyCtx = document.getElementById('lostMonthlyChart').getContext('2d');
+    const lostMonthlyLabels = lostMonthlyData.map(item => item.month);
+    const lostMonthlyCounts = lostMonthlyData.map(item => item.count);
+
+    new Chart(lostMonthlyCtx, {
+        type: 'line',
+        data: {
+            labels: lostMonthlyLabels,
+            datasets: [{
+                label: '분실물 월별 업로드',
+                data: lostMonthlyCounts,
+                fill: false,
+                borderColor: '#CDB7A1',
+                tension: 0.1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
 </script>
 </body>
 </html>

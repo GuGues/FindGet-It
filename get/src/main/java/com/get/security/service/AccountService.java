@@ -48,24 +48,23 @@ public class AccountService implements UserDetailsService {
         }
         reg.setPassword(encoder.encode(passwd));
         userMapper.save(reg);
-        System.out.println(reg.getMem_idx());
         return true;
     }
 
     @Transactional
     public boolean verifyPassword(String email, String inputPassword) {
-
-        Account account = new Account();
-        account.setEmail(email);
-        account = userMapper.findUser(account);
-
+        Account account = userMapper.findUserByEmail(email); // 이메일로 사용자 검색
         if (account == null) {
             throw new IllegalArgumentException("해당 사용자를 찾을 수 없습니다.");
         }
 
-
-        return encoder.matches(inputPassword, account.getPassword());
+        // 입력된 비밀번호와 저장된 비밀번호 비교
+        boolean match = encoder.matches(inputPassword, account.getPassword());
+        System.out.println("Password match result: " + match);
+        return match;
     }
+
+
 
     @Transactional
     public void updateJoinCountIfNewDay(String email) {
@@ -83,19 +82,6 @@ public class AccountService implements UserDetailsService {
     @Transactional
     public void upJoinCount(String email) {
         userMapper.upJoinCount(email);
-    }
-    
-    @Transactional
-    public boolean changePw(Account reg,String email, String passwd) {
-        Account checkUser = new Account();
-        checkUser.setEmail(email);
-
-        if (userMapper.findUser(checkUser) == null){
-            return false;
-        }
-        reg.setPassword(encoder.encode(passwd));
-        userMapper.changePw(reg);
-        return true;
     }
 
 }

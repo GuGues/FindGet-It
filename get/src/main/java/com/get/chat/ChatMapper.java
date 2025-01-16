@@ -3,7 +3,6 @@ package com.get.chat;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Mapper
@@ -14,7 +13,7 @@ public interface ChatMapper {
 
     List<ChatRoom> findAllRooms();
 
-    void createRoom(ChatRoom room);
+    void createRoom(String email, String openerEmail);
 
     List<ChatRoom> findRoomListByEmail(String email);
 
@@ -33,12 +32,4 @@ public interface ChatMapper {
     void report(ChattingReportVo reportVo);
 
     List<Chat> findAllChatReverse(String chattingNo);
-
-    void updateOpenerLocation(String openMember,String openMemberPermission, Double openMemberLat, Double openMemberLng,String chatting_no);
-
-    void updateParticipantLocation(String participant,String participantPermission, Double participantLat, Double participantLng,String chatting_no);
-
-    Map<String, String> getLocation(String email, String chattingNo);
-
-    void createChattingLocation(ChatRoom room);
 }

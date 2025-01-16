@@ -23,7 +23,8 @@ public class lostCustomVo {
 	private int reward;
 	private int color_code;
 	private int lost_state;
-	
+	private String nickname;
+
 	private String location;
 	
 }
