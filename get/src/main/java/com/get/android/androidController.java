@@ -173,17 +173,25 @@ public class androidController {
     }
 
     @GetMapping("/app/getLostSearch")
-    public ResponseEntity<List<lostCustomVo>> getLostSearch(@RequestParam Map<String, String> map, @RequestParam(value = "page", defaultValue = "1") int page) {
+    public ResponseEntity<Map<String,Object>> getLostSearch(@RequestParam Map<String, String> map, @RequestParam(value = "page", defaultValue = "1") int page) {
         System.out.println("searchLost map : " + map);
-        int recordsPerPage = 15;  // 페이지당 보여줄 게시글 수
+        int recordsPerPage = 5;  // 페이지당 보여줄 게시글 수
         int arg0 = (page - 1) * recordsPerPage;  // 오프셋 계산
         map.put("arg0", String.valueOf(arg0));
         map.put("arg1", String.valueOf(recordsPerPage));
         System.out.println(map);
         //{lost_title=sdsd, item_code=201205, location_code=100699, start_date=2024-12-10, end_date=2024-12-18, color_code=6}
         List<lostCustomVo> searchLost = lostMapper.getSearchLost(map);
+        Map<String,Object> result = new HashMap<>();
+        int foundTotal = lostMapper.getTotalSearchLostCount(map);
+        int pageCnt = foundTotal / recordsPerPage;
+        if (foundTotal % recordsPerPage != 0) {
+            pageCnt += 1;
+        }
 
-        return ResponseEntity.ok(searchLost);
+        result.put("searchLost",searchLost);
+        result.put("pageCnt",pageCnt);
+        return ResponseEntity.ok(result);
     }
 
 
