@@ -31,6 +31,9 @@
       margin-bottom: 5%;
       border-bottom: solid #FF914B;
     }
+    .title {
+        font-weight: normal;
+    }
 
     .detail-header h1 {
       font-size: 28px;

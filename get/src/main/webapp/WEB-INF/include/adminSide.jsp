@@ -127,8 +127,9 @@
      <li><a href="/admin/post">신고 게시글 목록</a></li>
      <li><a href="/admin/post/ban">차단 게시글 목록</a></li>
     </c:if>
-     <c:if test="${url.contains('/dashboard')}">
+     <c:if test="${url.contains('/dashboard') || url.contains('/number')}">
      <li><h3 class="side-title">데이터 관리</h3></li>
+     <li><a href="/dashboard">시각화 통계</a></li>
     </c:if>
     <c:if test="${url.contains('/faq') || url.contains('/cs')}">
      <li><h3 class="side-title">FAQ</h3></li>

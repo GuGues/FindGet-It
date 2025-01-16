@@ -16,6 +16,10 @@
       padding: 0;
     }
 
+    .title {
+      font-weight: normal;
+    }
+
     .detail-container {
       max-width: 1000px;
       height: 100%;
@@ -286,7 +290,7 @@
 
   <!-- 타이틀 영역 -->
   <div class="detail-header">
-    <h1>분실물 상세보기</h1>
+    <h1 class="title">분실물 상세보기</h1>
     <div class="detail-header-inside">
       <h4>
         소중한 물품을 분실하셨습니다.

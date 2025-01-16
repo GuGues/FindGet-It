@@ -18,6 +18,16 @@ public class DashboardVO {
     private List<RegionStat> foundRegionStats;   // 습득물 지역별 통계
     private List<RegionStat> lostRegionStats;    // 분실물 지역별 통계
 
+    // [3] 월별 업로드 통계
+    private List<MonthlyStat> foundMonthlyStats; // 습득물 월별 통계
+    private List<MonthlyStat> lostMonthlyStats;  // 분실물 월별 통계
+
+    // 새로운 필드
+    private int totalUserCount;        // 총 유저수
+    private int bannedUserCount;       // 정지당한 유저수
+    private int reportCount;           // 신고건수
+    private int successfulChatCount;   // 성사된 채팅
+
     // == getters / setters ==
     public int getFoundTotalCount() { return foundTotalCount; }
     public void setFoundTotalCount(int foundTotalCount) { this.foundTotalCount = foundTotalCount; }
@@ -42,4 +52,53 @@ public class DashboardVO {
 
     public List<RegionStat> getLostRegionStats() { return lostRegionStats; }
     public void setLostRegionStats(List<RegionStat> lostRegionStats) { this.lostRegionStats = lostRegionStats; }
+
+    public List<MonthlyStat> getFoundMonthlyStats() {
+        return foundMonthlyStats;
+    }
+
+    public void setFoundMonthlyStats(List<MonthlyStat> foundMonthlyStats) {
+        this.foundMonthlyStats = foundMonthlyStats;
+    }
+
+    public List<MonthlyStat> getLostMonthlyStats() {
+        return lostMonthlyStats;
+    }
+
+    public void setLostMonthlyStats(List<MonthlyStat> lostMonthlyStats) {
+        this.lostMonthlyStats = lostMonthlyStats;
+    }
+
+    // 새로운 Getters and Setters
+    public int getTotalUserCount() {
+        return totalUserCount;
+    }
+
+    public void setTotalUserCount(int totalUserCount) {
+        this.totalUserCount = totalUserCount;
+    }
+
+    public int getBannedUserCount() {
+        return bannedUserCount;
+    }
+
+    public void setBannedUserCount(int bannedUserCount) {
+        this.bannedUserCount = bannedUserCount;
+    }
+
+    public int getReportCount() {
+        return reportCount;
+    }
+
+    public void setReportCount(int reportCount) {
+        this.reportCount = reportCount;
+    }
+
+    public int getSuccessfulChatCount() {
+        return successfulChatCount;
+    }
+
+    public void setSuccessfulChatCount(int successfulChatCount) {
+        this.successfulChatCount = successfulChatCount;
+    }
 }

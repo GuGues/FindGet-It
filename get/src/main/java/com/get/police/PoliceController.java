@@ -37,8 +37,8 @@ public class PoliceController {
 
     @Autowired
     private PoliceMapper policeMapper;
-//경찰청 api 이용 경찰청 습득물 상세 페이지
-/*    @GetMapping("/police/found/view")
+
+    @GetMapping("/police/found/view")
     public ModelAndView view(PoliceVo vo, HttpServletRequest request) throws Exception {
         HttpSession session = request.getSession();
         Enumeration<String> enum_session = session.getAttributeNames();
@@ -66,19 +66,7 @@ public class PoliceController {
         mv.addObject("item", itemMap);
 
         return mv;
-    }*/
-
-    @GetMapping("/police/found/view")
-    public ModelAndView view(PoliceVo vo) throws Exception {
-
-        ModelAndView mv = new ModelAndView("police/view");
-        PoliceVo item = policeMapper.selectView(vo);
-
-        mv.addObject("item", item);
-
-        return mv;
     }
-
 
     @GetMapping("/police/found")
     public ModelAndView find(@RequestParam(value = "page", defaultValue = "1") int page) {
