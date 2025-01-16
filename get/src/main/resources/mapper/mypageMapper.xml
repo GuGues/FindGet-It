@@ -124,13 +124,13 @@
     </select>
 
     <select id="getNotFind">
-        SELECT EMAIL, TITLE, VIEWS, TO_CHAR(REG_DATE, 'YYYY-MM-DD')AS REG_DATE
+        SELECT EMAIL, TITLE, VIEWS, TO_CHAR(REG_DATE, 'YYYY-MM-DD')AS REG_DATE, IDX
         FROM (
-                 SELECT EMAIL, FOUND_TITLE AS TITLE,  F_VIEWS AS VIEWS, F_REG_DATE AS REG_DATE
+                 SELECT EMAIL, FOUND_TITLE AS TITLE,  F_VIEWS AS VIEWS, F_REG_DATE AS REG_DATE, FOUND_IDX AS IDX
                  FROM FOUND
                  WHERE EMAIL = #{email}
                  UNION ALL
-                 SELECT EMAIL, LOST_TITLE AS TITLE, L_VIEWS AS VIEWS, L_REG_DATE AS REG_DATE
+                 SELECT EMAIL, LOST_TITLE AS TITLE, L_VIEWS AS VIEWS, L_REG_DATE AS REG_DATE, LOST_IDX AS IDX
                  FROM LOST_ITEMS
                  WHERE EMAIL = #{email}
              ) T
