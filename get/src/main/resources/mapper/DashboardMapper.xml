@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.get.dashboard.DashboardMapper">
+
+    <!-- 습득물 전체 / 완료 / 진행중 -->
+    <select id="selectFoundTotalCount" resultType="int">
+        SELECT COUNT(*)
+        FROM FOUND
+    </select>
+
+    <select id="selectFoundFinishedCount" resultType="int">
+        SELECT COUNT(*)
+        FROM FOUND
+        WHERE FOUND_STATE = 1  <!-- 1: 찾아준(완료) -->
+    </select>
+
+    <select id="selectFoundOngoingCount" resultType="int">
+        SELECT COUNT(*)
+        FROM FOUND
+        WHERE FOUND_STATE = 2  <!-- 2: 진행중 -->
+    </select>
+
+    <!-- 분실물 전체 / 완료 / 진행중 -->
+    <select id="selectLostTotalCount" resultType="int">
+        SELECT COUNT(*)
+        FROM LOST_ITEMS
+    </select>
+
+    <select id="selectLostFinishedCount" resultType="int">
+        SELECT COUNT(*)
+        FROM LOST_ITEMS
+        WHERE LOST_STATE = 1  <!-- 1: 찾은(완료) -->
+    </select>
+
+    <select id="selectLostOngoingCount" resultType="int">
+        SELECT COUNT(*)
+        FROM LOST_ITEMS
+        WHERE LOST_STATE = 2  <!-- 2: 진행중 -->
+    </select>
+
+
+    <!-- 지역 통계 (예: SIDO_NAME 기준)
+         가정: LOCATIONS 테이블에서 LOCATION_CODE로 조인 => L.SIDO_NAME
+         FOUND, LOST_ITEMS 각각 GROUP BY L.SIDO_NAME
+    -->
+
+    <select id="selectFoundRegionStats" resultType="com.get.dashboard.RegionStat">
+        SELECT L.SIDO_NAME       AS regionName,
+               COUNT(*)          AS count
+        FROM FOUND F
+            JOIN LOCATIONS L ON F.LOCATION_CODE = L.LOCATION_CODE
+        GROUP BY L.SIDO_NAME
+        ORDER BY L.SIDO_NAME
+    </select>
+
+    <select id="selectLostRegionStats" resultType="com.get.dashboard.RegionStat">
+        SELECT L.SIDO_NAME       AS regionName,
+               COUNT(*)          AS count
+        FROM LOST_ITEMS LI
+            JOIN LOCATIONS L ON LI.LOCATION_CODE = L.LOCATION_CODE
+        GROUP BY L.SIDO_NAME
+        ORDER BY L.SIDO_NAME
+    </select>
+
+
+    <!-- 4) 월별 업로드 통계 -->
+    <select id="selectFoundMonthlyStats" resultType="com.get.dashboard.MonthlyStat">
+        SELECT
+        TO_CHAR(FOUND_DATE, 'YYYY-MM') AS month,
+        COUNT(*) AS count
+        FROM FOUND
+        WHERE FOUND_DATE >= TO_DATE('2024-01-01', 'YYYY-MM-DD')
+        AND TO_DATE('2025-02-01', 'YYYY-MM-DD') > FOUND_DATE
+        GROUP BY TO_CHAR(FOUND_DATE, 'YYYY-MM')
+        ORDER BY TO_CHAR(FOUND_DATE, 'YYYY-MM')
+    </select>
+
+    <select id="selectLostMonthlyStats">
+        SELECT
+        TO_CHAR(LOST_DATE, 'YYYY-MM') AS month,
+        COUNT(*) AS count
+        FROM LOST_ITEMS
+        WHERE LOST_DATE >= TO_DATE('2024-01-01', 'YYYY-MM-DD')
+        AND TO_DATE('2025-02-01', 'YYYY-MM-DD') > LOST_DATE
+        GROUP BY TO_CHAR(LOST_DATE, 'YYYY-MM')
+        ORDER BY TO_CHAR(LOST_DATE, 'YYYY-MM')
+    </select>
+
+
+    <!-- 5) 새로운 통계 -->
+    <select id="selectTotalUserCount" resultType="int">
+        SELECT COUNT(*) FROM MEMBERS
+    </select>
+
+    <select id="selectBannedUserCount" resultType="int">
+        SELECT COUNT(*) FROM MEMBERS WHERE USER_GRANT = 'BAN'
+    </select>
+
+    <select id="selectReportCount" resultType="int">
+        SELECT COUNT(*) FROM MEMBER_REPORT
+    </select>
+
+    <select id="selectSuccessfulChatCount" resultType="int">
+        SELECT COUNT(*) FROM CHATTING_ROOM
+    </select>
+
+
+
+</mapper>

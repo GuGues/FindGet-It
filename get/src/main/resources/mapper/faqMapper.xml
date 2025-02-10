@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.get.faq.FaqMapper">
+  
+  <select id="getFaqList">
+    SELECT FAQ_IDX, FAQ_QUESTION, FAQ_ANSWER, TO_CHAR(FAQ_REG_DATE,'YY-MM-DD') FAQ_REG_DATE
+      FROM FAQ
+  </select>
+  
+  <update id="updateFaq">
+    UPDATE FAQ
+     SET
+      FAQ_QUESTION = #{faq_question},
+      FAQ_ANSWER = #{faq_answer}
+     WHERE FAQ_IDX = #{faq_idx}
+  </update>
+  
+  <delete id="delFaq">
+    DELETE FAQ
+     WHERE FAQ_IDX = #{faq_idx}
+  </delete>
+  
+  <insert id="insertFaq">
+    INSERT INTO FAQ (FAQ_QUESTION, FAQ_ANSWER)
+    VALUES(#{ faq_question }, #{ faq_answer })
+  </insert>
+  
+  <!-- 1:1문의 -->
+  <select id="getCsList">
+    SELECT CS_IDX, EMAIL, CS_TITLE, TO_CHAR(CS_REG_DATE,'YY-MM-DD') CS_REG_DATE, CS_STATE
+     FROM CS_CENTER
+     ORDER BY CS_STATE DESC, CS_IDX DESC
+     OFFSET #{param1} ROWS FETCH NEXT #{param2} ROWS ONLY
+  </select>
+  
+  <select id="getCsQuestion">
+    SELECT CS_TITLE, CS_CONTENT, EMAIL, CS_STATE, CS_REPLY
+     FROM CS_CENTER
+     WHERE CS_IDX = #{ cs_idx }
+  </select>
+  
+  <select id="getTotalCsCount">
+    SELECT COUNT(*)
+     FROM CS_CENTER
+  </select>
+  
+  <update id="updateCs">
+    UPDATE CS_CENTER
+     SET
+      CS_REPLY = #{ cs_answer },
+      CS_STATE = 1
+    WHERE CS_IDX = #{ cs_idx } 
+  </update>
+  
+  <insert id="insertCs">
+    INSERT INTO CS_CENTER(EMAIL, CS_TITLE, CS_CONTENT, CS_STATE)
+      VALUES( #{ email }, #{ cs_title }, #{ cs_content }, 2)
+  </insert>
+  
+</mapper>
